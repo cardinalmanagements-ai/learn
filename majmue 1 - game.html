@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎓 داشبورد یادگیری مجموعه</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', system-ui, sans-serif; }
+body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #1a1a2e; padding: 15px; }
+.container { max-width: 1300px; margin: 0 auto; }
+
+/* Header */
+.header { background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-radius: 24px; padding: 30px; margin-bottom: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.header h1 { font-size: 2.3em; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+.header p { color: #555; font-size: 1.05em; }
+.progress-wrapper { display: flex; align-items: center; gap: 15px; margin-top: 18px; }
+.progress-bar-container { flex: 1; background: #e8eaf6; height: 14px; border-radius: 7px; overflow: hidden; position: relative; }
+.progress-bar { background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7); height: 100%; width: 0%; transition: width 0.5s; border-radius: 7px; }
+.progress-text { font-weight: bold; color: #4c1d95; font-size: 0.95em; }
+
+/* Navigation */
+.nav-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; background: rgba(255,255,255,0.97); padding: 12px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.nav-tab { padding: 11px 18px; background: #f3f4f6; border: none; border-radius: 11px; cursor: pointer; font-size: 0.92em; transition: all 0.3s; font-family: inherit; display: flex; align-items: center; gap: 7px; position: relative; }
+.nav-tab:hover { background: #e5e7eb; transform: translateY(-2px); }
+.nav-tab.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+.nav-tab.completed::after { content: '✓'; position: absolute; top: -5px; left: -5px; background: #10b981; color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold; }
+
+/* Sections */
+.section { background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin-bottom: 18px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; animation: fadeIn 0.5s; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.section h2 { font-size: 1.7em; margin-bottom: 18px; color: #2d3748; display: flex; align-items: center; gap: 10px; }
+.section h3 { font-size: 1.25em; color: #4c1d95; margin: 22px 0 12px; }
+.section p { line-height: 1.9; color: #374151; margin-bottom: 12px; }
+
+/* Boxes */
+.highlight, .warning, .success-box, .info-box { padding: 18px; border-radius: 12px; margin: 18px 0; line-height: 1.8; }
+.highlight { background: linear-gradient(135deg, #fef3c7, #fde68a); border-right: 5px solid #f59e0b; }
+.warning { background: linear-gradient(135deg, #fee2e2, #fecaca); border-right: 5px solid #ef4444; }
+.success-box { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-right: 5px solid #10b981; }
+.info-box { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-right: 5px solid #3b82f6; }
+
+/* OPENING EXAMPLES */
+.opening-intro { font-size: 1.15em; color: #4c1d95; font-weight: 500; text-align: center; margin: 18px 0 25px; padding: 14px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; }
+.opening-examples { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+@media (max-width: 700px) { .opening-examples { grid-template-columns: 1fr; } }
+.opening-example { background: white; border-radius: 18px; padding: 25px 22px; border: 3px solid; position: relative; transition: all 0.3s; }
+.opening-example.example-1 { border-color: #10b981; background: linear-gradient(135deg, #ecfdf5, #fff); }
+.opening-example.example-2 { border-color: #3b82f6; background: linear-gradient(135deg, #eff6ff, #fff); }
+.opening-example:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.13); }
+.example-badge { position: absolute; top: -14px; right: 20px; padding: 6px 16px; background: white; border: 2px solid; border-radius: 20px; font-weight: bold; font-size: 0.92em; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.example-1 .example-badge { border-color: #10b981; color: #065f46; }
+.example-2 .example-badge { border-color: #3b82f6; color: #1e3a8a; }
+.example-icon { font-size: 3.2em; margin-bottom: 10px; text-align: center; }
+.opening-example h3 { text-align: center; margin: 8px 0 15px; color: #1f2937; font-size: 1.3em; }
+.opening-example p { margin-bottom: 10px; font-size: 0.97em; line-height: 1.8; }
+.example-set-box { background: white; padding: 14px; border-radius: 10px; margin: 14px 0; font-weight: bold; text-align: center; border: 2px dashed #cbd5e1; font-size: 1.05em; color: #1e293b; }
+.example-1 .example-set-box { border-color: #10b981; }
+.example-2 .example-set-box { border-color: #3b82f6; }
+.check-list { margin-top: 12px; }
+.check-list p { padding-right: 5px; font-size: 0.93em; margin-bottom: 6px; }
+.bridge-box { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border: 2px solid #8b5cf6; border-radius: 14px; padding: 22px; margin: 25px 0; text-align: center; }
+.bridge-box .question { font-size: 1.1em; color: #5b21b6; margin-bottom: 12px; font-weight: 500; }
+.bridge-box .answer { font-size: 1.4em; color: #4c1d95; font-weight: bold; margin-top: 10px; }
+
+/* Cards */
+.card { background: linear-gradient(135deg, #fafbff, #fff); border-radius: 15px; padding: 22px; margin: 15px 0; border: 2px solid #e5e7eb; transition: all 0.3s; }
+.card:hover { border-color: #a5b4fc; box-shadow: 0 12px 30px rgba(102,126,234,0.12); }
+.card h3 { color: #4c1d95; margin: 0 0 12px; font-size: 1.2em; }
+
+/* Buttons */
+.btn { padding: 11px 22px; border: none; border-radius: 10px; cursor: pointer; font-size: 0.98em; font-family: inherit; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102,126,234,0.4); }
+.btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.btn-secondary { background: #e5e7eb; color: #374151; }
+.btn-secondary:hover { background: #d1d5db; }
+
+/* Number grid */
+.number-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; margin: 20px 0; }
+.number-item { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: white; border: 3px solid #e5e7eb; border-radius: 12px; font-size: 1.5em; font-weight: bold; cursor: pointer; transition: all 0.25s; user-select: none; position: relative; }
+.number-item:hover { transform: scale(1.06); border-color: #667eea; }
+.number-item.highlight-prime { background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: #f59e0b; color: #92400e; }
+.number-item.highlight-composite { background: linear-gradient(135deg, #fee2e2, #fecaca); border-color: #ef4444; color: #991b1b; }
+.number-item.highlight-special { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-color: #10b981; color: #065f46; }
+.number-item.highlight-twodigit { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-color: #3b82f6; color: #1e3a8a; }
+.number-item.dimmed { opacity: 0.25; }
+
+.filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+.filter-btn { padding: 10px 18px; background: white; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; font-family: inherit; transition: all 0.3s; font-size: 0.95em; }
+.filter-btn:hover { border-color: #667eea; transform: translateY(-1px); }
+.filter-btn.active { color: white; border-color: transparent; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+.filter-btn.active[data-filter="prime"] { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.filter-btn.active[data-filter="composite"] { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.filter-btn.active[data-filter="special"] { background: linear-gradient(135deg, #10b981, #059669); }
+.filter-btn.active[data-filter="twodigit"] { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.filter-btn.active[data-filter="all"] { background: linear-gradient(135deg, #667eea, #764ba2); }
+
+/* Set Display */
+.set-display { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fbbf24; padding: 22px; border-radius: 14px; font-size: 1.6em; text-align: center; margin: 18px 0; direction: ltr; font-family: 'Courier New', monospace; box-shadow: inset 0 2px 10px rgba(0,0,0,0.3); letter-spacing: 2px; }
+.set-display .set-name { color: #34d399; }
+.set-display .empty { color: #94a3b8; font-style: italic; font-size: 0.7em; }
+
+/* Quiz */
+.quiz-question { background: white; border-radius: 14px; padding: 22px; margin: 18px 0; border: 2px solid #e5e7eb; }
+.quiz-question h4 { font-size: 1.1em; margin-bottom: 15px; color: #1f2937; line-height: 1.7; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-option { padding: 14px 18px; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: right; font-family: inherit; font-size: 0.98em; }
+.quiz-option:hover:not(.answered) { border-color: #667eea; background: #f3f4f6; transform: translateX(-3px); }
+.quiz-option.correct { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-color: #10b981; color: #065f46; font-weight: 500; }
+.quiz-option.wrong { background: linear-gradient(135deg, #fee2e2, #fecaca); border-color: #ef4444; color: #991b1b; }
+.quiz-feedback { margin-top: 15px; padding: 14px; border-radius: 10px; display: none; line-height: 1.7; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.3s; }
+.quiz-feedback.correct { background: #d1fae5; color: #065f46; border-right: 4px solid #10b981; }
+.quiz-feedback.wrong { background: #fee2e2; color: #991b1b; border-right: 4px solid #ef4444; }
+
+.quiz-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
+.score-display { font-size: 1.1em; font-weight: bold; color: #4c1d95; }
+
+/* Symbols practice */
+.symbol-exercise { display: flex; align-items: center; gap: 15px; padding: 15px; background: #f9fafb; border-radius: 10px; margin: 12px 0; flex-wrap: wrap; }
+.symbol-exercise .question-text { flex: 1; min-width: 200px; font-size: 1.1em; }
+.symbol-buttons { display: flex; gap: 8px; }
+.symbol-btn { padding: 8px 16px; background: white; border: 2px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-family: inherit; transition: all 0.3s; }
+.symbol-btn:hover { border-color: #667eea; }
+.symbol-btn.correct { background: #10b981; color: white; border-color: #10b981; }
+.symbol-btn.wrong { background: #ef4444; color: white; border-color: #ef4444; }
+
+/* Set builder */
+.builder-card { background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px; margin: 15px 0; transition: all 0.3s; }
+.builder-card.answered.correct { background: #d1fae5; border-color: #10b981; }
+.builder-card.answered.wrong { background: #fee2e2; border-color: #ef4444; }
+.builder-card .description { font-size: 1.1em; line-height: 1.8; margin-bottom: 15px; padding: 12px; background: #f9fafb; border-radius: 8px; }
+.builder-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.builder-btn { padding: 10px 22px; border: 2px solid; border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 0.95em; font-weight: 500; transition: all 0.3s; background: white; }
+.builder-btn.is-set { border-color: #10b981; color: #065f46; }
+.builder-btn.is-set:hover { background: #10b981; color: white; }
+.builder-btn.not-set { border-color: #ef4444; color: #991b1b; }
+.builder-btn.not-set:hover { background: #ef4444; color: white; }
+.builder-btn.selected.correct { background: #10b981; color: white; }
+.builder-btn.selected.wrong { background: #ef4444; color: white; }
+
+/* Venn */
+.venn-container { position: relative; width: 100%; max-width: 500px; height: 350px; margin: 25px auto; }
+.venn-svg { width: 100%; height: 100%; }
+.venn-controls { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0; align-items: center; }
+.venn-input { padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 1em; flex: 1; min-width: 150px; }
+.venn-input:focus { outline: none; border-color: #667eea; }
+.venn-elements { display: flex; flex-wrap: wrap; gap: 8px; padding: 15px; background: #f9fafb; border-radius: 10px; min-height: 50px; }
+.venn-element { padding: 8px 14px; background: white; border: 2px solid #667eea; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.venn-element .remove { color: #ef4444; cursor: pointer; font-weight: bold; }
+
+/* Stats Dashboard */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+.stat-card { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 22px; border-radius: 16px; text-align: center; transition: transform 0.3s; }
+.stat-card:hover { transform: translateY(-5px); }
+.stat-card.green { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-card.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-card.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+.stat-card.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.stat-card .number { font-size: 2.5em; font-weight: bold; margin-bottom: 5px; }
+.stat-card .label { font-size: 0.95em; opacity: 0.9; }
+
+.achievements { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+.achievement { padding: 12px 18px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 25px; box-shadow: 0 5px 15px rgba(251,191,36,0.4); display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.achievement.locked { background: #e5e7eb; color: #9ca3af; box-shadow: none; }
+
+/* Chip */
+.set-chip { display: inline-block; padding: 4px 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 16px; font-family: 'Courier New', monospace; margin: 0 4px; direction: ltr; font-weight: bold; }
+
+/* Animations */
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.pop { animation: pop 0.4s; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+.shake { animation: shake 0.4s; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+/* Confetti */
+.confetti { position: fixed; width: 12px; height: 12px; pointer-events: none; z-index: 9999; }
+
+/* Toggle blocks */
+.collapse-toggle { color: #667eea; cursor: pointer; font-weight: 500; user-select: none; padding: 8px 0; display: inline-block; }
+.collapse-content { display: none; margin-top: 12px; padding: 15px; background: #f9fafb; border-radius: 10px; border-right: 3px solid #667eea; }
+.collapse-content.show { display: block; animation: fadeIn 0.3s; }
+
+/* Rule cards */
+.rule-card { background: white; border-radius: 14px; padding: 20px; margin: 15px 0; border: 2px solid #e5e7eb; transition: all 0.3s; }
+.rule-card:hover { border-color: #667eea; box-shadow: 0 10px 25px rgba(102,126,234,0.1); }
+.rule-number { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 50%; font-weight: bold; font-size: 1.2em; margin-left: 10px; }
+
+/* Squad Story */
+.vip-story { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+@media (max-width: 600px) { .vip-story { grid-template-columns: 1fr; } }
+.vip-card { background: linear-gradient(135deg, #fafbff, #fff); border-radius: 14px; padding: 20px; border: 2px solid #e5e7eb; transition: all 0.3s; }
+.vip-card:hover { transform: translateY(-4px); border-color: #8b5cf6; box-shadow: 0 12px 25px rgba(139,92,246,0.15); }
+.vip-card .icon-big { font-size: 2.5em; margin-bottom: 8px; }
+
+/* GAME SECTION */
+.game-stats-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; justify-content: center; }
+.game-stat { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 12px 18px; border-radius: 12px; font-weight: bold; box-shadow: 0 5px 15px rgba(102,126,234,0.3); font-size: 0.98em; }
+.game-stat.timer-stat { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.game-stat.score-stat { background: linear-gradient(135deg, #10b981, #059669); }
+.game-stat.high-stat { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.game-mission-box { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 3px solid #f59e0b; border-radius: 16px; padding: 22px; margin: 18px 0; text-align: center; font-size: 1.15em; font-weight: bold; color: #92400e; line-height: 1.8; min-height: 80px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.game-mission-box small { display: block; font-size: 0.8em; color: #78350f; font-weight: 500; margin-top: 8px; }
+.game-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
+@media (max-width: 600px) { .game-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; } }
+.game-cell { aspect-ratio: 1; background: white; border: 3px solid #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; cursor: pointer; transition: all 0.2s; user-select: none; color: #1f2937; }
+.game-cell:hover:not(.correct):not(.wrong):not(.missed):not(.disabled) { transform: scale(1.08); border-color: #667eea; box-shadow: 0 5px 15px rgba(102,126,234,0.25); }
+.game-cell.correct { background: linear-gradient(135deg, #10b981, #059669); color: white; border-color: #065f46; animation: pop 0.4s; }
+.game-cell.wrong { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border-color: #991b1b; animation: shake 0.4s; }
+.game-cell.missed { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-color: #d97706; animation: pulse 0.6s; }
+.game-cell.disabled { cursor: default; opacity: 0.6; }
+.game-progress-bar { background: #e5e7eb; height: 8px; border-radius: 4px; margin: 12px 0 5px; overflow: hidden; }
+.game-progress-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; width: 0%; transition: width 0.3s; }
+.game-progress-text { text-align: center; font-size: 0.88em; color: #6b7280; margin-bottom: 8px; }
+.game-timer-bar { background: #fee2e2; height: 6px; border-radius: 3px; margin: 8px 0 16px; overflow: hidden; }
+.game-timer-fill { background: linear-gradient(90deg, #ef4444, #f97316); height: 100%; width: 100%; transition: width 1s linear; }
+.game-start-screen { text-align: center; padding: 30px 20px; }
+.game-start-screen h3 { font-size: 1.4em; color: #4c1d95; margin-bottom: 12px; }
+.game-start-screen .rules-list { background: linear-gradient(135deg, #eef2ff, #fff); border-radius: 14px; padding: 22px; margin: 20px auto; max-width: 500px; text-align: right; border: 2px solid #c7d2fe; }
+.game-start-screen .rules-list p { margin: 8px 0; color: #374151; }
+.combo-display { display: inline-block; margin-right: 10px; padding: 6px 14px; background: linear-gradient(135deg, #ec4899, #db2777); color: white; border-radius: 20px; font-weight: bold; font-size: 0.9em; animation: pop 0.3s; }
+
+@media (max-width: 768px) {
+    .header h1 { font-size: 1.6em; }
+    .nav-tab { padding: 9px 13px; font-size: 0.82em; }
+    .section { padding: 20px; }
+    .number-item { font-size: 1.2em; }
+    .game-stat { font-size: 0.85em; padding: 10px 12px; }
+    .game-cell { font-size: 1.2em; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🎓 داشبورد یادگیری مجموعه</h1>
+        <p>یه سفرِ تعاملی برای تسلطِ کامل روی مفهوم «مجموعه» — درس اوّل ریاضی</p>
+        <div class="progress-wrapper">
+            <span class="progress-text" id="progressText">۰٪</span>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="overallProgress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-section="intro">📚 مقدمه</button>
+        <button class="nav-tab" data-section="rules">📏 قوانین</button>
+        <button class="nav-tab" data-section="divisors">🔢 شمارنده‌های ۶۰</button>
+        <button class="nav-tab" data-section="symbols">∈ نمادها</button>
+        <button class="nav-tab" data-section="builder">🏗️ ساختِ مجموعه</button>
+        <button class="nav-tab" data-section="venn">⭕ نمودار وِن</button>
+        <button class="nav-tab" data-section="game">🎮 بازی</button>
+        <button class="nav-tab" data-section="quiz">🎯 آزمون</button>
+        <button class="nav-tab" data-section="dashboard">🏆 پیشرفت</button>
+    </div>
+
+    <!-- 1. INTRODUCTION -->
+    <div class="section active" id="intro">
+        <h2>📚 مجموعه چیه؟</h2>
+
+        <div class="opening-intro">
+            🎯 بیا قبل از هر چیز، با دو تا مثالِ ساده از زندگیِ خودت شروع کنیم!
+        </div>
+
+        <div class="opening-examples">
+            <div class="opening-example example-1">
+                <div class="example-badge">مثال ۱</div>
+                <div class="example-icon">⚽</div>
+                <h3>تیمِ فوتبالِ مدرسه</h3>
+                <p>آقای مربی یه برگه دستش می‌گیره و اسمِ بازیکن‌های اصلی رو می‌نویسه:</p>
+                <div class="example-set-box">تیم = ‌{ علی، حسن، محمد، رضا، مهدی }</div>
+                <div class="check-list">
+                    <p>✅ اسمِ هر بازیکن کاملاً مشخصه</p>
+                    <p>✅ هیچ اسمی دو بار نوشته نشده</p>
+                    <p>✅ اگه ترتیبشون رو عوض کنیم، باز همون تیمه</p>
+                </div>
+            </div>
+
+            <div class="opening-example example-2">
+                <div class="example-badge">مثال ۲</div>
+                <div class="example-icon">🎵</div>
+                <h3>پلی‌لیستِ موسیقی</h3>
+                <p>توی گوشیت یه پلی‌لیست ساختی به اسم «آهنگ‌های موردِ علاقه‌ام»:</p>
+                <div class="example-set-box">پلی‌لیست = ‌{ آهنگِ ۱، آهنگِ ۲، آهنگِ ۳ }</div>
+                <div class="check-list">
+                    <p>✅ مشخصه چه آهنگ‌هایی توشه</p>
+                    <p>✅ یه آهنگ دو بار اضافه نمی‌شه</p>
+                    <p>✅ ترتیبِ پخش، خودِ لیست رو عوض نمی‌کنه</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bridge-box">
+            <div class="question">🤔 خب، این دو تا چی مشترک دارن؟</div>
+            <p>هر دو یه <strong>دسته‌ی مشخص</strong> و <strong>بدونِ تکرار</strong> از چیزایی‌ان. اعضاش کاملاً معلومه و ترتیب‌شون هم مهم نیست.</p>
+            <div class="answer">✨ تو ریاضی به این می‌گن: «مجموعه»</div>
+        </div>
+
+        <h3>📌 حالا تعریفِ رسمی</h3>
+        <p>تو زندگیِ روزمره از واژه‌هایی مثل «دسته»، «گروه»، «مجموعه» زیاد استفاده می‌کنیم. مثلاً «گروهی از بازیکنان وارد ورزشگاه شدند» — این جمله مشخص نمی‌کنه چه بازیکنانی! ولی تو ریاضی، «مجموعه» باید کاملاً <strong>دقیق و بدون ابهام</strong> باشه.</p>
+
+        <div class="info-box">
+            <strong>📖 تعریف:</strong> مجموعه یعنی دسته‌ای از اشیای <strong>مشخص</strong> (بدون ابهام) و <strong>متمایز</strong> (بدون تکرار).
+        </div>
+
+        <h3>🎮 یه استعاره‌ی جذابِ دیگه: اسکوادِ بازیِ آنلاین</h3>
+        <p>تصور کن داری یه بازیِ آنلاینی مثل کالاف‌دیوتی یا فورتنایت می‌کنی و باید یه <strong>اسکواد (تیم)</strong> از دوستات بسازی:</p>
+        <div class="vip-story">
+            <div class="vip-card">
+                <div class="icon-big">👾</div>
+                <h3>مجموعه = اسکوادِ تو</h3>
+                <p>یه تیم ساختی به اسمِ <strong>A</strong>. لیستِ گیمرایی که توی این اسکواد عضوَن، می‌شه مجموعه‌ی A.</p>
+            </div>
+            <div class="vip-card">
+                <div class="icon-big">🕹</div>
+                <h3>عضو = هر گیمر در تیم</h3>
+                <p>هر بازیکنی که آیدیش (یوزرنیمش) تو لیستِ اسکواد ثبت شده، یه «<strong>عضو</strong>» مجموعه‌ست.</p>
+            </div>
+            <div class="vip-card">
+                <div class="icon-big">⚔️</div>
+                <h3>شرطِ ورود = توصیفِ مجموعه</h3>
+                <p>کاپیتانِ تیم یه قانون داره: مثلاً «فقط کسایی که لِوِل‌شون بالای ۵۰ هست می‌تونن عضو بشن».</p>
+            </div>
+            <div class="vip-card">
+                <div class="icon-big">🛡</div>
+                <h3>مرزِ تیم = نمودار وِن</h3>
+                <p>یه دایره دور آیدی گیمرای تیم می‌کشیم. هرکی بیرونِ این دایره‌ست، تو اسکوادِ ما نیست.</p>
+            </div>
+        </div>
+
+        <h3>📖 مثال‌های بیشتر از زندگیِ واقعی</h3>
+        <div class="card">
+            <p>✅ <strong>مجموعه‌ست:</strong> دانش‌آموزانِ کلاسِ نهمِ شما</p>
+            <p>✅ <strong>مجموعه‌ست:</strong> روزهای هفته → <span class="set-chip">{شنبه, یکشنبه, ..., جمعه}</span></p>
+            <p>✅ <strong>مجموعه‌ست:</strong> اعداد طبیعیِ یک‌رقمی → <span class="set-chip">{1,2,3,4,5,6,7,8,9}</span></p>
+            <p>❌ <strong>مجموعه نیست:</strong> «چند تا از بازیکنان تیم ملی» — کدوماشون؟! نامشخصه.</p>
+            <p>❌ <strong>مجموعه نیست:</strong> «دانش‌آموزان خوش‌اخلاق» — خوش‌اخلاقی نسبیه!</p>
+        </div>
+
+        <div class="highlight">
+            <strong>🔑 نکته‌ی کلیدی:</strong> مجموعه‌ها رو با <strong>حروف بزرگ انگلیسی</strong> (A, B, C, ...) نام‌گذاری می‌کنیم و اعضاش رو داخل <strong>{ }</strong> می‌نویسیم.
+            <br>مثال: <span class="set-chip">A = {2, 3, 5}</span>
+        </div>
+
+        <button class="btn btn-primary" onclick="markComplete('intro'); switchTab('rules')">
+            فهمیدم، بریم سراغ قوانین ←
+        </button>
+    </div>
+
+    <!-- 2. RULES -->
+    <div class="section" id="rules">
+        <h2>📏 سه قانونِ طلاییِ مجموعه</h2>
+        <p>هر مجموعه‌ی ریاضی باید این ۳ شرط رو داشته باشه. روی هر کارت کلیک کن تا مثال‌هاش رو ببینی:</p>
+
+        <div class="rule-card">
+            <h3><span class="rule-number">1</span> قانون مشخص بودن</h3>
+            <p>توصیفِ اعضای مجموعه باید <strong>کاملاً واضح</strong> باشه. هیچ ابهامی نباید باشه. دو نفر مختلف نباید بتونن دو جوابِ متفاوت ازش دربیارن.</p>
+            <span class="collapse-toggle" onclick="toggleCollapse(this)">📂 نمونه‌ها رو ببین</span>
+            <div class="collapse-content">
+                <div class="success-box">
+                    ✅ <strong>«اعدادِ زوجِ بین ۱ تا ۱۰»</strong> → کاملاً مشخصه: {2, 4, 6, 8}
+                </div>
+                <div class="warning">
+                    ❌ <strong>«چهار شاعرِ ایرانی»</strong> → کدوم چهار تا؟! ایران هزاران شاعر داره!
+                </div>
+                <div class="warning">
+                    ❌ <strong>«۳ شمارنده‌ی زوجِ ۶۰»</strong> → احمد می‌تونه {4,6,10} بنویسه و رضا {6,10,12} — هر دو درستن، ولی متفاوت!
+                </div>
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <h3><span class="rule-number">2</span> قانون متمایز بودن</h3>
+            <p>هیچ عضوی نباید <strong>تکرار</strong> بشه. اگه یه عنصر دو بار نوشته شده باشه، یکیش رو حذف می‌کنیم.</p>
+            <span class="collapse-toggle" onclick="toggleCollapse(this)">📂 نمونه‌ها رو ببین</span>
+            <div class="collapse-content">
+                <div class="info-box">
+                    <span class="set-chip">{3, 3, 4}</span> = <span class="set-chip">{3, 4}</span>
+                </div>
+                <div class="info-box">
+                    <span class="set-chip">{1, 2, 1, 4, 5}</span> = <span class="set-chip">{1, 2, 4, 5}</span>
+                </div>
+                <div class="info-box">
+                    <span class="set-chip">{5, 6, 5, 7}</span> = <span class="set-chip">{5, 6, 7}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rule-card">
+            <h3><span class="rule-number">3</span> قانون بی‌اهمیّتیِ ترتیب</h3>
+            <p>ترتیبِ نوشتنِ اعضا <strong>هیچ اهمیتی نداره</strong>. هر چیدمانی همون مجموعه رو می‌سازه.</p>
+            <span class="collapse-toggle" onclick="toggleCollapse(this)">📂 نمونه‌ها رو ببین</span>
+            <div class="collapse-content">
+                <div class="info-box">
+                    <span class="set-chip">{2, 3, 5}</span> = <span class="set-chip">{5, 3, 2}</span> = <span class="set-chip">{3, 5, 2}</span>
+                </div>
+                <p>تو اسکوادِ بازی، مهم نیست کی اوّل به تیم اضافه شد. مهم اینه که الان کیا تو تیمن!</p>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <strong>💡 نتیجه‌ی نهایی:</strong> برای اینکه چیزی «مجموعه» باشه، باید بشه با قطعیّت گفت <strong>هر چیزی</strong> عضوِ این مجموعه هست یا نه.
+        </div>
+
+        <button class="btn btn-primary" onclick="markComplete('rules'); switchTab('divisors')">
+            بریم تمرین کنیم با شمارنده‌های ۶۰ ←
+        </button>
+    </div>
+
+    <!-- 3. DIVISORS OF 60 -->
+    <div class="section" id="divisors">
+        <h2>🔢 شمارنده‌های ۶۰ — کارگاهِ تعاملی</h2>
+        <p>شمارنده‌های عددِ ۶۰ این‌ها هستن. روی دکمه‌های زیر کلیک کن تا فیلتر کنی و مجموعه‌های A، B، C، D رو بسازی:</p>
+
+        <div class="number-grid" id="divisorsGrid"></div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all" onclick="filterDivisors('all')">🌐 همه (شمارنده‌های ۶۰)</button>
+            <button class="filter-btn" data-filter="prime" onclick="filterDivisors('prime')">⭐ A: شمارنده‌های اوّل</button>
+            <button class="filter-btn" data-filter="composite" onclick="filterDivisors('composite')">🔴 B: شمارنده‌های مرکّب</button>
+            <button class="filter-btn" data-filter="special" onclick="filterDivisors('special')">🟢 C: نه اوّل، نه مرکّب</button>
+            <button class="filter-btn" data-filter="twodigit" onclick="filterDivisors('twodigit')">🔵 D: دو رقمی</button>
+        </div>
+
+        <div class="set-display" id="resultSet">
+            <span class="set-name">شمارنده‌های ۶۰</span> = {1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60}
+        </div>
+
+        <div id="filterExplanation" class="info-box" style="display:none;"></div>
+
+        <h3>📊 چهار مجموعه‌ی مهم ۶۰</h3>
+        <div class="card">
+            <p><strong>مجموعه A</strong> (شمارنده‌های اول): <span class="set-chip">A = {2, 3, 5}</span> — تعداد اعضا: ۳</p>
+            <p><strong>مجموعه B</strong> (شمارنده‌های مرکّب): <span class="set-chip">B = {4, 6, 10, 12, 15, 20, 30, 60}</span> — تعداد اعضا: ۸</p>
+            <p><strong>مجموعه C</strong> (نه اول، نه مرکّب): <span class="set-chip">C = {1}</span> — تعداد اعضا: ۱</p>
+            <p><strong>مجموعه D</strong> (دو رقمی): <span class="set-chip">D = {10, 12, 15, 20, 30, 60}</span> — تعداد اعضا: ۶</p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ تله‌ی مهم:</strong> عددِ ۱ <strong>نه عددِ اوّله، نه عددِ مرکّب</strong>! یه استثناست. به همین خاطر مجموعه‌ی C فقط یه عضو داره.
+        </div>
+
+        <button class="btn btn-primary" onclick="markComplete('divisors'); switchTab('symbols')">
+            بریم سراغ نمادهای ∈ و ∉ ←
+        </button>
+    </div>
+
+    <!-- 4. SYMBOLS -->
+    <div class="section" id="symbols">
+        <h2>∈ ∉ نمادهای عضویّت</h2>
+        <p>دو تا نماد خیلی مهم تو مجموعه‌ها داریم:</p>
+
+        <div class="card">
+            <p>📍 برای گفتنِ «<strong>x عضوِ مجموعه‌ی A است</strong>» می‌نویسیم: <span class="set-chip" style="font-size:1.1em">x ∈ A</span></p>
+            <p>📍 برای گفتنِ «<strong>x عضوِ مجموعه‌ی A نیست</strong>» می‌نویسیم: <span class="set-chip" style="font-size:1.1em">x ∉ A</span></p>
+        </div>
+
+        <div class="info-box">
+            <strong>🧠 ترفندِ یادآوری:</strong> نمادِ ∈ شبیهِ حرفِ E انگلیسیه = <strong>E</strong>lement (عضو). خط روش = نه!
+        </div>
+
+        <h3>✏️ تمرین: کدوم درسته؟</h3>
+        <p>فرض کن مجموعه: <span class="set-chip" style="font-size:1.1em">A = {a, b, 5, 7}</span></p>
+
+        <div id="symbolsPractice"></div>
+
+        <div id="symbolsScore" class="success-box" style="display:none;"></div>
+
+        <button class="btn btn-primary" onclick="markComplete('symbols'); switchTab('builder')">
+            بریم سراغ ساختِ مجموعه ←
+        </button>
+    </div>
+
+    <!-- 5. SET BUILDER -->
+    <div class="section" id="builder">
+        <h2>🏗️ مجموعه است یا نیست؟</h2>
+        <p>به هر توصیف نگاه کن و تشخیص بده آیا یه مجموعه‌ی <strong>معیّن و یکتا</strong> می‌سازه یا نه:</p>
+
+        <div id="builderQuestions"></div>
+
+        <div id="builderResult" class="success-box" style="display:none;"></div>
+
+        <button class="btn btn-primary" onclick="markComplete('builder'); switchTab('venn')">
+            بریم سراغ نمودار وِن ←
+        </button>
+    </div>
+
+    <!-- 6. VENN DIAGRAM -->
+    <div class="section" id="venn">
+        <h2>⭕ نمودار وِن — ساخت تعاملی</h2>
+        <p>یه عضو وارد کن، روی دکمه «اضافه کن» بزن. ببین چطور وارد دایره می‌شه:</p>
+
+        <div class="venn-controls">
+            <input type="text" id="vennInput" class="venn-input" placeholder="یه عدد یا حرف وارد کن (مثلاً 3)" />
+            <button class="btn btn-primary" onclick="addVennElement()">➕ اضافه کن</button>
+            <button class="btn btn-secondary" onclick="clearVenn()">🗑 پاک کن</button>
+        </div>
+
+        <div class="venn-container">
+            <svg class="venn-svg" viewBox="0 0 500 350">
+                <ellipse cx="250" cy="175" rx="220" ry="150" fill="rgba(102,126,234,0.15)" stroke="#667eea" stroke-width="4"/>
+                <text x="40" y="40" font-size="28" font-weight="bold" fill="#4c1d95" font-family="Vazirmatn">A</text>
+                <g id="vennElementsGroup"></g>
+            </svg>
+        </div>
+
+        <div class="set-display">
+            <span class="set-name">A</span> = <span id="vennSetDisplay">{}</span>
+        </div>
+
+        <div class="info-box">
+            <strong>📌 نکته:</strong> دایره فقط یه شکل از نمایشه. می‌تونی هر منحنیِ بسته‌ای بکشی — مثلاً بیضی، مثلث، یا حتی یه شکلِ نامنظم. مهم اینه که <strong>بسته</strong> باشه.
+        </div>
+
+        <button class="btn btn-primary" onclick="markComplete('venn'); switchTab('game')">
+            بریم بازی کنیم! ←
+        </button>
+    </div>
+
+    <!-- 7. GAME -->
+    <div class="section" id="game">
+        <h2>🎮 شکار اعداد — بازیِ آموزشی</h2>
+        <p>وقتشه با مهارتت بجنگی! ۵ مأموریت داری، هر مأموریت یه نوع مجموعه‌ست. باید سریع و دقیق اعدادِ درست رو شکار کنی.</p>
+
+        <div class="game-start-screen" id="gameStartScreen">
+            <div class="example-icon">🎯</div>
+            <h3>قوانینِ بازی</h3>
+            <div class="rules-list">
+                <p>🎯 <strong>۵ مأموریت</strong> داری، هر کدوم یه نوع مجموعه</p>
+                <p>⏱ برای هر مأموریت <strong>زمانِ محدود</strong> داری</p>
+                <p>✅ هر شکارِ درست: <strong>+۱۰ امتیاز</strong></p>
+                <p>❌ هر شکارِ غلط: <strong>−۵ امتیاز</strong></p>
+                <p>🔥 <strong>کُمبو</strong>: ۳ تا درست پشت سرِ هم = +۵ بونوس</p>
+                <p>⚡ <strong>بونوسِ زمان</strong>: هر ثانیه باقی‌مونده = +۲ امتیاز</p>
+                <p>🏆 رکوردت ذخیره می‌شه، سعی کن بشکنیش!</p>
+            </div>
+            <button class="btn btn-primary" id="gameStartBtn" onclick="startGame()" style="font-size:1.1em; padding:14px 30px;">
+                🚀 شروع بازی
+            </button>
+        </div>
+
+        <div id="gamePlayArea" style="display:none;">
+            <div class="game-stats-bar">
+                <div class="game-stat timer-stat">⏱ <span id="gameTimer">۲۰</span> ثانیه</div>
+                <div class="game-stat score-stat">💯 امتیاز: <span id="gameScore">۰</span></div>
+                <div class="game-stat">🎯 مأموریت <span id="gameMission">۱</span>/۵</div>
+                <div class="game-stat high-stat">🏆 رکورد: <span id="gameHighScore">۰</span></div>
+            </div>
+
+            <div class="game-timer-bar">
+                <div class="game-timer-fill" id="gameTimerBar"></div>
+            </div>
+
+            <div class="game-mission-box" id="gameMissionBox">آماده‌ای؟</div>
+
+            <div class="game-progress-text">
+                پیشرفت: <span id="gameFoundCount">۰</span> از <span id="gameTotalTargets">۰</span>
+            </div>
+            <div class="game-progress-bar">
+                <div class="game-progress-fill" id="gameProgressFill"></div>
+            </div>
+
+            <div class="game-grid" id="gameGrid"></div>
+        </div>
+
+        <div id="gameResult" style="display:none;"></div>
+    </div>
+
+    <!-- 8. QUIZ -->
+    <div class="section" id="quiz">
+        <h2>🎯 آزمون نهایی — ۱۰ سوال</h2>
+        <p>دانشت رو محک بزن! می‌تونی هر سوال رو فقط یه بار جواب بدی.</p>
+
+        <div class="score-display" id="quizScoreDisplay">امتیاز: ۰ از ۰</div>
+
+        <div id="quizContainer"></div>
+
+        <div id="quizFinalResult" style="display:none;"></div>
+    </div>
+
+    <!-- 9. DASHBOARD -->
+    <div class="section" id="dashboard">
+        <h2>🏆 داشبورد پیشرفت تو</h2>
+        <p>این‌جا می‌تونی ببینی چقدر پیشرفت کردی:</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number" id="statCompletedSections">۰</div>
+                <div class="label">بخشِ تکمیل شده از ۸</div>
+            </div>
+            <div class="stat-card green">
+                <div class="number" id="statQuizScore">۰</div>
+                <div class="label">امتیاز آزمون از ۱۰</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="number" id="statGameScore">۰</div>
+                <div class="label">رکوردِ بازیِ شکار</div>
+            </div>
+            <div class="stat-card orange">
+                <div class="number" id="statSymbolsCorrect">۰</div>
+                <div class="label">پاسخِ درستِ نمادها</div>
+            </div>
+            <div class="stat-card pink">
+                <div class="number" id="statBuilderCorrect">۰</div>
+                <div class="label">تشخیصِ درستِ مجموعه</div>
+            </div>
+        </div>
+
+        <h3>🎖 دستاوردها</h3>
+        <div class="achievements" id="achievementsList"></div>
+
+        <h3>📋 خلاصه‌ی همه‌ی نکاتِ کلیدی</h3>
+        <div class="card">
+            <p>✅ <strong>مجموعه</strong> = دسته‌ای از اشیای مشخص و متمایز</p>
+            <p>✅ مجموعه‌ها رو با حروف بزرگ (A, B, C) نام‌گذاری می‌کنیم</p>
+            <p>✅ سه قانون: <strong>مشخص بودن</strong>، <strong>متمایز بودن</strong>، <strong>بی‌اهمیّتی ترتیب</strong></p>
+            <p>✅ نمادها: <strong>∈</strong> (عضو است) و <strong>∉</strong> (عضو نیست)</p>
+            <p>✅ نمایش با <strong>نمودار وِن</strong>: یه منحنیِ بسته دور اعضا</p>
+            <p>✅ ۱ نه عددِ اوّله، نه مرکّب</p>
+        </div>
+
+        <button class="btn btn-secondary" onclick="resetAll()">🔄 شروع از اوّل</button>
+    </div>
+</div>
+
+<script>
+// ============== STATE ==============
+const state = {
+    completed: JSON.parse(localStorage.getItem('completed') || '{}'),
+    quizScore: parseInt(localStorage.getItem('quizScore') || '0'),
+    quizAnswered: JSON.parse(localStorage.getItem('quizAnswered') || '[]'),
+    symbolsCorrect: parseInt(localStorage.getItem('symbolsCorrect') || '0'),
+    builderCorrect: parseInt(localStorage.getItem('builderCorrect') || '0'),
+    vennElements: JSON.parse(localStorage.getItem('vennElements') || '[]'),
+    gameHighScore: parseInt(localStorage.getItem('gameHighScore') || '0')
+};
+
+// ============== TAB NAVIGATION ==============
+document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.section));
+});
+
+function switchTab(sectionId) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.nav-tab[data-section="${sectionId}"]`).classList.add('active');
+    document.getElementById(sectionId).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (sectionId === 'dashboard') updateDashboard();
+}
+
+function markComplete(sectionId) {
+    state.completed[sectionId] = true;
+    localStorage.setItem('completed', JSON.stringify(state.completed));
+    document.querySelector(`.nav-tab[data-section="${sectionId}"]`).classList.add('completed');
+    updateProgress();
+    fireConfetti();
+}
+
+function updateProgress() {
+    const total = 8;
+    const done = ['intro','rules','divisors','symbols','builder','venn','game','quiz']
+        .filter(k => state.completed[k]).length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('overallProgress').style.width = pct + '%';
+    document.getElementById('progressText').textContent = pct + '٪';
+    Object.keys(state.completed).forEach(id => {
+        const tab = document.querySelector(`.nav-tab[data-section="${id}"]`);
+        if (tab) tab.classList.add('completed');
+    });
+}
+
+function toggleCollapse(el) {
+    const content = el.nextElementSibling;
+    content.classList.toggle('show');
+    el.textContent = content.classList.contains('show') ? '📂 بستن' : '📂 نمونه‌ها رو ببین';
+}
+
+// ============== DIVISORS OF 60 ==============
+const divisors60 = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60];
+const primes = [2, 3, 5];
+const composites = [4, 6, 10, 12, 15, 20, 30, 60];
+const special = [1];
+const twoDigit = [10, 12, 15, 20, 30, 60];
+
+function renderDivisors() {
+    const grid = document.getElementById('divisorsGrid');
+    grid.innerHTML = divisors60.map(n => 
+        `<div class="number-item" data-num="${n}">${toFa(n)}</div>`
+    ).join('');
+}
+
+function filterDivisors(filter) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.filter-btn[data-filter="${filter}"]`).classList.add('active');
+    
+    document.querySelectorAll('.number-item').forEach(item => {
+        item.classList.remove('highlight-prime', 'highlight-composite', 'highlight-special', 'highlight-twodigit', 'dimmed');
+        const n = parseInt(item.dataset.num);
+        if (filter === 'all') return;
+        const inGroup = 
+            (filter === 'prime' && primes.includes(n)) ||
+            (filter === 'composite' && composites.includes(n)) ||
+            (filter === 'special' && special.includes(n)) ||
+            (filter === 'twodigit' && twoDigit.includes(n));
+        
+        if (inGroup) {
+            item.classList.add('highlight-' + filter);
+            item.classList.add('pop');
+            setTimeout(() => item.classList.remove('pop'), 400);
+        } else {
+            item.classList.add('dimmed');
+        }
+    });
+
+    const resultSet = document.getElementById('resultSet');
+    const explanation = document.getElementById('filterExplanation');
+    
+    if (filter === 'all') {
+        resultSet.innerHTML = '<span class="set-name">شمارنده‌های ۶۰</span> = {1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60}';
+        explanation.style.display = 'none';
+    } else if (filter === 'prime') {
+        resultSet.innerHTML = '<span class="set-name">A</span> = {2, 3, 5}';
+        explanation.innerHTML = '<strong>توضیح:</strong> اعداد اوّل اعدادی‌ان که فقط دو شمارنده دارن: ۱ و خودشون. از بین شمارنده‌های ۶۰، فقط ۲، ۳ و ۵ این ویژگی رو دارن.';
+        explanation.style.display = 'block';
+    } else if (filter === 'composite') {
+        resultSet.innerHTML = '<span class="set-name">B</span> = {4, 6, 10, 12, 15, 20, 30, 60}';
+        explanation.innerHTML = '<strong>توضیح:</strong> اعدادِ مرکّب بیش از دو شمارنده دارن (یعنی غیر از ۱ و خودشون، شمارنده‌های دیگه‌ای هم دارن).';
+        explanation.style.display = 'block';
+    } else if (filter === 'special') {
+        resultSet.innerHTML = '<span class="set-name">C</span> = {1}';
+        explanation.innerHTML = '<strong>⚠️ نکته:</strong> عدد ۱ نه اوّله (چون فقط یه شمارنده داره) و نه مرکّبه. تنها عددِ شمارنده‌ی ۶۰ که این ویژگی رو داره، خودِ ۱ ست.';
+        explanation.style.display = 'block';
+    } else if (filter === 'twodigit') {
+        resultSet.innerHTML = '<span class="set-name">D</span> = {10, 12, 15, 20, 30, 60}';
+        explanation.innerHTML = '<strong>توضیح:</strong> اعدادی که دو رقم دارن، یعنی بین ۱۰ تا ۹۹. از شمارنده‌های ۶۰، شش تا دو رقمی هستن.';
+        explanation.style.display = 'block';
+    }
+}
+
+// ============== SYMBOLS PRACTICE ==============
+const symbolQuestions = [
+    { left: 'a', set: 'A', answer: '∈', explanation: 'a داخل { a, b, 5, 7 } هست، پس عضوِ A ست.' },
+    { left: '5', set: 'A', answer: '∈', explanation: '5 یکی از اعضای مجموعه‌ست.' },
+    { left: '4', set: 'A', answer: '∉', explanation: '4 توی مجموعه نیست.' },
+    { left: 'c', set: 'A', answer: '∉', explanation: 'c توی { a, b, 5, 7 } دیده نمی‌شه.' },
+    { left: 'b', set: 'A', answer: '∈', explanation: 'b یکی از اعضاست.' },
+    { left: '7', set: 'A', answer: '∈', explanation: '7 توی مجموعه هست.' },
+    { left: '۸', set: 'A', answer: '∉', explanation: '۸ عضوِ A نیست.' }
+];
+
+function renderSymbolsPractice() {
+    const container = document.getElementById('symbolsPractice');
+    container.innerHTML = symbolQuestions.map((q, i) => `
+        <div class="symbol-exercise" data-idx="${i}">
+            <span class="question-text">${i+1}. آیا <strong style="font-size:1.2em">${q.left}</strong> عضوِ A هست یا نه؟</span>
+            <div class="symbol-buttons">
+                <button class="symbol-btn" onclick="answerSymbol(${i}, '∈')">∈ هست</button>
+                <button class="symbol-btn" onclick="answerSymbol(${i}, '∉')">∉ نیست</button>
+            </div>
+            <div class="quiz-feedback" style="width:100%"></div>
+        </div>
+    `).join('');
+}
+
+function answerSymbol(idx, choice) {
+    const q = symbolQuestions[idx];
+    const exercise = document.querySelector(`.symbol-exercise[data-idx="${idx}"]`);
+    const buttons = exercise.querySelectorAll('.symbol-btn');
+    const feedback = exercise.querySelector('.quiz-feedback');
+    
+    if (exercise.dataset.answered) return;
+    exercise.dataset.answered = 'true';
+    
+    buttons.forEach(b => {
+        if (b.textContent.includes(q.answer)) b.classList.add('correct');
+        if (b.textContent.includes(choice) && choice !== q.answer) b.classList.add('wrong');
+    });
+    
+    if (choice === q.answer) {
+        feedback.className = 'quiz-feedback show correct';
+        feedback.innerHTML = '✅ آفرین! ' + q.explanation;
+        state.symbolsCorrect++;
+        localStorage.setItem('symbolsCorrect', state.symbolsCorrect);
+    } else {
+        feedback.className = 'quiz-feedback show wrong';
+        feedback.innerHTML = '❌ جواب درست: <strong>' + q.answer + '</strong>. ' + q.explanation;
+    }
+    
+    const total = symbolQuestions.length;
+    const answered = document.querySelectorAll('.symbol-exercise[data-answered]').length;
+    if (answered === total) {
+        const score = document.querySelectorAll('.quiz-feedback.correct.show').length;
+        document.getElementById('symbolsScore').style.display = 'block';
+        document.getElementById('symbolsScore').innerHTML = `🎉 تموم شد! ${toFa(score)} از ${toFa(total)} سوال رو درست جواب دادی.`;
+    }
+}
+
+// ============== SET BUILDER ==============
+const builderQuestions = [
+    { desc: 'اعدادِ طبیعیِ یک‌رقمی', isSet: true, why: 'کاملاً مشخصه: {۱, ۲, ۳, ۴, ۵, ۶, ۷, ۸, ۹}' },
+    { desc: 'چهار شاعر ایرانی', isSet: false, why: 'کدوم چهار تا؟! ایران هزاران شاعر داره. توصیف نامشخصه.' },
+    { desc: 'دو عددِ اوّلِ کوچک‌تر از ۱۲', isSet: false, why: 'اعدادِ اوّلِ کمتر از ۱۲: {۲, ۳, ۵, ۷, ۱۱}. کدوم دو تاش؟' },
+    { desc: 'روزهای هفته', isSet: true, why: 'دقیقاً ۷ روز مشخص داریم: شنبه تا جمعه.' },
+    { desc: 'دانش‌آموزانِ خوش‌اخلاقِ کلاس', isSet: false, why: 'خوش‌اخلاقی نظر شخصیه و معیار قطعی نداره.' },
+    { desc: 'شمارنده‌های عددِ ۲۰', isSet: true, why: 'مشخصه: {۱, ۲, ۴, ۵, ۱۰, ۲۰}.' },
+    { desc: 'عددهای زوج بین ۱ تا ۱۰', isSet: true, why: 'مشخصه: {۲, ۴, ۶, ۸}.' },
+    { desc: 'چند تا کتابِ خوب', isSet: false, why: '«چند تا» نامشخصه و «خوب» هم نسبیه.' }
+];
+
+function renderBuilder() {
+    const container = document.getElementById('builderQuestions');
+    container.innerHTML = builderQuestions.map((q, i) => `
+        <div class="builder-card" data-idx="${i}">
+            <div class="description">${i+1}. ${q.desc}</div>
+            <div class="builder-buttons">
+                <button class="builder-btn is-set" onclick="answerBuilder(${i}, true)">✅ مجموعه است</button>
+                <button class="builder-btn not-set" onclick="answerBuilder(${i}, false)">❌ مجموعه نیست</button>
+            </div>
+            <div class="quiz-feedback"></div>
+        </div>
+    `).join('');
+}
+
+function answerBuilder(idx, choice) {
+    const q = builderQuestions[idx];
+    const card = document.querySelector(`.builder-card[data-idx="${idx}"]`);
+    const buttons = card.querySelectorAll('.builder-btn');
+    const feedback = card.querySelector('.quiz-feedback');
+    
+    if (card.classList.contains('answered')) return;
+    card.classList.add('answered');
+    
+    const correct = (choice === q.isSet);
+    if (correct) {
+        card.classList.add('correct');
+        state.builderCorrect++;
+        localStorage.setItem('builderCorrect', state.builderCorrect);
+    } else {
+        card.classList.add('wrong');
+        card.classList.add('shake');
+    }
+    
+    buttons.forEach(b => {
+        b.disabled = true;
+        if ((b.classList.contains('is-set') && q.isSet) || (b.classList.contains('not-set') && !q.isSet)) {
+            b.classList.add('selected', 'correct');
+        }
+        if (b.classList.contains(choice ? 'is-set' : 'not-set') && !correct) {
+            b.classList.add('selected', 'wrong');
+        }
+    });
+    
+    feedback.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+    feedback.innerHTML = (correct ? '✅ ' : '❌ پاسخ درست: ' + (q.isSet ? 'مجموعه است. ' : 'مجموعه نیست. ')) + q.why;
+    
+    const answered = document.querySelectorAll('.builder-card.answered').length;
+    if (answered === builderQuestions.length) {
+        const correctCount = document.querySelectorAll('.builder-card.correct').length;
+        document.getElementById('builderResult').style.display = 'block';
+        document.getElementById('builderResult').innerHTML = `🎉 تموم شد! ${toFa(correctCount)} از ${toFa(builderQuestions.length)} سوال رو درست جواب دادی.`;
+    }
+}
+
+// ============== VENN DIAGRAM ==============
+function renderVennElements() {
+    const group = document.getElementById('vennElementsGroup');
+    if (state.vennElements.length === 0) {
+        group.innerHTML = '<text x="250" y="180" text-anchor="middle" font-size="22" fill="#94a3b8" font-style="italic" font-family="Vazirmatn">(خالی)</text>';
+        document.getElementById('vennSetDisplay').textContent = '{ }';
+        return;
+    }
+    
+    let html = '';
+    const cols = Math.min(state.vennElements.length, 4);
+    const rows = Math.ceil(state.vennElements.length / cols);
+    state.vennElements.forEach((el, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const x = 250 + (col - (cols-1)/2) * 70;
+        const y = 175 + (row - (rows-1)/2) * 60;
+        html += `<g class="venn-el" onclick="removeVennElement(${i})" style="cursor:pointer">
+            <circle cx="${x}" cy="${y}" r="22" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+            <text x="${x}" y="${y+7}" text-anchor="middle" font-size="20" font-weight="bold" fill="#1f2937" font-family="Vazirmatn">${el}</text>
+        </g>`;
+    });
+    group.innerHTML = html;
+    document.getElementById('vennSetDisplay').textContent = '{' + state.vennElements.join(', ') + '}';
+}
+
+function addVennElement() {
+    const input = document.getElementById('vennInput');
+    const val = input.value.trim();
+    if (!val) return;
+    if (state.vennElements.includes(val)) {
+        input.style.borderColor = '#ef4444';
+        setTimeout(() => input.style.borderColor = '', 1000);
+        return;
+    }
+    state.vennElements.push(val);
+    localStorage.setItem('vennElements', JSON.stringify(state.vennElements));
+    input.value = '';
+    renderVennElements();
+}
+
+function removeVennElement(idx) {
+    state.vennElements.splice(idx, 1);
+    localStorage.setItem('vennElements', JSON.stringify(state.vennElements));
+    renderVennElements();
+}
+
+function clearVenn() {
+    state.vennElements = [];
+    localStorage.setItem('vennElements', '[]');
+    renderVennElements();
+}
+
+document.getElementById('vennInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addVennElement();
+});
+
+// ============== GAME: NUMBER HUNTER ==============
+const gameMissions = [
+    { 
+        title: "⭐ مأموریت ۱: اعداد اوّل رو شکار کن!",
+        hint: "اعداد اوّل: فقط بر ۱ و خودشون بخش‌پذیرن (مثلاً ۲, ۳, ۵, ۷, ...)",
+        numbers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+        targets: [2,3,5,7,11,13,17,19],
+        time: 22,
+        explanation: "اعداد اوّلِ کمتر از ۲۰ = {۲, ۳, ۵, ۷, ۱۱, ۱۳, ۱۷, ۱۹} — ۸ تا"
+    },
+    { 
+        title: "🔢 مأموریت ۲: شمارنده‌های ۶۰ رو شکار کن!",
+        hint: "اعدادی که ۶۰ بر اون‌ها بخش‌پذیره (به یاد بیار: ۱، ۲، ۳، ...)",
+        numbers: [1,2,3,4,5,6,7,8,9,10,12,14,15,18,20,25,27,30,40,60],
+        targets: [1,2,3,4,5,6,10,12,15,20,30,60],
+        time: 28,
+        explanation: "شمارنده‌های ۶۰ = {۱, ۲, ۳, ۴, ۵, ۶, ۱۰, ۱۲, ۱۵, ۲۰, ۳۰, ۶۰} — ۱۲ تا"
+    },
+    {
+        title: "🎯 مأموریت ۳: اعداد زوج بین ۱ تا ۲۰ رو شکار کن!",
+        hint: "اعداد زوج: اعدادی که بر ۲ بخش‌پذیرن",
+        numbers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+        targets: [2,4,6,8,10,12,14,16,18,20],
+        time: 20,
+        explanation: "اعداد زوج = {۲, ۴, ۶, ۸, ۱۰, ۱۲, ۱۴, ۱۶, ۱۸, ۲۰} — ۱۰ تا"
+    },
+    {
+        title: "🔴 مأموریت ۴: اعداد مرکّب کمتر از ۲۰ رو شکار کن!",
+        hint: "اعداد مرکّب: بیشتر از ۲ شمارنده دارن (یعنی غیر از ۱ و خودشون)",
+        numbers: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
+        targets: [4,6,8,9,10,12,14,15,16,18],
+        time: 22,
+        explanation: "اعداد مرکّب = {۴, ۶, ۸, ۹, ۱۰, ۱۲, ۱۴, ۱۵, ۱۶, ۱۸} — ۱۰ تا. حواست به ۱ و اعدادِ اوّل باشه!"
+    },
+    {
+        title: "🌟 مأموریت ۵: مضرب‌های ۳ کمتر از ۳۰ رو شکار کن!",
+        hint: "مضرب‌های ۳: ۳, ۶, ۹, ۱۲, ...",
+        numbers: [1,2,3,5,6,7,9,10,12,13,15,16,18,19,20,21,24,25,27,28],
+        targets: [3,6,9,12,15,18,21,24,27],
+        time: 20,
+        explanation: "مضرب‌های ۳ کمتر از ۳۰ = {۳, ۶, ۹, ۱۲, ۱۵, ۱۸, ۲۱, ۲۴, ۲۷} — ۹ تا"
+    }
+];
+
+let gameState = {
+    currentMission: 0,
+    score: 0,
+    timer: 0,
+    timerInterval: null,
+    found: [],
+    isPlaying: false,
+    combo: 0,
+    missionStartTime: 0
+};
+
+function startGame() {
+    gameState = {
+        currentMission: 0,
+        score: 0,
+        timer: 0,
+        timerInterval: null,
+        found: [],
+        isPlaying: true,
+        combo: 0,
+        missionStartTime: 0
+    };
+    document.getElementById('gameStartScreen').style.display = 'none';
+    document.getElementById('gamePlayArea').style.display = 'block';
+    document.getElementById('gameResult').style.display = 'none';
+    document.getElementById('gameHighScore').textContent = toFa(state.gameHighScore);
+    loadMission();
+}
+
+function loadMission() {
+    const mission = gameMissions[gameState.currentMission];
+    gameState.found = [];
+    gameState.timer = mission.time;
+    gameState.combo = 0;
+    
+    document.getElementById('gameMission').textContent = toFa(gameState.currentMission + 1);
+    document.getElementById('gameMissionBox').innerHTML = `${mission.title}<small>💡 ${mission.hint}</small>`;
+    document.getElementById('gameTimer').textContent = toFa(gameState.timer);
+    document.getElementById('gameScore').textContent = toFa(gameState.score);
+    document.getElementById('gameFoundCount').textContent = '۰';
+    document.getElementById('gameTotalTargets').textContent = toFa(mission.targets.length);
+    document.getElementById('gameProgressFill').style.width = '0%';
+    document.getElementById('gameTimerBar').style.width = '100%';
+    
+    // Shuffle numbers
+    const shuffled = [...mission.numbers].sort(() => Math.random() - 0.5);
+    const grid = document.getElementById('gameGrid');
+    grid.innerHTML = shuffled.map(n => 
+        `<div class="game-cell" data-num="${n}" onclick="clickGameCell(this, ${n})">${toFa(n)}</div>`
+    ).join('');
+    
+    // Start timer
+    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+    const startTime = Date.now();
+    const totalTime = mission.time;
+    gameState.timerInterval = setInterval(() => {
+        gameState.timer--;
+        document.getElementById('gameTimer').textContent = toFa(gameState.timer);
+        const pct = (gameState.timer / totalTime) * 100;
+        document.getElementById('gameTimerBar').style.width = pct + '%';
+        if (gameState.timer <= 0) {
+            clearInterval(gameState.timerInterval);
+            endMission();
+        }
+    }, 1000);
+}
+
+function clickGameCell(cell, num) {
+    if (!gameState.isPlaying) return;
+    if (cell.classList.contains('correct') || cell.classList.contains('wrong') || cell.classList.contains('disabled')) return;
+    
+    const mission = gameMissions[gameState.currentMission];
+    
+    if (mission.targets.includes(num)) {
+        cell.classList.add('correct');
+        gameState.score += 10;
+        gameState.combo++;
+        gameState.found.push(num);
+        
+        // Combo bonus
+        if (gameState.combo >= 3 && gameState.combo % 3 === 0) {
+            gameState.score += 5;
+            showFloatingText(cell, '+۱۵ 🔥');
+        } else {
+            showFloatingText(cell, '+۱۰');
+        }
+        
+        // Update progress
+        const pct = (gameState.found.length / mission.targets.length) * 100;
+        document.getElementById('gameProgressFill').style.width = pct + '%';
+        document.getElementById('gameFoundCount').textContent = toFa(gameState.found.length);
+        
+        // All found?
+        if (gameState.found.length === mission.targets.length) {
+            clearInterval(gameState.timerInterval);
+            const timeBonus = gameState.timer * 2;
+            gameState.score += timeBonus;
+            setTimeout(() => endMission(true, timeBonus), 600);
+        }
+    } else {
+        cell.classList.add('wrong');
+        cell.classList.add('disabled');
+        gameState.score = Math.max(0, gameState.score - 5);
+        gameState.combo = 0;
+        showFloatingText(cell, '−۵', true);
+    }
+    document.getElementById('gameScore').textContent = toFa(gameState.score);
+}
+
+function showFloatingText(cell, text, isNegative = false) {
+    const rect = cell.getBoundingClientRect();
+    const floater = document.createElement('div');
+    floater.textContent = text;
+    floater.style.cssText = `
+        position: fixed;
+        left: ${rect.left + rect.width/2}px;
+        top: ${rect.top}px;
+        transform: translateX(-50%);
+        color: ${isNegative ? '#ef4444' : '#10b981'};
+        font-weight: bold;
+        font-size: 1.5em;
+        pointer-events: none;
+        z-index: 1000;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(floater);
+    floater.animate([
+        { transform: 'translateX(-50%) translateY(0)', opacity: 1 },
+        { transform: 'translateX(-50%) translateY(-60px)', opacity: 0 }
+    ], { duration: 1000, easing: 'ease-out' }).onfinish = () => floater.remove();
+}
+
+function endMission(allFound = false, timeBonus = 0) {
+    const mission = gameMissions[gameState.currentMission];
+    const correctCount = gameState.found.length;
+    
+    // Disable all cells
+    document.querySelectorAll('.game-cell').forEach(cell => {
+        const n = parseInt(cell.dataset.num);
+        cell.classList.add('disabled');
+        if (mission.targets.includes(n) && !gameState.found.includes(n)) {
+            cell.classList.add('missed');
+        }
+    });
+    
+    // Show feedback
+    let feedbackMsg = '';
+    if (allFound) {
+        feedbackMsg = `🎉 عالی! همه رو پیدا کردی!<small>⚡ بونوسِ زمان: +${toFa(timeBonus)} امتیاز</small>`;
+        fireConfetti();
+    } else if (correctCount === mission.targets.length) {
+        feedbackMsg = `✅ همه رو پیدا کردی!<small>${mission.explanation}</small>`;
+    } else {
+        feedbackMsg = `📊 ${toFa(correctCount)} از ${toFa(mission.targets.length)} پیدا کردی<small>${mission.explanation}</small>`;
+    }
+    document.getElementById('gameMissionBox').innerHTML = feedbackMsg;
+    
+    gameState.currentMission++;
+    
+    if (gameState.currentMission < gameMissions.length) {
+        setTimeout(() => loadMission(), 3000);
+    } else {
+        setTimeout(() => endGame(), 3000);
+    }
+}
+
+function endGame() {
+    gameState.isPlaying = false;
+    
+    // Save high score
+    const isNewRecord = gameState.score > state.gameHighScore;
+    if (isNewRecord) {
+        state.gameHighScore = gameState.score;
+        localStorage.setItem('gameHighScore', gameState.score);
+    }
+    
+    // Determine medal
+    let medal = '🏅', message = 'بازی تموم شد!', color = '#6b7280';
+    if (gameState.score >= 350) { medal = '🏆'; message = 'افسانه‌ای! تو یه استادِ مجموعه‌ای!'; color = '#fbbf24'; }
+    else if (gameState.score >= 250) { medal = '🥇'; message = 'فوق‌العاده! تسلطِ بالایی داری!'; color = '#f59e0b'; }
+    else if (gameState.score >= 180) { medal = '🥈'; message = 'خیلی خوب! ادامه بده!'; color = '#94a3b8'; }
+    else if (gameState.score >= 100) { medal = '🥉'; message = 'خوبه! می‌تونی بهتر بشی.'; color = '#c2410c'; }
+    
+    // Hide play area, show result
+    document.getElementById('gamePlayArea').style.display = 'none';
+    const result = document.getElementById('gameResult');
+    result.style.display = 'block';
+    result.innerHTML = `
+        <div class="game-start-screen">
+            <div style="font-size:5em;">${medal}</div>
+            <h3 style="color:${color}; font-size:1.6em;">${message}</h3>
+            <div class="rules-list" style="text-align:center;">
+                <p style="font-size:1.4em;">💯 امتیاز نهایی: <strong style="color:#4c1d95">${toFa(gameState.score)}</strong></p>
+                ${isNewRecord ? '<p style="color:#ec4899; font-size:1.2em; font-weight:bold;">🎊 رکورد جدید!</p>' : `<p>🏆 رکورد قبلیت: ${toFa(state.gameHighScore)}</p>`}
+            </div>
+            <button class="btn btn-primary" onclick="resetGameUI()" style="font-size:1.1em; padding:14px 30px;">
+                🔄 بازی دوباره
+            </button>
+            <button class="btn btn-secondary" onclick="switchTab('quiz')" style="font-size:1.1em; padding:14px 30px; margin-right:10px;">
+                ادامه به آزمون ←
+            </button>
+        </div>
+    `;
+    
+    if (gameState.score >= 100) {
+        markComplete('game');
+    }
+    
+    fireConfetti();
+}
+
+function resetGameUI() {
+    document.getElementById('gameResult').style.display = 'none';
+    document.getElementById('gameStartScreen').style.display = 'block';
+    document.getElementById('gameHighScore').textContent = toFa(state.gameHighScore);
+}
+
+// ============== QUIZ ==============
+const quizQuestions = [
+    {
+        q: 'کدوم یکی از این توصیف‌ها مجموعه می‌سازه؟',
+        options: ['پنج بازیکن خوبِ ایرانی', 'اعدادِ زوجِ بین ۱ تا ۲۰', 'چند گلِ زیبای باغچه', 'دانش‌آموزانِ ساکتِ کلاس'],
+        correct: 1,
+        explanation: 'فقط «اعدادِ زوج بین ۱ تا ۲۰» کاملاً مشخصه: {۲, ۴, ۶, ۸, ۱۰, ۱۲, ۱۴, ۱۶, ۱۸}. بقیه ابهام دارن.'
+    },
+    {
+        q: 'مجموعه‌ی {۳, ۳, ۵, ۷} برابرِ کدومه؟',
+        options: ['{۳, ۵, ۷}', '{۳, ۳, ۵, ۷}', '{۳, ۵}', '{۷, ۵}'],
+        correct: 0,
+        explanation: 'تو مجموعه عضوِ تکراری حذف می‌شه، پس {۳, ۳, ۵, ۷} = {۳, ۵, ۷}.'
+    },
+    {
+        q: 'کدوم گزینه با {۲, ۴, ۶} برابر <strong>نیست</strong>؟',
+        options: ['{۶, ۴, ۲}', '{۴, ۶, ۲}', '{۲, ۴, ۶, ۸}', '{۶, ۲, ۴}'],
+        correct: 2,
+        explanation: 'تو مجموعه ترتیب مهم نیست، پس سه‌تای اوّل برابرن. ولی {۲, ۴, ۶, ۸} یه عضو اضافه (۸) داره.'
+    },
+    {
+        q: 'تعدادِ اعضای مجموعه‌ی شمارنده‌های اوّلِ ۶۰ چندتاست؟',
+        options: ['۲', '۳', '۴', '۵'],
+        correct: 1,
+        explanation: 'شمارنده‌های اوّلِ ۶۰ = {۲, ۳, ۵} که ۳ عضو داره.'
+    },
+    {
+        q: 'مجموعه‌ی شمارنده‌های ۶۰ که نه اوّل‌ان نه مرکّب، کدومه؟',
+        options: ['{۰}', '{۱}', '{۱, ۶۰}', '{ } (خالی)'],
+        correct: 1,
+        explanation: 'فقط ۱ نه اوّله نه مرکّب. صفر هم اصلاً شمارنده‌ی ۶۰ نیست.'
+    },
+    {
+        q: 'اگه A = {a, b, ۵, ۷}، کدوم گزاره <strong>غلطه</strong>؟',
+        options: ['a ∈ A', '۵ ∈ A', 'c ∉ A', '۷ ∉ A'],
+        correct: 3,
+        explanation: '۷ توی A هست، پس باید نوشت ۷ ∈ A نه ۷ ∉ A.'
+    },
+    {
+        q: 'چرا اگه معلم بگه «۳ شمارنده‌ی زوجِ ۶۰ بنویسید» این یه مجموعه نیست؟',
+        options: ['چون ۶۰ خیلی بزرگه', 'چون ۳ تا کمه', 'چون شمارنده‌های زوج ۶۰ زیادن و معلوم نیست کدوم ۳ تا', 'چون اعدادِ زوج تو مجموعه قرار نمی‌گیرن'],
+        correct: 2,
+        explanation: 'شمارنده‌های زوج ۶۰: {۲, ۴, ۶, ۱۰, ۱۲, ۲۰, ۳۰, ۶۰}. هر کسی می‌تونه ۳ تای دلخواه انتخاب کنه، پس جوابِ یکتا نداره.'
+    },
+    {
+        q: 'مجموعه‌ی شمارنده‌های دو رقمیِ ۶۰ چند عضو داره؟',
+        options: ['۴', '۵', '۶', '۷'],
+        correct: 2,
+        explanation: 'D = {۱۰, ۱۲, ۱۵, ۲۰, ۳۰, ۶۰} → ۶ عضو.'
+    },
+    {
+        q: 'برای نمایشِ مجموعه با نمودار وِن، می‌تونیم از کدوم استفاده کنیم؟',
+        options: ['فقط دایره', 'فقط بیضی', 'هر منحنی یا خطِ شکسته‌ی بسته', 'فقط مربع'],
+        correct: 2,
+        explanation: 'هر شکلِ بسته‌ای کار می‌کنه — دایره فقط رایج‌ترینه. مهم اینه که منحنی بسته باشه.'
+    },
+    {
+        q: 'مجموعه‌ی B = {۵, ۶, ۵, ۷} چند عضو داره؟',
+        options: ['۲', '۳', '۴', '۵'],
+        correct: 1,
+        explanation: 'به‌خاطر تکراری بودنِ ۵، B در واقع = {۵, ۶, ۷} می‌شه که ۳ عضو داره.'
+    }
+];
+
+function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = quizQuestions.map((q, i) => `
+        <div class="quiz-question" data-idx="${i}">
+            <h4>سوال ${i+1}: ${q.q}</h4>
+            <div class="quiz-options">
+                ${q.options.map((opt, j) => `
+                    <button class="quiz-option" onclick="answerQuiz(${i}, ${j})">${String.fromCharCode(0x06F1 + j)}) ${opt}</button>
+                `).join('')}
+            </div>
+            <div class="quiz-feedback"></div>
+        </div>
+    `).join('');
+    
+    state.quizAnswered.forEach(a => {
+        const card = document.querySelector(`.quiz-question[data-idx="${a.idx}"]`);
+        if (card) restoreQuizAnswer(a.idx, a.choice);
+    });
+    updateQuizScore();
+}
+
+function answerQuiz(idx, choice) {
+    if (state.quizAnswered.find(a => a.idx === idx)) return;
+    
+    const q = quizQuestions[idx];
+    const card = document.querySelector(`.quiz-question[data-idx="${idx}"]`);
+    const options = card.querySelectorAll('.quiz-option');
+    const feedback = card.querySelector('.quiz-feedback');
+    
+    options.forEach((opt, j) => {
+        opt.classList.add('answered');
+        opt.disabled = true;
+        if (j === q.correct) opt.classList.add('correct');
+        if (j === choice && j !== q.correct) opt.classList.add('wrong');
+    });
+    
+    const correct = (choice === q.correct);
+    if (correct) {
+        feedback.className = 'quiz-feedback show correct';
+        feedback.innerHTML = '✅ آفرین! ' + q.explanation;
+        state.quizScore++;
+        fireConfetti();
+    } else {
+        feedback.className = 'quiz-feedback show wrong';
+        feedback.innerHTML = '❌ ' + q.explanation;
+        card.classList.add('shake');
+    }
+    
+    state.quizAnswered.push({ idx, choice });
+    localStorage.setItem('quizScore', state.quizScore);
+    localStorage.setItem('quizAnswered', JSON.stringify(state.quizAnswered));
+    updateQuizScore();
+    
+    if (state.quizAnswered.length === quizQuestions.length) {
+        showQuizFinal();
+        markComplete('quiz');
+    }
+}
+
+function restoreQuizAnswer(idx, choice) {
+    const q = quizQuestions[idx];
+    const card = document.querySelector(`.quiz-question[data-idx="${idx}"]`);
+    const options = card.querySelectorAll('.quiz-option');
+    const feedback = card.querySelector('.quiz-feedback');
+    
+    options.forEach((opt, j) => {
+        opt.classList.add('answered');
+        opt.disabled = true;
+        if (j === q.correct) opt.classList.add('correct');
+        if (j === choice && j !== q.correct) opt.classList.add('wrong');
+    });
+    
+    const correct = (choice === q.correct);
+    feedback.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+    feedback.innerHTML = (correct ? '✅ آفرین! ' : '❌ ') + q.explanation;
+}
+
+function updateQuizScore() {
+    document.getElementById('quizScoreDisplay').innerHTML = `امتیاز: <strong>${toFa(state.quizScore)}</strong> از <strong>${toFa(state.quizAnswered.length)}</strong>`;
+}
+
+function showQuizFinal() {
+    const final = document.getElementById('quizFinalResult');
+    const pct = Math.round((state.quizScore / quizQuestions.length) * 100);
+    let msg = '', emoji = '', cls = '';
+    if (pct === 100) { msg = 'عالی! تو یه استادِ مجموعه‌ای!'; emoji = '🏆'; cls = 'success-box'; }
+    else if (pct >= 80) { msg = 'فوق‌العاده! تسلط داری.'; emoji = '🌟'; cls = 'success-box'; }
+    else if (pct >= 60) { msg = 'خوبه! ولی یه دوره‌ی دیگه ضرر نداره.'; emoji = '👍'; cls = 'highlight'; }
+    else { msg = 'بهتره بخش‌های قبلی رو دوباره مرور کنی.'; emoji = '📚'; cls = 'warning'; }
+    
+    final.style.display = 'block';
+    final.className = cls;
+    final.innerHTML = `<h3>${emoji} نتیجه نهایی: ${toFa(state.quizScore)} از ${toFa(quizQuestions.length)} (${toFa(pct)}٪)</h3><p>${msg}</p>
+    <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:10px">🔄 امتحان مجدد</button>`;
+}
+
+function resetQuiz() {
+    state.quizScore = 0;
+    state.quizAnswered = [];
+    localStorage.setItem('quizScore', 0);
+    localStorage.setItem('quizAnswered', '[]');
+    document.getElementById('quizFinalResult').style.display = 'none';
+    renderQuiz();
+}
+
+// ============== DASHBOARD ==============
+function updateDashboard() {
+    const completedCount = ['intro', 'rules', 'divisors', 'symbols', 'builder', 'venn', 'game', 'quiz']
+        .filter(s => state.completed[s]).length;
+    document.getElementById('statCompletedSections').textContent = toFa(completedCount);
+    document.getElementById('statQuizScore').textContent = toFa(state.quizScore);
+    document.getElementById('statGameScore').textContent = toFa(state.gameHighScore);
+    document.getElementById('statSymbolsCorrect').textContent = toFa(state.symbolsCorrect);
+    document.getElementById('statBuilderCorrect').textContent = toFa(state.builderCorrect);
+    
+    const achievements = [
+        { name: '🎬 شروع به یادگیری', cond: state.completed.intro },
+        { name: '📏 آشنا با قوانین', cond: state.completed.rules },
+        { name: '🔢 استاد شمارنده‌ها', cond: state.completed.divisors },
+        { name: '∈ مسلطِ نمادها', cond: state.symbolsCorrect >= 5 },
+        { name: '🏗️ سازنده‌ی ماهر', cond: state.builderCorrect >= 5 },
+        { name: '⭕ هنرمندِ نمودار', cond: state.completed.venn },
+        { name: '🎮 شکارچی اعداد', cond: state.gameHighScore >= 100 },
+        { name: '🔥 شکارچی حرفه‌ای', cond: state.gameHighScore >= 250 },
+        { name: '🏆 افسانه‌ی بازی', cond: state.gameHighScore >= 350 },
+        { name: '🎯 برنده‌ی آزمون', cond: state.quizScore >= 7 },
+        { name: '💯 استاد مجموعه', cond: state.quizScore === 10 && completedCount === 8 }
+    ];
+    
+    document.getElementById('achievementsList').innerHTML = achievements.map(a =>
+        `<div class="achievement ${a.cond ? '' : 'locked'}">${a.cond ? a.name : '🔒 ' + a.name.replace(/^[^\s]+\s/, '')}</div>`
+    ).join('');
+}
+
+function resetAll() {
+    if (!confirm('مطمئنی همه‌ی پیشرفت پاک بشه؟')) return;
+    localStorage.clear();
+    location.reload();
+}
+
+// ============== UTILITIES ==============
+function toFa(n) {
+    return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+function fireConfetti() {
+    const colors = ['#fbbf24', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
+    for (let i = 0; i < 30; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-20px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(c);
+        const fall = c.animate([
+            { transform: `translateY(0) rotate(0)`, opacity: 1 },
+            { transform: `translateY(100vh) rotate(720deg)`, opacity: 0 }
+        ], { duration: 2000 + Math.random() * 1500, easing: 'cubic-bezier(.5,0,.5,1)' });
+        fall.onfinish = () => c.remove();
+    }
+}
+
+// ============== INITIALIZATION ==============
+renderDivisors();
+renderSymbolsPractice();
+renderBuilder();
+renderVennElements();
+renderQuiz();
+updateProgress();
+updateDashboard();
+</script>
+</body>
+</html>
