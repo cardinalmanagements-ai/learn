@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فصل ۲ — رفتار اتم‌ها با یکدیگر</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Vazirmatn',sans-serif; }
+  body {
+    background: linear-gradient(135deg,#0f1729 0%,#1a1f3a 50%,#0f1729 100%);
+    color:#e8ecf4; min-height:100vh; padding:20px; line-height:1.8;
+  }
+  .container { max-width:1200px; margin:0 auto; }
+
+  /* NAV */
+  .nav {
+    position:sticky; top:10px; z-index:100; background:rgba(15,23,41,0.85);
+    backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px; padding:10px; display:flex; gap:8px; overflow-x:auto;
+    margin-bottom:25px;
+  }
+  .nav button {
+    background:transparent; color:#a8b3cf; border:none; padding:10px 16px;
+    border-radius:10px; cursor:pointer; font-size:14px; font-weight:600;
+    white-space:nowrap; transition:0.3s;
+  }
+  .nav button:hover { background:rgba(255,255,255,0.05); color:#fff; }
+  .nav button.active { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
+
+  /* HERO */
+  .hero {
+    text-align:center; padding:50px 25px; background:rgba(255,255,255,0.03);
+    border-radius:24px; border:1px solid rgba(255,255,255,0.08); margin-bottom:30px;
+    background-image: radial-gradient(circle at 20% 30%, rgba(102,126,234,0.15), transparent 50%),
+                      radial-gradient(circle at 80% 70%, rgba(236,72,153,0.12), transparent 50%);
+  }
+  .hero .tag { display:inline-block; padding:6px 16px; background:rgba(102,126,234,0.2);
+    border:1px solid rgba(102,126,234,0.5); border-radius:50px; color:#a5b4fc;
+    font-size:13px; font-weight:600; margin-bottom:20px; }
+  .hero h1 { font-size:42px; font-weight:900; margin-bottom:15px;
+    background:linear-gradient(135deg,#fff,#a5b4fc); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; line-height:1.3; }
+  .hero p { font-size:18px; color:#a8b3cf; max-width:700px; margin:0 auto; }
+
+  .big-question {
+    margin-top:35px; display:grid; grid-template-columns:1fr auto 1fr; gap:20px;
+    align-items:center; max-width:800px; margin-left:auto; margin-right:auto;
+  }
+  .glass-card {
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:16px; padding:20px; text-align:center;
+  }
+  .glass-card .emoji { font-size:60px; }
+  .glass-card h3 { margin-top:10px; font-size:18px; }
+  .bulb { font-size:40px; }
+  .bulb.on { filter:drop-shadow(0 0 20px gold); animation:glow 1.5s infinite alternate; }
+  @keyframes glow { from{filter:drop-shadow(0 0 10px gold)} to{filter:drop-shadow(0 0 30px gold)} }
+
+  /* SECTIONS */
+  section {
+    background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px; padding:35px; margin-bottom:25px; display:none;
+  }
+  section.active { display:block; animation:fadeIn 0.5s; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+
+  h2 { font-size:28px; font-weight:800; margin-bottom:10px;
+    background:linear-gradient(135deg,#fbbf24,#f59e0b); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; }
+  h2::before { content:""; display:inline-block; width:6px; height:28px;
+    background:linear-gradient(135deg,#fbbf24,#f59e0b); border-radius:3px;
+    margin-left:12px; vertical-align:middle; }
+  .subtitle { color:#a8b3cf; margin-bottom:25px; font-size:15px; }
+
+  h3 { font-size:20px; font-weight:700; margin:25px 0 10px; color:#a5b4fc; }
+  p { color:#d1d5db; margin-bottom:12px; }
+  strong { color:#fbbf24; }
+
+  .info-box {
+    background:linear-gradient(135deg, rgba(102,126,234,0.1), rgba(236,72,153,0.1));
+    border-right:4px solid #667eea; padding:18px; border-radius:12px; margin:15px 0;
+  }
+  .warn-box {
+    background:rgba(239,68,68,0.1); border-right:4px solid #ef4444;
+    padding:18px; border-radius:12px; margin:15px 0;
+  }
+  .key-box {
+    background:linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.1));
+    border:2px solid rgba(251,191,36,0.4); padding:20px; border-radius:14px;
+    margin:20px 0; font-size:16px;
+  }
+
+  /* COMPOUND GRID */
+  .grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+    gap:14px; margin:20px 0;
+  }
+  .compound {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:18px; text-align:center; cursor:pointer; transition:0.3s;
+  }
+  .compound:hover { transform:translateY(-4px); border-color:#667eea;
+    box-shadow:0 10px 30px rgba(102,126,234,0.2); }
+  .compound .ico { font-size:42px; margin-bottom:8px; }
+  .compound .name { font-weight:700; margin-bottom:5px; }
+  .compound .formula { font-size:12px; color:#a8b3cf; font-family:monospace; }
+  .compound .use { font-size:12px; color:#10b981; margin-top:8px; display:none; }
+  .compound.revealed .use { display:block; }
+  .compound.ionic { background:linear-gradient(135deg, rgba(239,68,68,0.08), rgba(255,255,255,0.04)); }
+  .compound.molecular { background:linear-gradient(135deg, rgba(34,197,94,0.08), rgba(255,255,255,0.04)); }
+
+  /* TOGGLE */
+  .toggle-row { display:flex; gap:10px; margin:20px 0; flex-wrap:wrap; }
+  .toggle-btn {
+    flex:1; min-width:140px; padding:14px; border:2px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.03); color:#d1d5db; border-radius:12px;
+    cursor:pointer; font-size:15px; font-weight:600; transition:0.3s;
+  }
+  .toggle-btn.active { border-color:#667eea; background:rgba(102,126,234,0.2); color:#fff; }
+
+  /* PARTICLE BOX */
+  .particle-box {
+    background:#0a0f1f; border:2px solid rgba(255,255,255,0.1); border-radius:16px;
+    height:240px; position:relative; overflow:hidden; margin:15px 0;
+  }
+  .particle {
+    position:absolute; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-weight:900; font-size:14px; color:#fff;
+    transition:all 0.5s; box-shadow:0 0 15px currentColor;
+  }
+  .particle.pos { background:linear-gradient(135deg,#ef4444,#dc2626); width:36px; height:36px; }
+  .particle.neg { background:linear-gradient(135deg,#3b82f6,#2563eb); width:36px; height:36px; }
+  .particle.mol { background:linear-gradient(135deg,#10b981,#059669); width:40px; height:40px;
+    border-radius:14px; }
+
+  /* CIRCUIT LAB */
+  .lab {
+    background:linear-gradient(135deg,#1e293b,#0f172a); border:2px solid rgba(255,255,255,0.1);
+    border-radius:20px; padding:25px; margin:20px 0;
+  }
+  .circuit {
+    display:grid; grid-template-columns:auto 1fr auto; gap:25px; align-items:center;
+    background:#fff8e7; padding:30px 25px; border-radius:16px; color:#1f2937;
+    margin-bottom:20px; position:relative;
+  }
+  .battery {
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    font-size:14px; font-weight:700;
+  }
+  .battery-icon { font-size:50px; }
+  .beaker-display {
+    background:linear-gradient(to top, rgba(59,130,246,0.3) 0%, rgba(59,130,246,0.1) 100%);
+    border:3px solid #1e293b; border-top:none; border-radius:0 0 20px 20px;
+    height:140px; position:relative; overflow:hidden; margin:0 auto; width:180px;
+  }
+  .beaker-display.empty { background:transparent; }
+  .rod { position:absolute; top:-15px; width:10px; height:140px; background:#374151;
+    border-radius:5px 5px 0 0; }
+  .rod.left { right:30px; }
+  .rod.right { left:30px; }
+
+  .solution-picker { display:flex; gap:8px; flex-wrap:wrap; margin:15px 0; }
+  .sol-btn {
+    flex:1; min-width:120px; padding:12px; background:rgba(255,255,255,0.05);
+    border:2px solid rgba(255,255,255,0.1); color:#d1d5db; border-radius:10px;
+    cursor:pointer; font-weight:600; transition:0.3s;
+  }
+  .sol-btn:hover { border-color:#667eea; }
+  .sol-btn.active { background:rgba(102,126,234,0.3); border-color:#667eea; color:#fff; }
+
+  .result-board {
+    background:rgba(0,0,0,0.3); border-radius:12px; padding:18px; margin-top:15px;
+    text-align:center; min-height:80px; display:flex; align-items:center;
+    justify-content:center; font-size:16px;
+  }
+
+  table { width:100%; border-collapse:collapse; margin:15px 0; background:rgba(0,0,0,0.2);
+    border-radius:12px; overflow:hidden; }
+  th, td { padding:12px; text-align:center; border-bottom:1px solid rgba(255,255,255,0.1); }
+  th { background:rgba(102,126,234,0.2); font-weight:700; color:#a5b4fc; }
+  td.yes { color:#10b981; font-weight:700; }
+  td.no { color:#ef4444; font-weight:700; }
+
+  /* PETRI DISH */
+  .petri-container { display:flex; justify-content:center; margin:20px 0; }
+  .petri {
+    width:340px; height:340px; border-radius:50%; border:8px solid #cbd5e1;
+    background:radial-gradient(circle, #dbeafe 0%, #bfdbfe 100%);
+    position:relative; overflow:hidden;
+  }
+  .crystal {
+    position:absolute; padding:8px 12px; border-radius:8px; font-weight:700;
+    font-size:13px; color:#fff; z-index:5;
+  }
+  .crystal.cu { background:#1e40af; right:15px; top:50%; transform:translateY(-50%); }
+  .crystal.na { background:#475569; left:15px; top:50%; transform:translateY(-50%); }
+  .ion-flow {
+    position:absolute; width:24px; height:24px; border-radius:50%;
+    color:#fff; font-size:11px; font-weight:900; display:flex;
+    align-items:center; justify-content:center;
+  }
+
+  /* CRYSTAL LAB */
+  .crystal-lab { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin:20px 0; }
+  .crystal-beaker {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:18px; text-align:center; cursor:pointer; transition:0.3s;
+  }
+  .crystal-beaker:hover { transform:translateY(-3px); }
+  .mini-beaker {
+    width:100px; height:120px; margin:10px auto; background:rgba(255,255,255,0.05);
+    border:2px solid #cbd5e1; border-top:none; border-radius:0 0 18px 18px;
+    position:relative; overflow:hidden;
+  }
+  .water-level {
+    position:absolute; bottom:0; left:0; right:0; height:80%;
+    background:linear-gradient(to top, rgba(59,130,246,0.4), rgba(59,130,246,0.2));
+    transition:1s;
+  }
+  .thread { position:absolute; top:0; left:50%; width:1px; height:60%;
+    background:#fbbf24; transform:translateX(-50%); z-index:2; }
+  .crystals-on-thread { display:none; position:absolute; top:30%; left:50%;
+    transform:translateX(-50%); z-index:3; font-size:24px; }
+  .crystal-beaker.grown .crystals-on-thread { display:block; animation:fadeIn 1s; }
+
+  /* QUIZ */
+  .quiz-card {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:20px; margin:15px 0;
+  }
+  .quiz-q { font-weight:700; margin-bottom:15px; font-size:16px; }
+  .quiz-options { display:flex; flex-direction:column; gap:8px; }
+  .quiz-opt {
+    background:rgba(255,255,255,0.03); border:2px solid rgba(255,255,255,0.1);
+    color:#d1d5db; padding:12px; border-radius:10px; cursor:pointer;
+    text-align:right; transition:0.3s; font-size:15px;
+  }
+  .quiz-opt:hover { border-color:#667eea; background:rgba(102,126,234,0.05); }
+  .quiz-opt.correct { background:rgba(16,185,129,0.2); border-color:#10b981; color:#fff; }
+  .quiz-opt.wrong { background:rgba(239,68,68,0.2); border-color:#ef4444; color:#fff; }
+  .quiz-feedback { margin-top:12px; padding:12px; border-radius:8px;
+    background:rgba(0,0,0,0.3); display:none; font-size:14px; }
+  .quiz-feedback.show { display:block; }
+
+  .progress-bar {
+    height:8px; background:rgba(255,255,255,0.05); border-radius:4px;
+    overflow:hidden; margin:20px 0;
+  }
+  .progress-fill {
+    height:100%; background:linear-gradient(90deg,#667eea,#10b981);
+    width:0%; transition:0.5s;
+  }
+
+  /* SUMMARY TABLE */
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:20px 0; }
+  .compare-card {
+    padding:20px; border-radius:14px; border:1px solid rgba(255,255,255,0.1);
+  }
+  .compare-card.ion { background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(59,130,246,0.1)); }
+  .compare-card.mol { background:linear-gradient(135deg, rgba(16,185,129,0.15), rgba(255,255,255,0.03)); }
+  .compare-card h4 { font-size:18px; margin-bottom:10px; }
+  .compare-card ul { list-style:none; padding:0; }
+  .compare-card li { padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.1); font-size:14px; }
+  .compare-card li:last-child { border:none; }
+  .compare-card li::before { content:"◀"; color:#fbbf24; margin-left:8px; font-size:10px; }
+
+  .btn-primary {
+    background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border:none;
+    padding:12px 24px; border-radius:10px; font-weight:700; cursor:pointer;
+    font-size:15px; transition:0.3s;
+  }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(102,126,234,0.4); }
+
+  @media (max-width:768px) {
+    .hero h1 { font-size:28px; }
+    .big-question { grid-template-columns:1fr; }
+    .crystal-lab { grid-template-columns:1fr; }
+    .compare-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="tag">📘 فصل ۲ — رفتار اتم‌ها با یکدیگر</div>
+    <h1>چرا نمک برق رو رد می‌کنه، ولی شکر نه؟</h1>
+    <p>توی این داشبورد، یاد می‌گیری که چرا دو ماده‌ای که شبیه هم به نظر می‌رسن، رفتار کاملاً متفاوتی دارن. آماده‌ای؟ بزن بریم.</p>
+
+    <div class="big-question">
+      <div class="glass-card">
+        <div class="emoji">🧂</div>
+        <h3>محلول نمک</h3>
+        <div class="bulb on">💡</div>
+        <p style="color:#10b981; font-weight:700;">لامپ روشن!</p>
+      </div>
+      <div style="font-size:30px; color:#fbbf24;">≠</div>
+      <div class="glass-card">
+        <div class="emoji">🍬</div>
+        <h3>محلول شکر</h3>
+        <div class="bulb">💡</div>
+        <p style="color:#ef4444; font-weight:700;">لامپ خاموش!</p>
+      </div>
+    </div>
+    <p style="margin-top:30px; font-size:18px; color:#fbbf24;">⬇ راز این تفاوت رو با هم کشف می‌کنیم.</p>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="active" onclick="show(0,this)">۱) دنیای ترکیب‌ها</button>
+    <button onclick="show(1,this)">۲) دو نوع سازنده</button>
+    <button onclick="show(2,this)">🧪 آزمایش بلور</button>
+    <button onclick="show(3,this)">⚡ آزمایش رسانایی</button>
+    <button onclick="show(4,this)">💧 ظرف پتری</button>
+    <button onclick="show(5,this)">📊 جمع‌بندی</button>
+    <button onclick="show(6,this)">🎯 کوییز</button>
+  </div>
+
+  <!-- SECTION 1: COMPOUNDS GALLERY -->
+  <section class="active">
+    <h2>دنیای دور و بَرت پر از ترکیبه</h2>
+    <p class="subtitle">پارسال خوندی که عنصرها اغلب به‌حالت آزاد نیستن. یعنی چی؟ یعنی توی طبیعت معمولاً «تنها» پیدا نمی‌شن، بلکه با عنصرهای دیگه قاطی شدن و <strong>ترکیب شیمیایی</strong> ساختن. روی هر کارت کلیک کن تا کاربردش رو ببینی:</p>
+
+    <div class="grid" id="compoundGrid"></div>
+
+    <div class="info-box">
+      <strong>💡 پس مهمه بفهمیم:</strong> توی این ترکیب‌ها، اتم‌ها چجوری به هم چسبیدن؟ همه به یه شکل؟ <strong>نه!</strong> دو راه متفاوت وجود داره. بریم سراغ همین.
+    </div>
+  </section>
+
+  <!-- SECTION 2: IONS VS MOLECULES -->
+  <section>
+    <h2>دو نوع سازنده داریم — فقط دو نوع</h2>
+    <p class="subtitle">هر ترکیبی که توی دنیا می‌بینی، ذرات سازنده‌اش یکی از این دو نوعه. هیچ نوع سومی وجود نداره.</p>
+
+    <div class="toggle-row">
+      <button class="toggle-btn active" onclick="showType('mol',this)">🟢 مولکول‌ها (مثل شکر)</button>
+      <button class="toggle-btn" onclick="showType('ion',this)">🔴🔵 یون‌ها (مثل نمک)</button>
+    </div>
+
+    <div id="typeBox">
+      <div id="molView">
+        <h3>مولکول چیه؟</h3>
+        <p>یه «بسته‌ی خنثی» از چند اتمه. هیچ بار الکتریکی‌ای نداره — نه مثبت، نه منفی. مثل یه گروه دوست که با هم راه می‌رن ولی هیچ‌کس داد نمی‌زنه!</p>
+        <p><strong>مثال‌ها:</strong> آب (H₂O)، شکر (C₁₂H₂₂O₁₁)، اتانول، اتیلن‌گلیکول (ضدیخ).</p>
+        <div class="particle-box" id="molBox"></div>
+        <p style="text-align:center; color:#10b981;">⬆ مولکول‌ها بدون بار، در محلول پخش می‌شن ولی برق رو رد نمی‌کنن.</p>
+      </div>
+
+      <div id="ionView" style="display:none;">
+        <h3>یون چیه؟</h3>
+        <p>ذره‌ای که <strong>بار الکتریکی</strong> داره. یا مثبته (➕) یا منفی (➖). همیشه به‌صورت زوج مثبت و منفی کنار هم می‌مونن تا کل بار خنثی بشه.</p>
+        <p><strong>مثال‌ها:</strong> نمک خوراکی (Na⁺ Cl⁻)، کات کبود (Cu²⁺ SO₄²⁻)، آهک، پتاسیم پرمنگنات (K⁺ MnO₄⁻).</p>
+        <div class="particle-box" id="ionBox"></div>
+        <p style="text-align:center; color:#fbbf24;">⬆ یون‌ها بار دارن. وقتی آزاد بشن، می‌تونن برق رو رد کنن.</p>
+      </div>
+    </div>
+
+    <div class="key-box">
+      🔑 <strong>قانون طلایی این فصل:</strong> ویژگی هر ماده، به نوع ذره سازنده‌اش بستگی داره. شکر و نمک هر دو سفیدن، ولی چون یکی مولکوله و یکی یونی، رفتارشون فرق می‌کنه.
+    </div>
+  </section>
+
+  <!-- SECTION 3: CRYSTAL LAB -->
+  <section>
+    <h2>🧪 آزمایش ۱ — تهیه بلور</h2>
+    <p class="subtitle">سه ماده می‌خواییم بلورشون کنیم: نمک، شکر، و کات کبود. روی هر بشر کلیک کن، مراحل رو طی کن، و ببین چی می‌شه.</p>
+
+    <div class="warn-box">⚠️ <strong>هشدار ایمنی:</strong> هنگام آزمایش، عینک و دستکش بپوش. آب داغ خطرناکه.</div>
+
+    <h3>روش کار:</h3>
+    <p>۱) ۲۰ میلی‌لیتر آب مقطر داغ توی هر بشر. ۲) یه قاشق از هر ماده اضافه کن و هم بزن تا حل شه. ۳) نخ و مدادی رو روی بشر بذار و نخ رو داخل محلول بنداز. ۴) چند روز صبر کن.</p>
+
+    <div class="crystal-lab">
+      <div class="crystal-beaker" onclick="growCrystal(this,'nacl')">
+        <h3 style="color:#fff;">نمک خوراکی</h3>
+        <div class="mini-beaker">
+          <div class="water-level"></div>
+          <div class="thread"></div>
+          <div class="crystals-on-thread">⬜</div>
+        </div>
+        <p style="font-size:13px;">NaCl — یونی</p>
+        <p style="font-size:11px; color:#a8b3cf;">کلیک کن تا بلور رشد کنه</p>
+      </div>
+      <div class="crystal-beaker" onclick="growCrystal(this,'sugar')">
+        <h3 style="color:#fff;">شکر</h3>
+        <div class="mini-beaker">
+          <div class="water-level"></div>
+          <div class="thread"></div>
+          <div class="crystals-on-thread">🍯</div>
+        </div>
+        <p style="font-size:13px;">C₁₂H₂₂O₁₁ — مولکولی</p>
+        <p style="font-size:11px; color:#a8b3cf;">کلیک کن تا بلور رشد کنه</p>
+      </div>
+      <div class="crystal-beaker" onclick="growCrystal(this,'cuso4')">
+        <h3 style="color:#fff;">کات کبود</h3>
+        <div class="mini-beaker">
+          <div class="water-level" style="background:linear-gradient(to top, rgba(37,99,235,0.6), rgba(59,130,246,0.3));"></div>
+          <div class="thread"></div>
+          <div class="crystals-on-thread">🟦</div>
+        </div>
+        <p style="font-size:13px;">CuSO₄ — یونی</p>
+        <p style="font-size:11px; color:#a8b3cf;">کلیک کن تا بلور رشد کنه</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>🔍 نتیجه‌ای که باید ببینی:</strong>
+      <ul style="margin-right:20px; margin-top:8px;">
+        <li><strong>شباهت:</strong> هر سه بلور تشکیل دادن. یعنی ذره‌های سازنده‌شون منظم چیده می‌شن.</li>
+        <li><strong>تفاوت:</strong> رنگ، شکل و اندازه بلورها فرق می‌کنه. چرا؟ چون <em>نوع ذره سازنده</em>شون فرق داره. نمک و کات کبود از یون ساخته شدن، ولی شکر از مولکول.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 4: CONDUCTIVITY LAB -->
+  <section>
+    <h2>⚡ آزمایش ۲ — تست رسانایی الکتریکی</hh2>
+    <p class="subtitle">یه مدار ساده می‌چینیم: باتری + لامپ + دو میلهٔ کربنی توی محلول. اگه لامپ روشن شد، یعنی محلول برق رو رد می‌کنه. روی هر ماده کلیک کن و ببین چی می‌شه.</p>
+
+    <div class="lab">
+      <div class="circuit">
+        <div class="battery">
+          <div class="battery-icon">🔋</div>
+          <div>۱/۵ ولت</div>
+        </div>
+        <div style="text-align:center;">
+          <div id="bulbBig" style="font-size:60px;">💡</div>
+          <div class="beaker-display" id="testBeaker">
+            <div class="rod left"></div>
+            <div class="rod right"></div>
+          </div>
+        </div>
+        <div style="font-size:14px; font-weight:700;">میلهٔ<br>کربنی</div>
+      </div>
+
+      <h3>یه محلول انتخاب کن:</h3>
+      <div class="solution-picker">
+        <button class="sol-btn" onclick="testSol('water',this)">آب مقطر</button>
+        <button class="sol-btn" onclick="testSol('nacl',this)">نمک خوراکی</button>
+        <button class="sol-btn" onclick="testSol('sugar',this)">شکر</button>
+        <button class="sol-btn" onclick="testSol('ethanol',this)">اتانول</button>
+        <button class="sol-btn" onclick="testSol('cuso4',this)">کات کبود</button>
+      </div>
+
+      <div class="result-board" id="resultBoard">⬅ یه ماده انتخاب کن</div>
+
+      <h3 style="margin-top:25px;">📋 جدول مشاهدات (خودش پر می‌شه):</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ماده</th><th>آب مقطر</th><th>نمک</th><th>شکر</th><th>اتانول</th><th>کات کبود</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>رسانایی</strong></td>
+            <td id="r-water">—</td>
+            <td id="r-nacl">—</td>
+            <td id="r-sugar">—</td>
+            <td id="r-ethanol">—</td>
+            <td id="r-cuso4">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-box">
+      🔑 <strong>چرا این اتفاق می‌افته؟</strong><br>
+      جریان الکتریکی یعنی «حرکت بار». محلول نمک و کات کبود پر از <strong>یون‌های باردار</strong>ه که آزادانه حرکت می‌کنن و بار رو منتقل می‌کنن → لامپ روشن. ولی محلول شکر و اتانول، <strong>مولکول</strong> داره که بار نداره → لامپ خاموش.
+      <br><br>
+      <strong>پتاسیم پرمنگنات</strong> (KMnO₄) مثال زیبای کتابه: وقتی توی آب حل می‌شه، یون‌های بنفش‌رنگش توی کل ظرف پخش می‌شن و محلول، رنگی و رسانا می‌شه.
+    </div>
+  </section>
+
+  <!-- SECTION 5: PETRI DISH -->
+  <section>
+    <h2>💧 آزمایش ۳ — حرکت یون‌ها در ظرف پتری</h2>
+    <p class="subtitle">می‌خواییم <em>ببینیم</em> که یون‌ها واقعاً توی آب حرکت می‌کنن. یه دانه کات کبود (آبی) و یه دانه سدیم‌هیدروکسید (سفید) رو دو طرف ظرف پتری می‌ذاریم. اگه یون‌ها حرکت کنن، باید وسط ظرف به هم برسن و واکنش بدن.</p>
+
+    <div class="petri-container">
+      <div class="petri" id="petri">
+        <div class="crystal cu">CuSO₄ 🟦</div>
+        <div class="crystal na">NaOH ⬜</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin:15px 0;">
+      <button class="btn-primary" onclick="runPetri()">▶ شروع آزمایش</button>
+      <button class="btn-primary" onclick="resetPetri()" style="background:#475569; margin-right:10px;">⟲ ریست</button>
+    </div>
+
+    <div id="petriResult" style="display:none;">
+      <div class="info-box">
+        <strong>🎯 چی دیدی؟</strong> وسط ظرف، یه رسوب آبی روشن تشکیل شد! این یعنی:
+        <ol style="margin-right:20px; margin-top:10px;">
+          <li>یون‌های مس (Cu²⁺) از سمت کات کبود توی آب پخش شدن و به سمت چپ حرکت کردن.</li>
+          <li>یون‌های هیدروکسید (OH⁻) از سمت سدیم‌هیدروکسید توی آب پخش شدن و به سمت راست حرکت کردن.</li>
+          <li>وسط ظرف به هم رسیدن و واکنش دادن.</li>
+        </ol>
+      </div>
+
+      <h3>معادله نوشتاری واکنش:</h3>
+      <div class="key-box" style="font-family:monospace; text-align:center; font-size:15px;">
+        کات کبود + سدیم‌هیدروکسید → <strong>فراورده‌ها</strong><br><br>
+        یون مس (Cu²⁺) + یون سولفات (SO₄²⁻) + یون سدیم (Na⁺) + یون هیدروکسید (OH⁻)<br>
+        ⬇<br>
+        <span style="color:#3b82f6;">Cu(OH)₂ آبی روشن — رسوب</span> + یون سدیم + یون سولفات
+      </div>
+
+      <div class="info-box">
+        <strong>✅ نتیجه نهایی:</strong> پس <strong>یون‌ها در آب حرکت می‌کنن</strong>. به‌خاطر همینه که محلول‌های یونی، جریان الکتریکی رو رد می‌کنن — چون ذرات باردار، آزادانه توی محلول جابه‌جا می‌شن.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: SUMMARY -->
+  <section>
+    <h2>📊 جمع‌بندی نهایی — تو الان همه‌چی رو می‌دونی</h2>
+
+    <div class="compare-grid">
+      <div class="compare-card ion">
+        <h4>🔴🔵 ترکیب‌های یونی</h4>
+        <ul>
+          <li>ذره‌های سازنده: <strong>یون‌ها</strong> (مثبت و منفی)</li>
+          <li>بار الکتریکی: <strong>دارن</strong></li>
+          <li>در آب: یون‌ها آزاد و پخش می‌شن</li>
+          <li>رسانایی محلول: <strong>بله ✅</strong></li>
+          <li>مثال: نمک، کات کبود، آهک، KMnO₄، NaOH</li>
+        </ul>
+      </div>
+      <div class="compare-card mol">
+        <h4>🟢 ترکیب‌های مولکولی</h4>
+        <ul>
+          <li>ذره‌های سازنده: <strong>مولکول‌ها</strong> (بسته‌ی خنثی)</li>
+          <li>بار الکتریکی: <strong>ندارن</strong></li>
+          <li>در آب: مولکول پخش می‌شه ولی شکسته نمی‌شه</li>
+          <li>رسانایی محلول: <strong>خیر ❌</strong></li>
+          <li>مثال: شکر، آب، اتانول، اتیلن‌گلیکول، آمونیاک</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="key-box">
+      🧠 <strong>اگه فقط یه چیز رو ازین فصل با خودت ببری، این باشه:</strong>
+      <br><br>
+      <em>«نوع ذره سازنده = نوع رفتار ماده»</em>
+      <br><br>
+      یونی؟ بار داره، توی آب پخش می‌شه و باهاش جریان جابه‌جا می‌شه. مولکولی؟ خنثیه، توی آب پخش می‌شه ولی هیچ باری منتقل نمی‌کنه.
+    </div>
+  </section>
+
+  <!-- SECTION 7: QUIZ -->
+  <section>
+    <h2>🎯 کوییز — تست خودت</h2>
+    <p class="subtitle">۷ سوال. جواب بده تا ببینی واقعاً یاد گرفتی یا نه. هر گزینه رو بزنی، توضیحش رو بهت می‌گم.</p>
+
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div id="score" style="text-align:center; font-size:18px; margin-bottom:20px;">امتیاز: ۰ / ۷</div>
+
+    <div id="quizContainer"></div>
+  </section>
+
+</div>
+
+<script>
+// ====== NAV ======
+function show(i, btn) {
+  document.querySelectorAll('section').forEach((s,j)=>s.classList.toggle('active', i===j));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ====== COMPOUNDS GRID ======
+const compounds = [
+  {ico:'💧', name:'آب', formula:'H₂O', use:'حیات، نوشیدن', type:'mol'},
+  {ico:'🍬', name:'شکر', formula:'C₁₂H₂₂O₁₁', use:'شیرین کردن', type:'mol'},
+  {ico:'🧂', name:'نمک خوراکی', formula:'NaCl', use:'طعم غذا', type:'ion'},
+  {ico:'🌿', name:'آمونیاک', formula:'NH₃', use:'کود کشاورزی', type:'mol'},
+  {ico:'🍷', name:'اتانول', formula:'C₂H₅OH', use:'ضدعفونی پزشکی', type:'mol'},
+  {ico:'❄️', name:'ضدیخ', formula:'C₂H₆O₂', use:'جلوگیری از یخ‌زدن رادیاتور خودرو', type:'mol'},
+  {ico:'🟦', name:'کات کبود', formula:'CuSO₄', use:'بلور آبی، آزمایشگاه', type:'ion'},
+  {ico:'🎃', name:'آهک', formula:'CaO', use:'ترد کردن مربای کدوحلوایی', type:'ion'},
+];
+const cg = document.getElementById('compoundGrid');
+compounds.forEach((c,i)=>{
+  const d = document.createElement('div');
+  d.className = 'compound ' + c.type;
+  d.innerHTML = `<div class="ico">${c.ico}</div>
+    <div class="name">${c.name}</div>
+    <div class="formula">${c.formula}</div>
+    <div class="use">🎯 ${c.use}<br><strong>${c.type==='ion'?'یونی':'مولکولی'}</strong></div>`;
+  d.onclick = ()=>d.classList.toggle('revealed');
+  cg.appendChild(d);
+});
+
+// ====== PARTICLE ANIMATIONS ======
+function makeParticles(boxId, type) {
+  const box = document.getElementById(boxId);
+  box.innerHTML = '';
+  const w = box.offsetWidth, h = box.offsetHeight;
+  for (let i=0; i<12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle ' + type;
+    if (type==='ion') p.className = 'particle ' + (i%2===0 ? 'pos':'neg');
+    p.textContent = type==='mol' ? '🍬' : (i%2===0 ? '+' : '−');
+    p.style.left = Math.random()*(w-40) + 'px';
+    p.style.top = Math.random()*(h-40) + 'px';
+    box.appendChild(p);
+    animateP(p, box);
+  }
+}
+function animateP(p, box) {
+  setInterval(()=>{
+    p.style.left = Math.random()*(box.offsetWidth-40) + 'px';
+    p.style.top = Math.random()*(box.offsetHeight-40) + 'px';
+  }, 1500 + Math.random()*1000);
+}
+function showType(t, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('molView').style.display = t==='mol' ? 'block':'none';
+  document.getElementById('ionView').style.display = t==='ion' ? 'block':'none';
+  setTimeout(()=>makeParticles(t==='mol'?'molBox':'ionBox', t), 100);
+}
+setTimeout(()=>makeParticles('molBox','mol'), 300);
+
+// ====== CRYSTAL LAB ======
+function growCrystal(el, type) {
+  if (el.classList.contains('grown')) return;
+  el.classList.add('grown');
+}
+
+// ====== CONDUCTIVITY TEST ======
+const solutions = {
+  water: {name:'آب مقطر', color:'transparent', conducts:false, why:'آب مقطر تقریباً هیچ یون آزادی نداره. مولکول آب خنثی است.'},
+  nacl: {name:'نمک خوراکی', color:'rgba(255,255,255,0.5)', conducts:true, why:'NaCl یونیه. توی آب به Na⁺ و Cl⁻ تجزیه می‌شه. یون‌های باردار = جریان برق!'},
+  sugar: {name:'شکر', color:'rgba(255,200,100,0.3)', conducts:false, why:'شکر مولکولیه. مولکول‌هاش توی آب پخش می‌شن ولی بار ندارن.'},
+  ethanol: {name:'اتانول', color:'rgba(200,200,255,0.3)', conducts:false, why:'اتانول هم مولکولیه. هیچ یونی توی محلول نیست.'},
+  cuso4: {name:'کات کبود', color:'rgba(59,130,246,0.5)', conducts:true, why:'CuSO₄ یونیه. به Cu²⁺ و SO₄²⁻ تجزیه می‌شه. محلول رساناست و آبی‌رنگه.'}
+};
+function testSol(key, btn) {
+  document.querySelectorAll('.sol-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const s = solutions[key];
+  const beaker = document.getElementById('testBeaker');
+  beaker.style.background = `linear-gradient(to top, ${s.color} 0%, ${s.color} 80%, transparent 80%)`;
+  beaker.classList.remove('empty');
+
+  const bulb = document.getElementById('bulbBig');
+  if (s.conducts) {
+    bulb.style.filter = 'drop-shadow(0 0 30px gold) brightness(1.5)';
+    bulb.textContent = '💡';
+  } else {
+    bulb.style.filter = 'grayscale(1) brightness(0.5)';
+    bulb.textContent = '💡';
+  }
+
+  document.getElementById('resultBoard').innerHTML =
+    `<div><strong style="font-size:18px; color:${s.conducts?'#10b981':'#ef4444'};">
+    ${s.conducts ? '✅ لامپ روشن شد!' : '❌ لامپ خاموش موند.'}
+    </strong><br><span style="font-size:14px; color:#a8b3cf;">${s.why}</span></div>`;
+
+  const cell = document.getElementById('r-'+key);
+  cell.textContent = s.conducts ? 'رساناست ✅' : 'نارساست ❌';
+  cell.className = s.conducts ? 'yes' : 'no';
+}
+
+// ====== PETRI DISH ======
+function runPetri() {
+  resetPetri();
+  const petri = document.getElementById('petri');
+  // Cu ions (blue, from right side moving left)
+  for (let i=0; i<6; i++) {
+    setTimeout(()=>{
+      const ion = document.createElement('div');
+      ion.className = 'ion-flow';
+      ion.style.background = '#2563eb';
+      ion.textContent = 'Cu²⁺';
+      ion.style.right = '40px';
+      ion.style.top = (50 + Math.random()*240) + 'px';
+      petri.appendChild(ion);
+      setTimeout(()=>{
+        ion.style.transition = 'all 3s';
+        ion.style.right = (150 + Math.random()*30) + 'px';
+      }, 100);
+    }, i*300);
+  }
+  // OH ions (white/gray, from left side moving right)
+  for (let i=0; i<6; i++) {
+    setTimeout(()=>{
+      const ion = document.createElement('div');
+      ion.className = 'ion-flow';
+      ion.style.background = '#64748b';
+      ion.textContent = 'OH⁻';
+      ion.style.left = '40px';
+      ion.style.top = (50 + Math.random()*240) + 'px';
+      petri.appendChild(ion);
+      setTimeout(()=>{
+        ion.style.transition = 'all 3s';
+        ion.style.left = (150 + Math.random()*30) + 'px';
+      }, 100);
+    }, i*300);
+  }
+  // Precipitate
+  setTimeout(()=>{
+    const ppt = document.createElement('div');
+    ppt.style.cssText = `position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+      width:90px; height:90px; background:radial-gradient(circle, #60a5fa, #2563eb);
+      border-radius:50%; opacity:0; transition:opacity 2s; filter:blur(8px);`;
+    petri.appendChild(ppt);
+    setTimeout(()=>ppt.style.opacity='0.85', 100);
+    document.getElementById('petriResult').style.display = 'block';
+  }, 3500);
+}
+function resetPetri() {
+  const petri = document.getElementById('petri');
+  petri.querySelectorAll('.ion-flow, div[style*="radial-gradient"]').forEach(e=>e.remove());
+  document.getElementById('petriResult').style.display = 'none';
+}
+
+// ====== QUIZ ======
+const quiz = [
+  {q:'کدوم گزینه یه ترکیب یونیه؟',
+   opts:['شکر','اتانول','کات کبود','ضدیخ'], correct:2,
+   exp:'کات کبود (CuSO₄) از یون مس و یون سولفات ساخته شده. شکر، اتانول و ضدیخ همه مولکولی‌ان.'},
+  {q:'چرا محلول شکر برق رو رد نمی‌کنه؟',
+   opts:['چون شکر توی آب حل نمی‌شه','چون مولکول‌های شکر بار الکتریکی ندارن','چون آب تمیز نیست','چون لامپ خرابه'],
+   correct:1, exp:'شکر مولکولیه. مولکول‌هاش توی آب پخش می‌شن ولی هیچ بار الکتریکی‌ای ندارن، پس جریان منتقل نمی‌شه.'},
+  {q:'یون یعنی چی؟',
+   opts:['ذره‌ی خنثی','ذره‌ای با بار الکتریکی مثبت یا منفی','اتم تنها','مولکول بزرگ'],
+   correct:1, exp:'یون = ذره‌ای که بار الکتریکی داره. یا + است یا −.'},
+  {q:'توی آزمایش ظرف پتری، چرا وسط ظرف رنگ آبی روشن دیدیم؟',
+   opts:['چون آب رنگ گرفت','چون یون مس و یون هیدروکسید به هم رسیدن و واکنش دادن','چون نور بازتاب شد','چون کات کبود حل شد'],
+   correct:1, exp:'یون‌های Cu²⁺ از یه طرف و OH⁻ از طرف دیگه حرکت کردن، وسط ظرف به هم رسیدن، و رسوب Cu(OH)₂ آبی روشن ساختن.'},
+  {q:'کدوم جمله درسته؟',
+   opts:['همه‌ی محلول‌ها برق رو رد می‌کنن','فقط محلول‌های مولکولی برق رو رد می‌کنن','فقط محلول‌های یونی برق رو رد می‌کنن','هیچ محلولی برق رو رد نمی‌کنه'],
+   correct:2, exp:'فقط محلول‌های یونی برق رو رد می‌کنن، چون یون‌های باردار آزادانه حرکت می‌کنن.'},
+  {q:'پتاسیم پرمنگنات (KMnO₄) توی آب چی کار می‌کنه؟',
+   opts:['ته‌نشین می‌شه','یون‌هاش در سراسر محلول پخش می‌شن','تبدیل به گاز می‌شه','تغییر نمی‌کنه'],
+   correct:1, exp:'یون‌های سازنده‌اش (K⁺ و MnO₄⁻) توی کل محلول پخش می‌شن و رنگ بنفش زیبا می‌دن. محلولش هم رساناست.'},
+  {q:'چرا ویژگی شکر و نمک با هم فرق داره، در حالی که هر دو سفیدن؟',
+   opts:['چون اندازه‌شون فرق داره','چون نوع ذره سازنده‌شون فرق داره (یکی مولکول، یکی یون)','چون قیمتشون فرق داره','چون یکی از دریا اومده'],
+   correct:1, exp:'دقیقاً همینه! ویژگی هر ماده به نوع ذره سازنده‌اش بستگی داره. شکر مولکولیه، نمک یونیه — رفتارشون کاملاً متفاوته.'}
+];
+let score = 0, answered = new Set();
+const qc = document.getElementById('quizContainer');
+quiz.forEach((item, idx)=>{
+  const card = document.createElement('div');
+  card.className = 'quiz-card';
+  card.innerHTML = `<div class="quiz-q">سوال ${idx+1}) ${item.q}</div>
+    <div class="quiz-options" id="opts-${idx}"></div>
+    <div class="quiz-feedback" id="fb-${idx}"></div>`;
+  qc.appendChild(card);
+  const optsBox = card.querySelector('.quiz-options');
+  item.opts.forEach((opt, oi)=>{
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = opt;
+    b.onclick = ()=>{
+      if (answered.has(idx)) return;
+      answered.add(idx);
+      optsBox.querySelectorAll('.quiz-opt').forEach((bt,j)=>{
+        if (j===item.correct) bt.classList.add('correct');
+        else if (j===oi) bt.classList.add('wrong');
+      });
+      if (oi===item.correct) score++;
+      document.getElementById('score').textContent = `امتیاز: ${score} / ${quiz.length}`;
+      document.getElementById('progress').style.width = (answered.size/quiz.length*100)+'%';
+      const fb = document.getElementById('fb-'+idx);
+      fb.innerHTML = (oi===item.correct ? '✅ <strong>درسته!</strong> ' : '❌ <strong>اشتباه.</strong> ') + item.exp;
+      fb.classList.add('show');
+    };
+    optsBox.appendChild(b);
+  });
+});
+</script>
+</body>
+</html>
