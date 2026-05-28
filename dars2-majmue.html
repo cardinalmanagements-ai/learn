@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎓 درس دوم: مجموعه‌های برابر و زیرمجموعه</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', system-ui, sans-serif; }
+body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #1a1a2e; padding: 15px; }
+.container { max-width: 1300px; margin: 0 auto; }
+
+/* Header */
+.header { background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-radius: 24px; padding: 30px; margin-bottom: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+.header h1 { font-size: 2.2em; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+.header p { color: #555; font-size: 1.05em; }
+.progress-wrapper { display: flex; align-items: center; gap: 15px; margin-top: 18px; }
+.progress-bar-container { flex: 1; background: #e8eaf6; height: 14px; border-radius: 7px; overflow: hidden; }
+.progress-bar { background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7); height: 100%; width: 0%; transition: width 0.5s; border-radius: 7px; }
+.progress-text { font-weight: bold; color: #4c1d95; font-size: 0.95em; }
+
+/* Navigation */
+.nav-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; background: rgba(255,255,255,0.97); padding: 12px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.nav-tab { padding: 11px 18px; background: #f3f4f6; border: none; border-radius: 11px; cursor: pointer; font-size: 0.92em; transition: all 0.3s; font-family: inherit; display: flex; align-items: center; gap: 7px; position: relative; }
+.nav-tab:hover { background: #e5e7eb; transform: translateY(-2px); }
+.nav-tab.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
+.nav-tab.completed::after { content: '✓'; position: absolute; top: -5px; left: -5px; background: #10b981; color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold; }
+
+/* Sections */
+.section { background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin-bottom: 18px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: none; animation: fadeIn 0.5s; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.section h2 { font-size: 1.7em; margin-bottom: 18px; color: #2d3748; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.section h3 { font-size: 1.25em; color: #4c1d95; margin: 22px 0 12px; }
+.section p { line-height: 1.9; color: #374151; margin-bottom: 12px; }
+
+/* Boxes */
+.highlight, .warning, .success-box, .info-box { padding: 18px; border-radius: 12px; margin: 18px 0; line-height: 1.8; }
+.highlight { background: linear-gradient(135deg, #fef3c7, #fde68a); border-right: 5px solid #f59e0b; }
+.warning { background: linear-gradient(135deg, #fee2e2, #fecaca); border-right: 5px solid #ef4444; }
+.success-box { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-right: 5px solid #10b981; }
+.info-box { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-right: 5px solid #3b82f6; }
+
+/* Opening intro */
+.opening-intro { font-size: 1.1em; color: #4c1d95; font-weight: 500; text-align: center; margin: 18px 0 25px; padding: 14px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; }
+
+/* Opening examples (hook before explanation) */
+.opening-examples { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
+@media (max-width: 700px) { .opening-examples { grid-template-columns: 1fr; } }
+.opening-example { background: white; border-radius: 18px; padding: 25px 22px; border: 3px solid; position: relative; transition: all 0.3s; }
+.opening-example.example-1 { border-color: #10b981; background: linear-gradient(135deg, #ecfdf5, #fff); }
+.opening-example.example-2 { border-color: #3b82f6; background: linear-gradient(135deg, #eff6ff, #fff); }
+.opening-example:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.13); }
+.example-badge { position: absolute; top: -14px; right: 20px; padding: 6px 16px; background: white; border: 2px solid; border-radius: 20px; font-weight: bold; font-size: 0.92em; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+.example-1 .example-badge { border-color: #10b981; color: #065f46; }
+.example-2 .example-badge { border-color: #3b82f6; color: #1e3a8a; }
+.example-icon { font-size: 3.2em; margin-bottom: 10px; text-align: center; }
+.opening-example h3 { text-align: center; margin: 8px 0 15px; color: #1f2937; font-size: 1.25em; }
+.opening-example p { margin-bottom: 10px; font-size: 0.97em; line-height: 1.8; }
+.example-set-box { background: linear-gradient(135deg, #5b21b6, #7c3aed); color: #fef3c7; padding: 12px; border-radius: 10px; margin: 12px 0; font-weight: bold; text-align: center; font-size: 1em; }
+.example-set-box.ltr { direction: ltr; font-family: 'Courier New', monospace; }
+.check-list { margin-top: 12px; }
+.check-list p { padding-right: 5px; font-size: 0.93em; margin-bottom: 6px; }
+.bridge-box { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border: 2px solid #8b5cf6; border-radius: 14px; padding: 22px; margin: 25px 0; text-align: center; }
+.bridge-box .question { font-size: 1.08em; color: #5b21b6; margin-bottom: 12px; font-weight: 500; line-height: 1.8; }
+.bridge-box .answer { font-size: 1.3em; color: #4c1d95; font-weight: bold; margin-top: 10px; }
+
+/* Cards */
+.card { background: linear-gradient(135deg, #fafbff, #fff); border-radius: 15px; padding: 22px; margin: 15px 0; border: 2px solid #e5e7eb; transition: all 0.3s; }
+.card:hover { border-color: #a5b4fc; box-shadow: 0 12px 30px rgba(102,126,234,0.12); }
+.card h3 { color: #4c1d95; margin: 0 0 12px; font-size: 1.2em; }
+
+/* Buttons */
+.btn { padding: 11px 22px; border: none; border-radius: 10px; cursor: pointer; font-size: 0.98em; font-family: inherit; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+.btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102,126,234,0.4); }
+.btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.btn-secondary { background: #e5e7eb; color: #374151; }
+.btn-secondary:hover { background: #d1d5db; }
+
+/* Set chip */
+.set-chip { display: inline-block; padding: 4px 12px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 16px; font-family: 'Courier New', monospace; margin: 0 4px; direction: ltr; font-weight: bold; }
+.set-display { background: linear-gradient(135deg, #5b21b6, #7c3aed); color: #fef3c7; padding: 22px; border-radius: 14px; font-size: 1.5em; text-align: center; margin: 18px 0; direction: ltr; font-family: 'Courier New', monospace; box-shadow: 0 8px 22px rgba(91,33,182,0.25); letter-spacing: 1px; }
+.set-display .set-name { color: #fcd34d; }
+.set-display.persian { direction: rtl; font-family: 'Vazirmatn', system-ui, sans-serif; font-size: 1.2em; letter-spacing: 0; }
+
+/* Twin cards (Equal Sets metaphor) */
+.twin-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center; margin: 25px 0; }
+@media (max-width: 700px) { .twin-grid { grid-template-columns: 1fr; } .twin-equals { font-size: 2em !important; transform: rotate(90deg); } }
+.twin-card { background: white; border-radius: 18px; padding: 22px; border: 3px solid; text-align: center; transition: transform 0.3s; }
+.twin-card.green { border-color: #10b981; background: linear-gradient(135deg, #ecfdf5, #fff); }
+.twin-card.blue { border-color: #3b82f6; background: linear-gradient(135deg, #eff6ff, #fff); }
+.twin-card .twin-icon { font-size: 2.8em; margin-bottom: 8px; }
+.twin-card .twin-label { font-weight: bold; color: #1f2937; font-size: 1.1em; margin-bottom: 10px; }
+.twin-card .twin-set { background: linear-gradient(135deg, #5b21b6, #7c3aed); color: #fef3c7; padding: 12px; border-radius: 10px; font-family: 'Courier New', monospace; direction: ltr; font-size: 1.15em; font-weight: bold; box-shadow: 0 4px 12px rgba(91,33,182,0.2); }
+.twin-equals { font-size: 3em; color: #667eea; font-weight: bold; text-align: center; }
+
+/* GAME 1 — Equal or Not Equal? */
+.eq-game-area { background: linear-gradient(135deg, #f9fafb, #fff); border: 2px solid #e5e7eb; border-radius: 18px; padding: 25px; margin: 18px 0; }
+.eq-round-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.eq-round-counter { font-weight: bold; color: #4c1d95; font-size: 1.05em; }
+.eq-score { font-weight: bold; color: #065f46; background: #d1fae5; padding: 6px 14px; border-radius: 20px; }
+.eq-streak { font-weight: bold; color: #92400e; background: #fef3c7; padding: 6px 14px; border-radius: 20px; }
+.eq-sets-display { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; margin: 22px 0; }
+@media (max-width: 600px) { .eq-sets-display { grid-template-columns: 1fr; } .eq-qmark { font-size: 2em !important; padding: 8px 0; } }
+.eq-set-box { background: linear-gradient(135deg, #5b21b6, #7c3aed); color: #fef3c7; padding: 20px; border-radius: 14px; text-align: center; font-family: 'Courier New', monospace; font-size: 1.3em; font-weight: bold; direction: ltr; min-height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(91,33,182,0.25); }
+.eq-set-box .set-name { color: #fcd34d; }
+.eq-qmark { font-size: 3em; text-align: center; color: #667eea; font-weight: bold; }
+.eq-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+.eq-btn { padding: 18px; border: 3px solid; border-radius: 14px; cursor: pointer; font-size: 1.15em; font-weight: bold; font-family: inherit; transition: all 0.3s; background: white; }
+.eq-btn.yes { border-color: #10b981; color: #065f46; }
+.eq-btn.yes:hover:not(:disabled) { background: #10b981; color: white; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+.eq-btn.no { border-color: #ef4444; color: #991b1b; }
+.eq-btn.no:hover:not(:disabled) { background: #ef4444; color: white; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
+.eq-btn.selected.correct { background: #10b981; color: white; }
+.eq-btn.selected.wrong { background: #ef4444; color: white; animation: shake 0.4s; }
+.eq-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.eq-feedback { margin-top: 15px; padding: 16px; border-radius: 12px; display: none; line-height: 1.8; }
+.eq-feedback.show { display: block; animation: fadeIn 0.3s; }
+.eq-feedback.correct { background: #d1fae5; color: #065f46; border-right: 4px solid #10b981; }
+.eq-feedback.wrong { background: #fee2e2; color: #991b1b; border-right: 4px solid #ef4444; }
+.eq-next-btn { margin-top: 12px; }
+.eq-final { background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 16px; padding: 25px; text-align: center; margin: 20px 0; display: none; }
+.eq-final.show { display: block; animation: fadeIn 0.4s; }
+.eq-final h3 { color: #92400e; font-size: 1.5em; margin-bottom: 10px; }
+.eq-final .big-score { font-size: 3em; font-weight: bold; color: #4c1d95; margin: 10px 0; }
+
+/* GAME 2 — Subset Hunter */
+.sub-game-area { background: linear-gradient(135deg, #f9fafb, #fff); border: 2px solid #e5e7eb; border-radius: 18px; padding: 25px; margin: 18px 0; }
+.sub-main-display { background: linear-gradient(135deg, #4c1d95, #6d28d9); color: white; padding: 22px; border-radius: 16px; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(76,29,149,0.3); }
+.sub-main-display .label { font-size: 0.95em; opacity: 0.9; margin-bottom: 8px; }
+.sub-main-display .main-set { font-size: 1.5em; font-weight: bold; font-family: 'Courier New', monospace; direction: ltr; }
+.sub-main-display .main-set.persian { direction: rtl; font-family: 'Vazirmatn', system-ui, sans-serif; }
+.sub-candidate { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fef3c7; padding: 18px 20px; border-radius: 14px; text-align: center; font-family: 'Courier New', monospace; font-size: 1.3em; font-weight: bold; direction: ltr; margin: 18px 0; box-shadow: 0 6px 16px rgba(124,58,237,0.25); }
+.sub-candidate.persian { direction: rtl; font-family: 'Vazirmatn', system-ui, sans-serif; }
+.sub-question { text-align: center; font-size: 1.1em; color: #4c1d95; font-weight: 500; margin: 16px 0; }
+.sub-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.sub-btn { padding: 16px; border: 3px solid; border-radius: 14px; cursor: pointer; font-size: 1.1em; font-weight: bold; font-family: inherit; transition: all 0.3s; background: white; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.sub-btn.is { border-color: #10b981; color: #065f46; }
+.sub-btn.is:hover:not(:disabled) { background: #10b981; color: white; transform: translateY(-3px); }
+.sub-btn.not { border-color: #ef4444; color: #991b1b; }
+.sub-btn.not:hover:not(:disabled) { background: #ef4444; color: white; transform: translateY(-3px); }
+.sub-btn.selected.correct { background: #10b981; color: white; }
+.sub-btn.selected.wrong { background: #ef4444; color: white; animation: shake 0.4s; }
+.sub-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.sub-symbol { font-size: 1.4em; }
+.sub-lives { display: flex; gap: 6px; }
+.sub-life { font-size: 1.4em; transition: opacity 0.3s; }
+.sub-life.lost { opacity: 0.2; filter: grayscale(1); }
+
+/* DRAG & DROP — SUBSET BUILDER */
+.dd-round-info { display: flex; justify-content: space-between; align-items: center; margin: 16px 0; flex-wrap: wrap; gap: 10px; }
+.dd-universe { background: linear-gradient(135deg, #ede9fe, #ddd6fe); border: 3px solid #8b5cf6; border-radius: 18px; padding: 18px 20px; margin: 16px 0; }
+.dd-universe-label { font-weight: bold; color: #5b21b6; margin-bottom: 12px; font-size: 1.05em; }
+.dd-universe-set { display: flex; flex-wrap: wrap; gap: 10px; }
+.dd-mem { display: inline-flex; align-items: center; justify-content: center; min-width: 48px; height: 48px; padding: 0 14px; background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; border-radius: 12px; font-weight: bold; font-size: 1.25em; box-shadow: 0 4px 10px rgba(124,58,237,0.25); }
+
+.dd-zone { background: #f9fafb; border: 3px dashed #cbd5e1; border-radius: 18px; padding: 20px; margin: 16px 0; min-height: 130px; transition: all 0.25s; position: relative; }
+.dd-zone.over { border-color: #10b981; background: #ecfdf5; transform: scale(1.01); }
+.dd-zone.valid { border-color: #10b981; border-style: solid; background: linear-gradient(135deg, #ecfdf5, #fff); }
+.dd-zone.invalid { border-color: #ef4444; border-style: solid; background: linear-gradient(135deg, #fef2f2, #fff); }
+.dd-zone-title { font-weight: bold; color: #4c1d95; margin-bottom: 14px; font-size: 1.05em; }
+.dd-zone-items { display: flex; flex-wrap: wrap; gap: 12px; min-height: 56px; align-items: center; }
+.dd-zone-empty { color: #9ca3af; font-style: italic; text-align: center; padding: 10px; }
+
+.dd-status { text-align: center; font-size: 1.2em; font-weight: bold; padding: 16px; border-radius: 14px; margin: 16px 0; transition: all 0.3s; background: #f3f4f6; color: #6b7280; }
+.dd-status.yes { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; }
+.dd-status.no { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; }
+
+.dd-pool-label { font-weight: 500; color: #374151; margin: 18px 0 10px; }
+.dd-pool { display: flex; flex-wrap: wrap; gap: 12px; min-height: 60px; padding: 14px; background: #f3f4f6; border-radius: 14px; }
+
+.dd-chip { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 52px; padding: 0 16px; background: white; border: 3px solid #c4b5fd; border-radius: 14px; font-weight: bold; font-size: 1.3em; color: #4c1d95; cursor: grab; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.15s, box-shadow 0.15s; touch-action: none; user-select: none; }
+.dd-chip:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(124,58,237,0.2); border-color: #8b5cf6; }
+.dd-chip:active { cursor: grabbing; }
+.dd-chip.dragging { opacity: 0.85; transform: scale(1.12) rotate(-3deg); box-shadow: 0 14px 30px rgba(0,0,0,0.25); cursor: grabbing; z-index: 10000; }
+.dd-chip.in-zone { border-color: #10b981; background: linear-gradient(135deg, #d1fae5, #fff); }
+.dd-chip.foreign-in-zone { border-color: #ef4444; background: linear-gradient(135deg, #fee2e2, #fff); color: #991b1b; }
+.dd-chip.reject { animation: shake 0.4s; border-color: #ef4444; }
+
+.dd-feedback { margin-top: 14px; padding: 16px; border-radius: 12px; display: none; line-height: 1.8; }
+.dd-feedback.show { display: block; animation: fadeIn 0.3s; }
+.dd-feedback.correct { background: #d1fae5; color: #065f46; border-right: 4px solid #10b981; }
+.dd-feedback.wrong { background: #fee2e2; color: #991b1b; border-right: 4px solid #ef4444; }
+
+/* Symbol legend */
+.symbol-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 18px 0; }
+.symbol-item { background: white; padding: 14px; border-radius: 12px; border: 2px solid #e5e7eb; display: flex; align-items: center; gap: 12px; }
+.symbol-item .sym { font-size: 1.8em; font-weight: bold; color: #4c1d95; min-width: 40px; text-align: center; }
+.symbol-item .desc { font-size: 0.95em; color: #374151; line-height: 1.5; }
+
+/* Stats / dashboard */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0; }
+.stat-card { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 22px; border-radius: 16px; text-align: center; }
+.stat-card.green { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-card.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-card.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+.stat-card .number { font-size: 2.5em; font-weight: bold; margin-bottom: 5px; }
+.stat-card .label { font-size: 0.95em; opacity: 0.9; }
+.achievements { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+.achievement { padding: 12px 18px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; border-radius: 25px; box-shadow: 0 5px 15px rgba(251,191,36,0.4); display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.achievement.locked { background: #e5e7eb; color: #9ca3af; box-shadow: none; }
+
+/* Animations */
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.pop { animation: pop 0.4s; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+.confetti { position: fixed; width: 12px; height: 12px; pointer-events: none; z-index: 9999; }
+
+/* Mini-quiz at end */
+.quiz-question { background: white; border-radius: 14px; padding: 22px; margin: 18px 0; border: 2px solid #e5e7eb; }
+.quiz-question h4 { font-size: 1.05em; margin-bottom: 15px; color: #1f2937; line-height: 1.7; }
+.quiz-options { display: grid; gap: 10px; }
+.quiz-option { padding: 14px 18px; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: right; font-family: inherit; font-size: 0.98em; }
+.quiz-option:hover:not(.answered) { border-color: #667eea; background: #f3f4f6; }
+.quiz-option.correct { background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-color: #10b981; color: #065f46; font-weight: 500; }
+.quiz-option.wrong { background: linear-gradient(135deg, #fee2e2, #fecaca); border-color: #ef4444; color: #991b1b; }
+.quiz-feedback { margin-top: 15px; padding: 14px; border-radius: 10px; display: none; line-height: 1.7; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.3s; }
+.quiz-feedback.correct { background: #d1fae5; color: #065f46; border-right: 4px solid #10b981; }
+.quiz-feedback.wrong { background: #fee2e2; color: #991b1b; border-right: 4px solid #ef4444; }
+.score-display { font-size: 1.05em; font-weight: bold; color: #4c1d95; margin-bottom: 10px; }
+
+@media (max-width: 768px) {
+    .header h1 { font-size: 1.5em; }
+    .nav-tab { padding: 9px 13px; font-size: 0.82em; }
+    .section { padding: 20px; }
+    .twin-card .twin-set { font-size: 1em; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+    <h1>🎓 درس دوم: مجموعه‌های برابر و زیرمجموعه</h1>
+    <p>وقتشه ببینیم چه‌جوری مجموعه‌ها رو با هم مقایسه می‌کنیم — برابرن؟ یکی توی اون یکی جا می‌شه؟</p>
+    <div class="progress-wrapper">
+        <span class="progress-text" id="progressText">۰٪</span>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="overallProgress"></div>
+        </div>
+    </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" data-section="intro">📚 مقدمه</button>
+    <button class="nav-tab" data-section="equal">🟰 مجموعه‌های برابر</button>
+    <button class="nav-tab" data-section="game1">🎮 بازیِ برابری</button>
+    <button class="nav-tab" data-section="subset">📦 زیرمجموعه</button>
+    <button class="nav-tab" data-section="game2">🎯 بازیِ زیرمجموعه</button>
+    <button class="nav-tab" data-section="dragdrop">🧩 زیرمجموعه‌ساز</button>
+    <button class="nav-tab" data-section="quiz">🏆 آزمون و پیشرفت</button>
+</div>
+
+<!-- 1. INTRO -->
+<div class="section active" id="intro">
+    <h2>📚 از کجا شروع کنیم؟</h2>
+
+    <div class="opening-intro">
+        🎯 قبل از هر تعریف و فرمولی، بیا با دو تا صحنه‌ی آشنا از زندگیِ روزمره شروع کنیم!
+    </div>
+
+    <div class="opening-examples">
+        <div class="opening-example example-1">
+            <div class="example-badge">مثال ۱ — برابری</div>
+            <div class="example-icon">🥪</div>
+            <h3>دو لیستِ یه ساندویچ</h3>
+            <p>تو و رفیقت می‌خواید واسه‌ی پیک‌نیک یه ساندویچ بزنید. هر کدوم جدا مواد لازم رو می‌نویسید:</p>
+            <div class="example-set-box">لیستِ تو: نان، پنیر، گوجه، خیار</div>
+            <div class="example-set-box">لیستِ رفیقت: خیار، نان، گوجه، پنیر</div>
+            <div class="check-list">
+                <p>🤔 ترتیب فرق داره... ولی آخرش <strong>دقیقاً همون چهار تا چیز</strong>ه!</p>
+                <p>✅ پس این دو تا لیست در واقع <strong>یکی‌ان</strong> — ساندویچِ جفتتون مو‌به‌مو شبیهِ همه.</p>
+            </div>
+        </div>
+
+        <div class="opening-example example-2">
+            <div class="example-badge">مثال ۲ — زیرمجموعه</div>
+            <div class="example-icon">⚽</div>
+            <h3>تیمِ فوتبالِ کلاس</h3>
+            <p>کلاسِ شما ۳۰ نفره. ولی فقط ۱۱ نفر توی تیمِ فوتبالِ کلاسن:</p>
+            <div class="example-set-box">تیمِ فوتبال = ۱۱ نفر از بچه‌های کلاس</div>
+            <div class="check-list">
+                <p>🤔 آیا <strong>هر</strong> بازیکنِ تیم، دانش‌آموزِ این کلاس هم هست؟ صد در صد!</p>
+                <p>✅ پس تیمِ فوتبال «<strong>داخلِ</strong>» کلاسه — یه گروهِ کوچیک‌تر از دلِ گروهِ بزرگ‌تر.</p>
+                <p>❌ ولی برعکسش غلطه: هر بچه‌ی کلاس عضوِ تیم نیست!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bridge-box">
+        <div class="question">
+            دیدی؟ بدونِ هیچ فرمولی، خودت فهمیدی! ریاضی فقط واسه‌ی این دو حالت یه <strong>اسم</strong> و یه <strong>علامت</strong> گذاشته:
+        </div>
+        <div class="answer">🟰 لیست‌های یکسان = «مجموعه‌های برابر» &nbsp;|&nbsp; 📦 گروهِ داخلی = «زیرمجموعه»</div>
+    </div>
+
+    <h2 style="margin-top:30px">📚 حالا بریم دقیق‌ترش کنیم</h2>
+
+    <p>تو این درس دو تا سوالِ ساده ولی مهم جواب می‌دیم:</p>
+
+    <div class="card">
+        <h3>🔍 سوالِ ۱: آیا این دو مجموعه «برابرن»؟</h3>
+        <p>یعنی دقیقاً همون اعضا رو دارن؟ ممکنه یکی <strong>{2, 4, 6}</strong> باشه، اون یکی <strong>{6, 2, 4}</strong>. برابرن یا نه؟ (مثلِ همون دو تا لیستِ ساندویچ!)</p>
+    </div>
+
+    <div class="card">
+        <h3>📦 سوالِ ۲: آیا یکی از اون‌ها «داخلِ» اون یکی جا می‌شه؟</h3>
+        <p>یعنی همه‌ی اعضای گروهِ کوچیک‌تر، توی گروهِ بزرگ‌تر هم هستن؟ (مثلِ تیمِ فوتبال توی کلاس!) بهش می‌گیم <strong>زیرمجموعه</strong>.</p>
+    </div>
+
+    <h3>🗺 نقشه‌ی این درس:</h3>
+    <div class="card">
+        <p>✅ یاد می‌گیریم چه‌جوری بفهمیم دو مجموعه برابرن یا نه (و علامتِ =)</p>
+        <p>✅ تله‌های اعدادِ «هم‌ارز» رو می‌شناسیم (مثلاً ۳ همون 9/3 ست!)</p>
+        <p>✅ مفهوم <strong>زیرمجموعه</strong> (⊆) رو می‌فهمیم</p>
+        <p>✅ می‌بینیم چرا <strong>مجموعه‌ی تهی</strong>، زیرمجموعه‌ی <strong>هر</strong> مجموعه‌ایه</p>
+        <p>🎮 دو تا بازیِ تعاملی هم وسطِ کار داریم تا خودتو محک بزنی!</p>
+    </div>
+
+    <button class="btn btn-primary" onclick="markComplete('intro'); switchTab('equal')">
+        بریم سراغ مجموعه‌های برابر ←
+    </button>
+</div>
+
+<!-- 2. EQUAL SETS -->
+<div class="section" id="equal">
+    <h2>🟰 مجموعه‌های برابر</h2>
+
+    <div class="opening-intro">
+        دو مجموعه «برابر»ن اگه و فقط اگه <strong>دقیقاً همون اعضا</strong> رو داشته باشن. هیچ چیزِ دیگه مهم نیست!
+    </div>
+
+    <h3>🧪 آزمایشِ کلیدی:</h3>
+    <div class="twin-grid">
+        <div class="twin-card green">
+            <div class="twin-icon">👥</div>
+            <div class="twin-label">مجموعه A</div>
+            <div class="twin-set">{2, 4, 6}</div>
+        </div>
+        <div class="twin-equals">=</div>
+        <div class="twin-card blue">
+            <div class="twin-icon">👥</div>
+            <div class="twin-label">مجموعه B</div>
+            <div class="twin-set">{6, 2, 4}</div>
+        </div>
+    </div>
+
+    <div class="success-box">
+        <strong>✅ برابرن!</strong> چون <strong>هر</strong> عضوِ A توی B هست (۲، ۴، ۶ همگی)، و <strong>هر</strong> عضوِ B توی A هست. ترتیبِ نوشتن هیچ اهمیتی نداره — قانونِ سومِ مجموعه‌ها رو یادته؟
+    </div>
+
+    <h3>📐 تعریفِ رسمی</h3>
+    <div class="card">
+        <p>دو مجموعه‌ی <strong>A</strong> و <strong>B</strong> برابرند اگه:</p>
+        <p>۱) هر عضوِ A، عضوِ B هم باشه</p>
+        <p>۲) و هر عضوِ B، عضوِ A هم باشه</p>
+        <p>اون‌وقت می‌نویسیم: <span class="set-chip" style="font-size:1.15em">A = B</span></p>
+    </div>
+
+    <h3>⚠️ تله‌ی شماره ۱: شکل عضوها ممکنه فرق کنه!</h3>
+    <p>یه عدد می‌تونه چند جور لباس بپوشه. ولی همون آدمه!</p>
+
+    <div class="twin-grid">
+        <div class="twin-card green">
+            <div class="twin-icon">🥸</div>
+            <div class="twin-label">مجموعه A</div>
+            <div class="twin-set">{9/3, √25, 4}</div>
+        </div>
+        <div class="twin-equals">=</div>
+        <div class="twin-card blue">
+            <div class="twin-icon">😎</div>
+            <div class="twin-label">مجموعه B</div>
+            <div class="twin-set">{3, 5, 4}</div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>💡 چرا برابرن؟</strong> چون 9/3 = 3 و √25 = 5. عضوها فقط لباسِ متفاوت پوشیدن، ولی <strong>هویتشون یکیه</strong>. قبل از مقایسه، باید همیشه عضوها رو ساده کنی.
+    </div>
+
+    <h3>❌ تله‌ی شماره ۲: شبیه بودن کافی نیست!</h3>
+    <div class="twin-grid">
+        <div class="twin-card green">
+            <div class="twin-icon">👥</div>
+            <div class="twin-label">مجموعه A</div>
+            <div class="twin-set">{8, 9, 10}</div>
+        </div>
+        <div class="twin-equals" style="color:#ef4444">≠</div>
+        <div class="twin-card blue">
+            <div class="twin-icon">👥</div>
+            <div class="twin-label">مجموعه B</div>
+            <div class="twin-set">{7, 8, 9}</div>
+        </div>
+    </div>
+
+    <div class="warning">
+        <strong>❌ برابر نیستن!</strong> هر دو سه عضو دارن، هر دو اعدادِ متوالی‌ان، ولی <strong>۱۰ توی B نیست</strong> و <strong>۷ توی A نیست</strong>. حتی یه عضوِ متفاوت کافیه که برابری به هم بخوره.
+    </div>
+
+    <h3>🧠 قانونِ نابرابری</h3>
+    <div class="card">
+        <p>اگه <strong>حتی یه</strong> عضو در A باشه که در B نیست، یا یه عضو در B باشه که در A نیست:</p>
+        <p>اون‌وقت می‌نویسیم: <span class="set-chip" style="font-size:1.15em">A ≠ B</span></p>
+    </div>
+
+    <h3>📝 مثالِ معروفِ کتاب: حلِ کاملِ تمرین</h3>
+    <div class="card">
+        <p>کتاب می‌خواد این دو مجموعه برابر بشن، جاهای خالی رو پر کنیم:</p>
+        <div class="set-display">
+            {5, ?, 2/5, 4, 9/3} = {2/5, 3, -√144/(-2)², ?, √25}
+        </div>
+        <p><strong>قدم ۱ — ساده می‌کنیم:</strong></p>
+        <p>• 9/3 = 3</p>
+        <p>• √25 = 5</p>
+        <p>• -√144/(-2)² = -12/4 = <strong>-3</strong></p>
+        <p><strong>قدم ۲ — مقایسه می‌کنیم:</strong></p>
+        <p>سمتِ راست بعد از ساده‌سازی: {2/5, 3, -3, ?, 5}</p>
+        <p>سمتِ چپ بعد از ساده‌سازی: {5, ?, 2/5, 4, 3}</p>
+        <p><strong>قدم ۳ — جاهای خالی رو پیدا می‌کنیم:</strong></p>
+        <div class="success-box" style="margin:10px 0">
+            ✅ جای خالیِ سمتِ چپ = <strong>-3</strong> (چون -3 توی راست هست ولی توی چپ نیست)<br>
+            ✅ جای خالیِ سمتِ راست = <strong>4</strong> (چون 4 توی چپ هست ولی توی راست نیست)
+        </div>
+    </div>
+
+    <div class="highlight">
+        <strong>🎯 نسخه‌ی قطعی برای تشخیص برابری:</strong>
+        <p>۱) همه‌ی اعضا رو به ساده‌ترین شکل دربیار.</p>
+        <p>۲) ببین هر عضوِ سمت چپ توی سمت راست هست یا نه.</p>
+        <p>۳) ببین هر عضوِ سمت راست توی سمت چپ هست یا نه.</p>
+        <p>اگه هر دو شرط برقرار بود → برابرن. اگه حتی یکیش نبود → برابر نیستن.</p>
+    </div>
+
+    <button class="btn btn-primary" onclick="markComplete('equal'); switchTab('game1')">
+        🎮 حالا برو بازی کن و خودتو محک بزن!
+    </button>
+</div>
+
+<!-- 3. GAME 1 — EQUAL OR NOT? -->
+<div class="section" id="game1">
+    <h2>🎮 بازی ۱: برابر یا نابرابر؟</h2>
+    <p>یه دور ۱۰ سوالی. هر دفعه دو مجموعه نشونت می‌دم. تشخیص بده برابرن یا نه. <strong>هرچی پشت سرِ هم درست بزنی، استریک بالاتر می‌ره!</strong></p>
+
+    <div class="eq-game-area">
+        <div class="eq-round-info">
+            <span class="eq-round-counter">سوال <span id="eqRoundNum">۱</span> از ۱۰</span>
+            <span class="eq-score">امتیاز: <span id="eqScore">۰</span></span>
+            <span class="eq-streak">🔥 استریک: <span id="eqStreak">۰</span></span>
+        </div>
+
+        <div id="eqRoundContainer"></div>
+
+        <div class="eq-final" id="eqFinal"></div>
+    </div>
+
+    <div class="info-box">
+        <strong>💡 یادآوری:</strong> همیشه قبل از تصمیم‌گیری، عضوها رو ساده کن (مثلاً جذرها، کسرها). یه عضوِ کوچیکِ متفاوت کافیه که برابری از بین بره!
+    </div>
+
+    <button class="btn btn-primary" onclick="markComplete('game1'); switchTab('subset')">
+        بریم سراغ زیرمجموعه ←
+    </button>
+</div>
+
+<!-- 4. SUBSET -->
+<div class="section" id="subset">
+    <h2>📦 زیرمجموعه</h2>
+
+    <div class="opening-intro">
+        یه مجموعه «زیرمجموعه‌ی» مجموعه‌ی دیگه‌ست، اگه <strong>همه‌ی</strong> اعضاش توی اون مجموعه‌ی بزرگ‌تر باشن.
+    </div>
+
+    <h3>🎭 مثالِ زنده: گروه تئاترِ مدرسه</h3>
+    <div class="card">
+        <p>فرض کن مدرسه‌ی شما این دانش‌آموزا رو داره:</p>
+        <div class="set-display persian">
+            <span class="set-name">مدرسه</span> = {علی، رضا، مریم، سارا، امیر، نگار}
+        </div>
+        <p>و گروهِ تئاترِ مدرسه فقط این‌هان:</p>
+        <div class="set-display persian">
+            <span class="set-name">تئاتر</span> = {رضا، سارا، نگار}
+        </div>
+        <p><strong>هر</strong> عضوِ گروه تئاتر، دانش‌آموزِ مدرسه هم هست؟ آره! پس:</p>
+        <div class="success-box" style="text-align:center;font-size:1.2em">
+            <strong>تئاتر ⊆ مدرسه</strong> (تئاتر زیرمجموعه‌ی مدرسه‌ست)
+        </div>
+    </div>
+
+    <h3>📐 تعریفِ رسمی</h3>
+    <div class="card">
+        <p>مجموعه‌ی <strong>B</strong> «زیرمجموعه‌ی» مجموعه‌ی <strong>A</strong> ست، اگه <strong>هر</strong> عضوِ B، عضوِ A هم باشه.</p>
+        <p>می‌نویسیم: <span class="set-chip" style="font-size:1.15em">B ⊆ A</span></p>
+    </div>
+
+    <h3>🔣 نمادها رو یاد بگیر</h3>
+    <div class="symbol-legend">
+        <div class="symbol-item">
+            <div class="sym">⊆</div>
+            <div class="desc"><strong>زیرمجموعه است</strong><br>B ⊆ A یعنی «B زیرمجموعه‌ی A ست»</div>
+        </div>
+        <div class="symbol-item">
+            <div class="sym">⊄</div>
+            <div class="desc"><strong>زیرمجموعه نیست</strong><br>B ⊄ A یعنی «حداقل یه عضوی توی B هست که توی A نیست»</div>
+        </div>
+        <div class="symbol-item">
+            <div class="sym">∈</div>
+            <div class="desc"><strong>عضو است</strong> (واسه یک عضوِ تنها)</div>
+        </div>
+        <div class="symbol-item">
+            <div class="sym">∅</div>
+            <div class="desc"><strong>مجموعه‌ی تهی</strong> (بدون هیچ عضو)</div>
+        </div>
+    </div>
+
+    <div class="warning">
+        <strong>⚠️ خیلی مهم — فرقِ ∈ با ⊆:</strong>
+        <p>• <strong>∈</strong> برای یه <strong>عضوِ تنها</strong>ست: مثلاً 3 ∈ {1, 2, 3} ✅</p>
+        <p>• <strong>⊆</strong> برای یه <strong>مجموعه</strong>ست: مثلاً {3} ⊆ {1, 2, 3} ✅</p>
+        <p>۳ یه عدده، {۳} یه مجموعه‌ی یک‌عضویه — این دو فرق دارن!</p>
+    </div>
+
+    <h3>⭐ سه نکته‌ی طلایی که حتماً تو امتحان میاد</h3>
+
+    <div class="card">
+        <h3>۱) هر مجموعه، زیرمجموعه‌ی خودشه</h3>
+        <p>یعنی همیشه: <span class="set-chip" style="font-size:1.1em">A ⊆ A</span></p>
+        <p><strong>چرا؟</strong> چون هر عضوِ A قطعاً عضوِ A هست (خودشه دیگه!).</p>
+    </div>
+
+    <div class="card">
+        <h3>۲) مجموعه‌ی تهی، زیرمجموعه‌ی هر مجموعه‌ایه</h3>
+        <p>یعنی برای هر مجموعه‌ی A: <span class="set-chip" style="font-size:1.1em">∅ ⊆ A</span></p>
+        <p><strong>چرا؟</strong> برای رد کردنش، باید یه عضو توی ∅ پیدا کنی که توی A نباشه. ولی ∅ <strong>هیچ عضوی نداره</strong>! پس نمی‌تونی ردش کنی. پس همیشه درسته.</p>
+        <div class="info-box" style="margin-top:10px">
+            <strong>🧠 ترفندِ به یاد سپردن:</strong> مجموعه‌ی تهی مثل یه چمدونِ خالیه. هر کمدی رو باز کنی، می‌تونی یه چمدونِ خالی توش جا بدی — چون چیزی نداره که سرریز کنه!
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>۳) اگه A ⊆ B و B ⊆ A، اون‌وقت A = B</h3>
+        <p>یعنی اگه هر کدوم زیرمجموعه‌ی اون یکی باشه، حتماً برابرن. این منطقیه — چون هر عضوِ A توی B هست و برعکس!</p>
+    </div>
+
+    <h3>❌ کِی زیرمجموعه نیست؟</h3>
+    <div class="warning">
+        اگه <strong>حتی یه</strong> عضو توی B باشه که توی A نباشه، اون‌وقت B زیرمجموعه‌ی A نیست: <span class="set-chip" style="background:#ef4444;font-size:1.1em">B ⊄ A</span>
+    </div>
+
+    <div class="twin-grid">
+        <div class="twin-card green">
+            <div class="twin-icon">📦</div>
+            <div class="twin-label">A</div>
+            <div class="twin-set">{1, 2, 3, 4, 5}</div>
+        </div>
+        <div class="twin-equals" style="color:#ef4444;font-size:2em">⊄</div>
+        <div class="twin-card blue">
+            <div class="twin-icon">📦</div>
+            <div class="twin-label">B</div>
+            <div class="twin-set">{2, 4, 7}</div>
+        </div>
+    </div>
+    <div class="info-box">
+        <strong>چرا B ⊄ A؟</strong> چون <strong>۷</strong> توی B هست ولی توی A نیست. همین یه عضو کافیه که زیرمجموعه نباشه.
+    </div>
+
+    <button class="btn btn-primary" onclick="markComplete('subset'); switchTab('game2')">
+        🎮 حالا تو زیرمجموعه‌یاب شو!
+    </button>
+</div>
+
+<!-- 5. GAME 2 — SUBSET HUNTER -->
+<div class="section" id="game2">
+    <h2>🎯 بازی ۲: شکارچی زیرمجموعه</h2>
+    <p>یه مجموعه‌ی اصلی نشونت می‌دم. بعد یه مجموعه‌ی دیگه می‌بینی. تصمیم بگیر: <strong>زیرمجموعه‌ی اصلیه یا نه؟</strong></p>
+    <p>❤️ سه تا جون داری. هر اشتباه یه جون می‌بره. تا آخرِ ۱۰ سوال جون بمونه، برنده‌ای!</p>
+
+    <div class="sub-game-area">
+        <div class="eq-round-info">
+            <span class="eq-round-counter">سوال <span id="subRoundNum">۱</span> از ۱۰</span>
+            <span class="eq-score">امتیاز: <span id="subScore">۰</span></span>
+            <span class="sub-lives" id="subLives">❤️❤️❤️</span>
+        </div>
+
+        <div id="subRoundContainer"></div>
+
+        <div class="eq-final" id="subFinal"></div>
+    </div>
+
+    <div class="info-box">
+        <strong>🧠 یادت باشه:</strong>
+        <p>• مجموعه‌ی تهی (∅ یا { }) <strong>همیشه</strong> زیرمجموعه‌ست.</p>
+        <p>• یه مجموعه، زیرمجموعه‌ی خودشه.</p>
+        <p>• اگه حتی یه عضوِ غیرمشترک ببینی، دیگه زیرمجموعه نیست.</p>
+    </div>
+
+    <button class="btn btn-primary" onclick="markComplete('game2'); switchTab('dragdrop')">
+        بریم بازیِ کشیدنی ←
+    </button>
+</div>
+
+<!-- 6. DRAG & DROP — SUBSET BUILDER -->
+<div class="section" id="dragdrop">
+    <h2>🧩 زیرمجموعه‌ساز — با موس بساز!</h2>
+    <p>یادته زیرمجموعه یعنی چی؟ یعنی یه مجموعه که <strong>همه‌ی اعضاش</strong> توی یه مجموعه‌ی بزرگ‌تر باشه. این‌جا قراره خودت یکی بسازی!</p>
+
+    <div class="card">
+        <h3>🎮 چه‌جوری بازی کنیم؟ (۳ قدم ساده)</h3>
+        <p><strong>۱.</strong> بالا یه مجموعه‌ی آماده می‌بینی به اسمِ <strong>A</strong>. این مجموعه ثابته و فقط برای اینه که بدونی چه عددهایی «مجازن».</p>
+        <p><strong>۲.</strong> پایین یه عالمه کارت ریخته. با موس کارت‌ها رو بگیر و بکش بالا، بنداز توی کادرِ <strong>B</strong>. این مجموعه‌ی B همونیه که <strong>تو داری می‌سازی</strong>.</p>
+        <p><strong>۳.</strong> فقط کارت‌هایی رو بکش داخل که توی A هم هستن! آخرش دکمه‌ی <strong>«بررسی کن»</strong> رو بزن.</p>
+    </div>
+
+    <div class="info-box">
+        <strong>🎯 ماموریتِ این مرحله:</strong> <span id="ddMission">...</span>
+        <p style="margin-top:8px">⚠️ <strong>تله:</strong> بعضی کارت‌ها توی A نیستن! اگه یکیشون رو بکشی توی B، اون‌وقت B دیگه «همه‌ی اعضاش توی A» نیست — یعنی دیگه زیرمجموعه نیست. نوارِ رنگی پایینِ کادر بهت می‌گه درست پیش می‌ری یا نه.</p>
+    </div>
+
+    <div class="dd-round-info">
+        <span class="eq-round-counter">مرحله <span id="ddRoundNum">۱</span> از ۴</span>
+        <span class="eq-score">⭐ ستاره: <span id="ddStars">۰</span></span>
+    </div>
+
+    <!-- The fixed reference set A -->
+    <div class="dd-universe">
+        <div class="dd-universe-label">🌍 مجموعه‌ی A (آماده و ثابت) — فقط این عددها مجازن:</div>
+        <div class="dd-universe-set" id="ddUniverseSet"></div>
+    </div>
+
+    <!-- Drop zone B -->
+    <div class="dd-zone" id="ddZone">
+        <div class="dd-zone-title">📦 مجموعه‌ی B (تو می‌سازیش) — کارت‌ها رو بکش این تو 👇</div>
+        <div class="dd-zone-items" id="ddZoneItems"></div>
+        <div class="dd-zone-empty" id="ddZoneEmpty">هنوز خالیه... یه کارت بکش این تو 👇</div>
+    </div>
+
+    <!-- Live status -->
+    <div class="dd-status" id="ddStatus">
+        <span id="ddStatusText">B ⊆ A ؟ → یه کارت بکش تا ببینیم</span>
+    </div>
+
+    <!-- Pool of draggable chips -->
+    <div class="dd-pool-label">🃏 کارت‌های در دسترس (بکششون بالا):</div>
+    <div class="dd-pool" id="ddPool"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="btn btn-success" onclick="ddCheck()">✅ بررسی کن</button>
+        <button class="btn btn-secondary" onclick="ddResetRound()">🔄 خالی کن</button>
+    </div>
+
+    <div class="dd-feedback" id="ddFeedback"></div>
+    <div class="eq-final" id="ddFinal"></div>
+
+    <button class="btn btn-primary" onclick="markComplete('dragdrop'); switchTab('quiz')" style="margin-top:18px">
+        بریم آزمونِ نهایی ←
+    </button>
+</div>
+
+<!-- 7. QUIZ + DASHBOARD -->
+<div class="section" id="quiz">
+    <h2>🏆 آزمونِ نهایی + پیشرفت تو</h2>
+    <p>۸ سوالِ ترکیبی از کلِ درس. هر سوال فقط یه بار جواب می‌گیره.</p>
+
+    <div class="score-display" id="quizScoreDisplay">امتیاز: ۰ از ۰</div>
+    <div id="quizContainer"></div>
+    <div id="quizFinalResult" style="display:none;"></div>
+
+    <h3 style="margin-top:30px">📊 کارنامه‌ی پیشرفتت</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="number" id="statCompleted">۰</div>
+            <div class="label">بخش تکمیل شده از ۶</div>
+        </div>
+        <div class="stat-card green">
+            <div class="number" id="statEq">۰</div>
+            <div class="label">امتیازِ بازی برابری</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="number" id="statSub">۰</div>
+            <div class="label">امتیازِ بازی زیرمجموعه</div>
+        </div>
+        <div class="stat-card pink">
+            <div class="number" id="statQuiz">۰</div>
+            <div class="label">امتیازِ آزمون از ۸</div>
+        </div>
+    </div>
+
+    <h3>🎖 دستاوردها</h3>
+    <div class="achievements" id="achList"></div>
+
+    <h3>📋 خلاصه‌ی همه‌ی نکاتِ کلیدی</h3>
+    <div class="card">
+        <p>✅ <strong>A = B</strong> یعنی همه‌ی اعضای دو مجموعه یکسانن (هر چی توی A هست توی B هم هست و برعکس)</p>
+        <p>✅ ترتیبِ اعضا و شکلِ نوشتنشون (مثلاً 9/3 یا 3) مهم نیست — هویتشون مهمه</p>
+        <p>✅ حتی یه عضوِ غیرمشترک کافیه که A ≠ B</p>
+        <p>✅ <strong>B ⊆ A</strong> یعنی هر عضوِ B توی A هم هست</p>
+        <p>✅ هر مجموعه زیرمجموعه‌ی خودشه: A ⊆ A</p>
+        <p>✅ مجموعه‌ی تهی زیرمجموعه‌ی هر مجموعه‌ایه: ∅ ⊆ A</p>
+        <p>✅ ∈ برای عضوِ تنها، ⊆ برای مجموعه</p>
+    </div>
+
+    <button class="btn btn-secondary" onclick="resetAll()" style="margin-top:12px">🔄 شروع از اول</button>
+</div>
+
+</div>
+
+<script>
+// ============== STATE ==============
+const state = {
+    completed: JSON.parse(localStorage.getItem('d2_completed') || '{}'),
+    eqScore: parseInt(localStorage.getItem('d2_eqScore') || '0'),
+    eqRound: parseInt(localStorage.getItem('d2_eqRound') || '0'),
+    eqStreak: parseInt(localStorage.getItem('d2_eqStreak') || '0'),
+    eqBest: parseInt(localStorage.getItem('d2_eqBest') || '0'),
+    subScore: parseInt(localStorage.getItem('d2_subScore') || '0'),
+    subRound: parseInt(localStorage.getItem('d2_subRound') || '0'),
+    subLives: parseInt(localStorage.getItem('d2_subLives') || '3'),
+    quizScore: parseInt(localStorage.getItem('d2_quizScore') || '0'),
+    quizAnswered: JSON.parse(localStorage.getItem('d2_quizAnswered') || '[]')
+};
+
+const toFa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+// ============== NAVIGATION ==============
+document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.section));
+});
+
+function switchTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`.nav-tab[data-section="${id}"]`).classList.add('active');
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id === 'quiz') updateDashboard();
+}
+
+function markComplete(id) {
+    state.completed[id] = true;
+    localStorage.setItem('d2_completed', JSON.stringify(state.completed));
+    document.querySelector(`.nav-tab[data-section="${id}"]`).classList.add('completed');
+    updateProgress();
+    fireConfetti();
+}
+
+function updateProgress() {
+    const total = 6;
+    const done = ['intro','equal','game1','subset','game2','dragdrop'].filter(k => state.completed[k]).length;
+    const pct = Math.round(done/total*100);
+    document.getElementById('overallProgress').style.width = pct + '%';
+    document.getElementById('progressText').textContent = toFa(pct) + '٪';
+    Object.keys(state.completed).forEach(id => {
+        const t = document.querySelector(`.nav-tab[data-section="${id}"]`);
+        if (t) t.classList.add('completed');
+    });
+}
+
+// ============== CONFETTI ==============
+function fireConfetti() {
+    const colors = ['#667eea','#10b981','#f59e0b','#ec4899','#3b82f6','#fbbf24'];
+    for (let i = 0; i < 40; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random()*100 + 'vw';
+        c.style.top = '-20px';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(c);
+        const dx = (Math.random()-0.5)*300;
+        const dy = window.innerHeight + 50;
+        c.animate([
+            { transform: c.style.transform, opacity: 1 },
+            { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
+        ], { duration: 2000 + Math.random()*1000, easing: 'cubic-bezier(.2,.6,.4,1)' });
+        setTimeout(() => c.remove(), 3000);
+    }
+}
+
+// ============================================
+// GAME 1 — EQUAL OR NOT EQUAL?
+// ============================================
+const eqRounds = [
+    {
+        a: '{1, 2, 3}',
+        b: '{3, 1, 2}',
+        equal: true,
+        why: 'هر سه عضو یکسانه. ترتیبِ نوشتن هیچ اهمیتی نداره.'
+    },
+    {
+        a: '{2, 4, 6}',
+        b: '{2, 4, 6, 8}',
+        equal: false,
+        why: 'مجموعه‌ی B یه عضوِ اضافه داره (۸). همین کافیه که برابر نباشن.'
+    },
+    {
+        a: '{9/3, 4, √25}',
+        b: '{3, 4, 5}',
+        equal: true,
+        why: 'ساده کن: 9/3 = 3 و √25 = 5. پس A = {3, 4, 5} = B.'
+    },
+    {
+        a: '{7, 8, 9}',
+        b: '{8, 9, 10}',
+        equal: false,
+        why: 'این همون تله‌ی معروفِ کتابه! هر دو سه‌تا عضو متوالی دارن، ولی ۷ توی B نیست و ۱۰ توی A نیست.'
+    },
+    {
+        a: '{1, 1, 2, 3}',
+        b: '{1, 2, 3}',
+        equal: true,
+        why: 'تکرار توی مجموعه‌ها بی‌اثره. {1, 1, 2, 3} همون {1, 2, 3} ست.'
+    },
+    {
+        a: '{ }',
+        b: '∅',
+        equal: true,
+        why: 'هر دوش مجموعه‌ی تهی‌ان — فقط دو شکلِ مختلفِ نوشتن. هیچ عضوی ندارن.'
+    },
+    {
+        a: '{√16, 8/2, 4}',
+        b: '{4}',
+        equal: true,
+        why: 'ساده کن: √16 = 4 و 8/2 = 4. پس A = {4, 4, 4} = {4} = B (تکرارها حذف می‌شن).'
+    },
+    {
+        a: '{2, 4, 6}',
+        b: '{2, 4, 7}',
+        equal: false,
+        why: 'دو تا عضو مشترکن (۲ و ۴)، ولی ۶ توی B نیست و ۷ توی A نیست. پس برابر نیستن.'
+    },
+    {
+        a: '{a, b, c}',
+        b: '{c, b, a, b}',
+        equal: true,
+        why: 'تکرارِ b حذف می‌شه و ترتیب مهم نیست. هر دو در نهایت {a, b, c} هستن.'
+    },
+    {
+        a: '{0}',
+        b: '∅',
+        equal: false,
+        why: 'تله‌ی مهم! {0} مجموعه‌ای با یه عضوه (عددِ صفر). ∅ مجموعه‌ی تهیه با هیچ عضو. این دو فرق دارن!'
+    }
+];
+
+function renderEqRound() {
+    const container = document.getElementById('eqRoundContainer');
+    if (state.eqRound >= eqRounds.length) {
+        container.innerHTML = '';
+        showEqFinal();
+        return;
+    }
+    const r = eqRounds[state.eqRound];
+    document.getElementById('eqRoundNum').textContent = toFa(state.eqRound + 1);
+    document.getElementById('eqScore').textContent = toFa(state.eqScore);
+    document.getElementById('eqStreak').textContent = toFa(state.eqStreak);
+
+    container.innerHTML = `
+        <div class="eq-sets-display">
+            <div class="eq-set-box"><span class="set-name">A</span> = ${r.a}</div>
+            <div class="eq-qmark">?</div>
+            <div class="eq-set-box"><span class="set-name">B</span> = ${r.b}</div>
+        </div>
+        <div class="eq-answers">
+            <button class="eq-btn yes" onclick="answerEq(true)">🟰 برابرن</button>
+            <button class="eq-btn no" onclick="answerEq(false)">≠ برابر نیستن</button>
+        </div>
+        <div class="eq-feedback" id="eqFeedback"></div>
+    `;
+}
+
+function answerEq(choice) {
+    const r = eqRounds[state.eqRound];
+    const correct = (choice === r.equal);
+    const buttons = document.querySelectorAll('#game1 .eq-btn');
+    buttons.forEach(b => b.disabled = true);
+    const picked = choice ? buttons[0] : buttons[1];
+    picked.classList.add('selected', correct ? 'correct' : 'wrong');
+    if (!correct) {
+        const right = r.equal ? buttons[0] : buttons[1];
+        right.classList.add('selected', 'correct');
+    }
+    const fb = document.getElementById('eqFeedback');
+    if (correct) {
+        state.eqScore++;
+        state.eqStreak++;
+        if (state.eqStreak > state.eqBest) state.eqBest = state.eqStreak;
+        fb.className = 'eq-feedback show correct';
+        fb.innerHTML = `✅ <strong>درسته!</strong> ${r.why}`;
+        if (state.eqStreak >= 3) fireConfetti();
+    } else {
+        state.eqStreak = 0;
+        fb.className = 'eq-feedback show wrong';
+        fb.innerHTML = `❌ <strong>اشتباه.</strong> ${r.why}`;
+    }
+    fb.innerHTML += `<div style="margin-top:12px"><button class="btn btn-primary eq-next-btn" onclick="nextEqRound()">سوال بعد ←</button></div>`;
+    saveEq();
+    document.getElementById('eqScore').textContent = toFa(state.eqScore);
+    document.getElementById('eqStreak').textContent = toFa(state.eqStreak);
+}
+
+function nextEqRound() {
+    state.eqRound++;
+    saveEq();
+    renderEqRound();
+}
+
+function saveEq() {
+    localStorage.setItem('d2_eqScore', state.eqScore);
+    localStorage.setItem('d2_eqRound', state.eqRound);
+    localStorage.setItem('d2_eqStreak', state.eqStreak);
+    localStorage.setItem('d2_eqBest', state.eqBest);
+}
+
+function showEqFinal() {
+    const final = document.getElementById('eqFinal');
+    const pct = Math.round(state.eqScore / eqRounds.length * 100);
+    let msg, emoji;
+    if (pct === 100) { msg = 'فوق‌العاده! کاملاً مسلطی!'; emoji = '🏆'; }
+    else if (pct >= 80) { msg = 'عالی! تسلطِ خوبی داری.'; emoji = '🌟'; }
+    else if (pct >= 60) { msg = 'خوبه، ولی مرورِ مفهوم ضرر نداره.'; emoji = '👍'; }
+    else { msg = 'بهتره به بخشِ آموزش برگردی.'; emoji = '📚'; }
+    final.classList.add('show');
+    final.innerHTML = `
+        <h3>${emoji} بازی تموم شد!</h3>
+        <div class="big-score">${toFa(state.eqScore)} / ${toFa(eqRounds.length)}</div>
+        <p>${msg}</p>
+        <p style="margin-top:10px">🔥 بهترین استریک تو: <strong>${toFa(state.eqBest)}</strong></p>
+        <button class="btn btn-primary" onclick="resetEq()" style="margin-top:12px">🔄 بازیِ مجدد</button>
+    `;
+    if (pct >= 60) markComplete('game1');
+}
+
+function resetEq() {
+    state.eqScore = 0;
+    state.eqRound = 0;
+    state.eqStreak = 0;
+    saveEq();
+    document.getElementById('eqFinal').classList.remove('show');
+    renderEqRound();
+}
+
+// ============================================
+// GAME 2 — SUBSET HUNTER
+// ============================================
+const subRounds = [
+    {
+        main: '{1, 2, 3, 4, 5}',
+        cand: '{2, 4}',
+        isSub: true,
+        why: 'هم ۲ و هم ۴ توی مجموعه‌ی اصلی هستن. پس {2, 4} زیرمجموعه‌ی {1,2,3,4,5} ست.'
+    },
+    {
+        main: '{1, 2, 3, 4, 5}',
+        cand: '{2, 4, 7}',
+        isSub: false,
+        why: 'عددِ ۷ توی مجموعه‌ی اصلی نیست! همین یه عضو کافیه که زیرمجموعه نباشه.'
+    },
+    {
+        main: '{a, b, c, d}',
+        cand: '∅',
+        isSub: true,
+        why: 'مجموعه‌ی تهی <strong>همیشه</strong> زیرمجموعه‌ست. نکته‌ی طلایی!'
+    },
+    {
+        main: '{2, 4, 6, 8, 10}',
+        cand: '{2, 4, 6, 8, 10}',
+        isSub: true,
+        why: 'هر مجموعه زیرمجموعه‌ی خودشه. A ⊆ A همیشه درسته.'
+    },
+    {
+        main: '{1, 3, 5, 7, 9}',
+        cand: '{1, 3, 5, 7, 9, 11}',
+        isSub: false,
+        why: 'دقت کن! مجموعه‌ی دوم بزرگ‌تره — ۱۱ توی اصلی نیست. پس زیرمجموعه نیست.'
+    },
+    {
+        main: '{شیراز، تهران، اصفهان، تبریز}',
+        cand: '{تهران، اصفهان}',
+        isSub: true,
+        why: 'هم تهران و هم اصفهان توی مجموعه‌ی اصلی هستن. ✅'
+    },
+    {
+        main: '{2, 4, 6, 8}',
+        cand: '{4}',
+        isSub: true,
+        why: 'حتی مجموعه‌های تک‌عضوی هم می‌تونن زیرمجموعه باشن. ۴ توی اصلی هست. ✅'
+    },
+    {
+        main: '{ }',
+        cand: '{1}',
+        isSub: false,
+        why: 'مجموعه‌ی اصلی تهیه! هیچ عضوی نداره. ولی {1} عضو ۱ رو داره. پس {1} نمی‌تونه زیرمجموعه‌ی تهی باشه.'
+    },
+    {
+        main: '{0, 1, 2}',
+        cand: '∅',
+        isSub: true,
+        why: 'باز هم: مجموعه‌ی تهی همیشه زیرمجموعه‌ست — حتی توی مجموعه‌های کوچیک.'
+    },
+    {
+        main: '{a, b, c, d, e}',
+        cand: '{a, c, f}',
+        isSub: false,
+        why: 'هرچند a و c داخل اصلی هستن، ولی f نیست. یه عضوِ غیرمشترک کافیه!'
+    }
+];
+
+function isPersian(text) {
+    return /[\u0600-\u06FF]/.test(text);
+}
+
+function renderSubRound() {
+    const container = document.getElementById('subRoundContainer');
+    if (state.subRound >= subRounds.length || state.subLives <= 0) {
+        container.innerHTML = '';
+        showSubFinal();
+        return;
+    }
+    const r = subRounds[state.subRound];
+    document.getElementById('subRoundNum').textContent = toFa(state.subRound + 1);
+    document.getElementById('subScore').textContent = toFa(state.subScore);
+    document.getElementById('subLives').innerHTML = renderLives();
+
+    const mainCls = isPersian(r.main) ? 'main-set persian' : 'main-set';
+    const candCls = isPersian(r.cand) ? 'sub-candidate persian' : 'sub-candidate';
+
+    container.innerHTML = `
+        <div class="sub-main-display">
+            <div class="label">مجموعه‌ی اصلی</div>
+            <div class="${mainCls}"><span style="color:#fcd34d">A</span> = ${r.main}</div>
+        </div>
+        <div class="sub-question">آیا مجموعه‌ی زیر، زیرمجموعه‌ی A هست؟</div>
+        <div class="${candCls}">${r.cand}</div>
+        <div class="sub-buttons">
+            <button class="sub-btn is" onclick="answerSub(true)"><span class="sub-symbol">⊆</span> هست (زیرمجموعه‌ست)</button>
+            <button class="sub-btn not" onclick="answerSub(false)"><span class="sub-symbol">⊄</span> نیست</button>
+        </div>
+        <div class="eq-feedback" id="subFeedback"></div>
+    `;
+}
+
+function renderLives() {
+    let html = '';
+    for (let i = 0; i < 3; i++) {
+        html += `<span class="sub-life${i < state.subLives ? '' : ' lost'}">❤️</span>`;
+    }
+    return html;
+}
+
+function answerSub(choice) {
+    const r = subRounds[state.subRound];
+    const correct = (choice === r.isSub);
+    const buttons = document.querySelectorAll('#game2 .sub-btn');
+    buttons.forEach(b => b.disabled = true);
+    const picked = choice ? buttons[0] : buttons[1];
+    picked.classList.add('selected', correct ? 'correct' : 'wrong');
+    if (!correct) {
+        const right = r.isSub ? buttons[0] : buttons[1];
+        right.classList.add('selected', 'correct');
+        state.subLives--;
+    } else {
+        state.subScore++;
+    }
+    const fb = document.getElementById('subFeedback');
+    if (correct) {
+        fb.className = 'eq-feedback show correct';
+        fb.innerHTML = `✅ <strong>درسته!</strong> ${r.why}`;
+        fireConfetti();
+    } else {
+        fb.className = 'eq-feedback show wrong';
+        fb.innerHTML = `💔 <strong>اشتباه — یه جون از دست دادی.</strong> ${r.why}`;
+    }
+    document.getElementById('subLives').innerHTML = renderLives();
+    fb.innerHTML += `<div style="margin-top:12px"><button class="btn btn-primary" onclick="nextSubRound()">سوال بعد ←</button></div>`;
+    saveSub();
+    document.getElementById('subScore').textContent = toFa(state.subScore);
+}
+
+function nextSubRound() {
+    state.subRound++;
+    saveSub();
+    renderSubRound();
+}
+
+function saveSub() {
+    localStorage.setItem('d2_subScore', state.subScore);
+    localStorage.setItem('d2_subRound', state.subRound);
+    localStorage.setItem('d2_subLives', state.subLives);
+}
+
+function showSubFinal() {
+    const final = document.getElementById('subFinal');
+    const won = state.subLives > 0 && state.subRound >= subRounds.length;
+    let msg, emoji;
+    if (won && state.subScore === subRounds.length) { msg = 'پرفکت! بدون از دست دادنِ جون!'; emoji = '🏆'; }
+    else if (won) { msg = 'موفق شدی تموم کنی! جون داشتی!'; emoji = '🌟'; }
+    else { msg = 'جون‌هات تموم شد! یه بار دیگه امتحان کن.'; emoji = '💔'; }
+    final.classList.add('show');
+    final.innerHTML = `
+        <h3>${emoji} بازی تموم شد!</h3>
+        <div class="big-score">${toFa(state.subScore)} / ${toFa(subRounds.length)}</div>
+        <p>${msg}</p>
+        <p style="margin-top:10px">جون باقی‌مونده: ${renderLives()}</p>
+        <button class="btn btn-primary" onclick="resetSub()" style="margin-top:12px">🔄 بازیِ مجدد</button>
+    `;
+    if (state.subScore >= 6) markComplete('game2');
+}
+
+function resetSub() {
+    state.subScore = 0;
+    state.subRound = 0;
+    state.subLives = 3;
+    saveSub();
+    document.getElementById('subFinal').classList.remove('show');
+    renderSubRound();
+}
+
+// ============================================
+// DRAG & DROP — SUBSET BUILDER
+// ============================================
+const ddRounds = [
+    {
+        universe: ['۲', '۴', '۶', '۸'],
+        decoys: ['۵', '۷'],
+        goal: 2,
+        missionText: 'یه زیرمجموعه‌ی <strong>دقیقاً ۲ عضوی</strong> از A بساز.'
+    },
+    {
+        universe: ['a', 'b', 'c', 'd'],
+        decoys: ['x', 'z'],
+        goal: 3,
+        missionText: 'یه زیرمجموعه‌ی <strong>دقیقاً ۳ عضوی</strong> از A بساز.'
+    },
+    {
+        universe: ['۱', '۳', '۵', '۷', '۹'],
+        decoys: ['۲', '۴'],
+        goal: 5,
+        missionText: 'همه‌ی ۵ عضوِ A رو بکش داخل! (یادت باشه: <strong>A ⊆ A</strong> هم درسته)'
+    },
+    {
+        universe: ['🍎', '🍌', '🍇', '🍊'],
+        decoys: ['🥕', '🌶️'],
+        goal: 3,
+        missionText: 'یه سبدِ ۳ تایی فقط از <strong>میوه‌های A</strong> بساز (هویج و فلفل میوه نیستن، توی A نیستن!).'
+    }
+];
+
+let ddState = { round: 0, stars: 0, pool: [], zone: [], dragEl: null };
+
+function ddInit() {
+    ddState.round = parseInt(localStorage.getItem('d2_ddRound') || '0');
+    ddState.stars = parseInt(localStorage.getItem('d2_ddStars') || '0');
+    if (ddState.round >= ddRounds.length) { ddShowFinal(); return; }
+    ddLoadRound();
+}
+
+function ddLoadRound() {
+    const r = ddRounds[ddState.round];
+    // build pool items with unique ids
+    let id = 0;
+    ddState.pool = [];
+    ddState.zone = [];
+    r.universe.forEach(v => ddState.pool.push({ id: id++, val: v, inA: true }));
+    r.decoys.forEach(v => ddState.pool.push({ id: id++, val: v, inA: false }));
+    // shuffle pool
+    ddState.pool.sort(() => Math.random() - 0.5);
+    document.getElementById('ddRoundNum').textContent = toFa(ddState.round + 1);
+    document.getElementById('ddStars').textContent = toFa(ddState.stars);
+    document.getElementById('ddMission').innerHTML = r.missionText;
+    document.getElementById('ddFeedback').className = 'dd-feedback';
+    document.getElementById('ddFeedback').innerHTML = '';
+    renderDD();
+}
+
+function renderDD() {
+    const r = ddRounds[ddState.round];
+    // universe (fixed reference)
+    document.getElementById('ddUniverseSet').innerHTML =
+        r.universe.map(v => `<span class="dd-mem">${v}</span>`).join('');
+    // pool
+    const pool = document.getElementById('ddPool');
+    pool.innerHTML = ddState.pool.map(it =>
+        `<div class="dd-chip" data-id="${it.id}" data-loc="pool">${it.val}</div>`).join('');
+    // zone
+    const zoneItems = document.getElementById('ddZoneItems');
+    const empty = document.getElementById('ddZoneEmpty');
+    if (ddState.zone.length === 0) {
+        zoneItems.innerHTML = '';
+        empty.style.display = 'block';
+    } else {
+        empty.style.display = 'none';
+        zoneItems.innerHTML = ddState.zone.map(it =>
+            `<div class="dd-chip ${it.inA ? 'in-zone' : 'foreign-in-zone'}" data-id="${it.id}" data-loc="zone">${it.val}</div>`).join('');
+    }
+    attachDDHandlers();
+    updateDDStatus();
+}
+
+function updateDDStatus() {
+    const status = document.getElementById('ddStatus');
+    const text = document.getElementById('ddStatusText');
+    const zone = document.getElementById('ddZone');
+    if (ddState.zone.length === 0) {
+        status.className = 'dd-status';
+        text.innerHTML = 'B ⊆ A ؟ → یه کارت بکش تا ببینیم';
+        zone.classList.remove('valid', 'invalid');
+        return;
+    }
+    const allIn = ddState.zone.every(it => it.inA);
+    const setStr = '{' + ddState.zone.map(it => it.val).join('، ') + '}';
+    if (allIn) {
+        status.className = 'dd-status yes';
+        text.innerHTML = `✅ B = ${setStr} &nbsp; → &nbsp; B ⊆ A درسته! همه‌ی اعضا توی A هستن.`;
+        zone.classList.add('valid'); zone.classList.remove('invalid');
+    } else {
+        const bad = ddState.zone.filter(it => !it.inA).map(it => it.val).join('، ');
+        status.className = 'dd-status no';
+        text.innerHTML = `❌ B = ${setStr} &nbsp; → &nbsp; B ⊄ A! چون «${bad}» توی A نیست.`;
+        zone.classList.add('invalid'); zone.classList.remove('valid');
+    }
+}
+
+// ---- Pointer-based drag (works for mouse AND touch) ----
+function attachDDHandlers() {
+    document.querySelectorAll('#dragdrop .dd-chip').forEach(chip => {
+        chip.addEventListener('pointerdown', ddStartDrag);
+    });
+}
+
+function ddStartDrag(e) {
+    e.preventDefault();
+    const chip = e.currentTarget;
+    const id = parseInt(chip.dataset.id);
+    const fromZone = chip.dataset.loc === 'zone';
+    const rect = chip.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    // create a floating clone to drag
+    const ghost = chip.cloneNode(true);
+    ghost.classList.add('dragging');
+    ghost.style.position = 'fixed';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.height = rect.height + 'px';
+    ghost.style.left = rect.left + 'px';
+    ghost.style.top = rect.top + 'px';
+    ghost.style.margin = '0';
+    document.body.appendChild(ghost);
+    chip.style.opacity = '0.3';
+
+    const zone = document.getElementById('ddZone');
+
+    function onMove(ev) {
+        ghost.style.left = (ev.clientX - offsetX) + 'px';
+        ghost.style.top = (ev.clientY - offsetY) + 'px';
+        const zr = zone.getBoundingClientRect();
+        const over = ev.clientX >= zr.left && ev.clientX <= zr.right && ev.clientY >= zr.top && ev.clientY <= zr.bottom;
+        zone.classList.toggle('over', over && !fromZone);
+    }
+
+    function onUp(ev) {
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        ghost.remove();
+        chip.style.opacity = '';
+        zone.classList.remove('over');
+
+        const zr = zone.getBoundingClientRect();
+        const droppedInZone = ev.clientX >= zr.left && ev.clientX <= zr.right && ev.clientY >= zr.top && ev.clientY <= zr.bottom;
+
+        if (!fromZone && droppedInZone) {
+            // move from pool -> zone
+            const idx = ddState.pool.findIndex(it => it.id === id);
+            if (idx > -1) {
+                const item = ddState.pool.splice(idx, 1)[0];
+                ddState.zone.push(item);
+                renderDD();
+                // little shake if foreign
+                if (!item.inA) {
+                    const el = document.querySelector(`#ddZoneItems .dd-chip[data-id="${id}"]`);
+                    if (el) { el.classList.add('reject'); setTimeout(() => el.classList.remove('reject'), 400); }
+                }
+            }
+        } else if (fromZone && !droppedInZone) {
+            // move from zone -> back to pool
+            const idx = ddState.zone.findIndex(it => it.id === id);
+            if (idx > -1) {
+                const item = ddState.zone.splice(idx, 1)[0];
+                ddState.pool.push(item);
+                renderDD();
+            }
+        }
+        // else: no change, just re-render to be safe
+        else { renderDD(); }
+    }
+
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+}
+
+function ddCheck() {
+    const r = ddRounds[ddState.round];
+    const fb = document.getElementById('ddFeedback');
+    const allIn = ddState.zone.length > 0 && ddState.zone.every(it => it.inA);
+    const rightCount = ddState.zone.length === r.goal;
+
+    if (allIn && rightCount) {
+        ddState.stars++;
+        localStorage.setItem('d2_ddStars', ddState.stars);
+        fb.className = 'dd-feedback show correct';
+        fb.innerHTML = `🎉 <strong>عالی بود!</strong> یه زیرمجموعه‌ی درستِ ${toFa(r.goal)} عضوی ساختی. ستاره گرفتی! ⭐`;
+        document.getElementById('ddStars').textContent = toFa(ddState.stars);
+        fireConfetti();
+        fb.innerHTML += `<div style="margin-top:12px"><button class="btn btn-primary" onclick="ddNext()">مرحله‌ی بعد ←</button></div>`;
+    } else if (!allIn) {
+        const bad = ddState.zone.filter(it => !it.inA).map(it => it.val).join('، ');
+        fb.className = 'dd-feedback show wrong';
+        fb.innerHTML = `❌ هنوز نه! «${bad}» توی A نیست، پس B زیرمجموعه‌ی A نیست. بکششون بیرون.`;
+    } else {
+        fb.className = 'dd-feedback show wrong';
+        fb.innerHTML = `🟡 نزدیکی! همه‌ی اعضا توی A هستن (زیرمجموعه‌ست ✅)، ولی ماموریت ${toFa(r.goal)} عضو می‌خواد و تو ${toFa(ddState.zone.length)} تا گذاشتی.`;
+    }
+}
+
+function ddNext() {
+    ddState.round++;
+    localStorage.setItem('d2_ddRound', ddState.round);
+    if (ddState.round >= ddRounds.length) { ddShowFinal(); return; }
+    ddLoadRound();
+}
+
+function ddResetRound() {
+    // send all zone items back to pool
+    ddState.pool = ddState.pool.concat(ddState.zone);
+    ddState.zone = [];
+    document.getElementById('ddFeedback').className = 'dd-feedback';
+    renderDD();
+}
+
+function ddShowFinal() {
+    const final = document.getElementById('ddFinal');
+    final.classList.add('show');
+    final.innerHTML = `
+        <h3>🏆 همه‌ی مرحله‌ها رو زدی!</h3>
+        <div class="big-score">⭐ ${toFa(ddState.stars)} / ${toFa(ddRounds.length)}</div>
+        <p>حالا دیگه با چشمِ بسته هم می‌تونی یه زیرمجموعه‌ی درست بسازی!</p>
+        <button class="btn btn-primary" onclick="ddResetAll()" style="margin-top:12px">🔄 بازیِ مجدد</button>
+    `;
+    markComplete('dragdrop');
+}
+
+function ddResetAll() {
+    ddState.round = 0;
+    ddState.stars = 0;
+    localStorage.setItem('d2_ddRound', 0);
+    localStorage.setItem('d2_ddStars', 0);
+    document.getElementById('ddFinal').classList.remove('show');
+    ddLoadRound();
+}
+
+// ============================================
+// FINAL QUIZ
+// ============================================
+const quizQs = [
+    {
+        q: 'کدوم گزاره <strong>درسته</strong>؟',
+        opts: ['{1, 2, 3} = {3, 2, 1}', '{1, 2, 3} = {1, 2, 3, 4}', '{1, 2, 3} = ∅', '{1, 2} = {1, 2, 1}'],
+        correct: [0, 3],
+        explain: 'هم {1, 2, 3} = {3, 2, 1} درسته (ترتیب مهم نیست) و هم {1, 2} = {1, 2, 1} (تکرار بی‌اثره). ولی گزینه‌ی اولی واضح‌تره. هر دو پاسخ پذیرفته‌ست.'
+    },
+    {
+        q: 'دو مجموعه: A = {√9, 4, 8/2}، B = {3, 4}. کدوم درسته؟',
+        opts: ['A = B', 'A ≠ B چون A سه عضو داره و B دو عضو', 'A و B هیچ ارتباطی ندارن', 'B زیرمجموعه‌ی A نیست'],
+        correct: 0,
+        explain: 'ساده می‌کنیم: √9 = 3 و 8/2 = 4. پس A = {3, 4, 4} = {3, 4} (تکرار حذف می‌شه) = B.'
+    },
+    {
+        q: 'اگه A = {۱, ۲, ۳} باشه، کدوم گزاره <strong>غلطه</strong>؟',
+        opts: ['۲ ∈ A', '{۲} ⊆ A', '۲ ⊆ A', '∅ ⊆ A'],
+        correct: 2,
+        explain: '۲ یه عضوِ تنهاست، نه یه مجموعه. باید بنویسیم ۲ ∈ A. علامتِ ⊆ فقط بین دو مجموعه میاد. اگه می‌خواستیم از ⊆ استفاده کنیم، باید می‌نوشتیم {۲} ⊆ A.'
+    },
+    {
+        q: 'مجموعه‌ی تهی (∅) زیرمجموعه‌ی کدوم مجموعه‌هاست؟',
+        opts: ['فقط زیرمجموعه‌ی خودشه', 'فقط زیرمجموعه‌ی مجموعه‌های بزرگ‌تره', 'زیرمجموعه‌ی هر مجموعه‌ایه (بدون استثنا)', 'هیچ‌وقت زیرمجموعه نیست'],
+        correct: 2,
+        explain: 'یکی از قواعدِ طلایی: مجموعه‌ی تهی زیرمجموعه‌ی هر مجموعه‌ایه — بدون استثنا. ∅ ⊆ A برای هر A.'
+    },
+    {
+        q: 'برای اینکه دو مجموعه برابر باشن، چند شرط باید برقرار باشه؟',
+        opts: ['هیچ شرطی', 'فقط یه شرط (تعداد اعضا یکی باشه)', 'دو شرط: هر عضوِ A در B و هر عضوِ B در A', 'باید اعضا با همون ترتیب نوشته بشن'],
+        correct: 2,
+        explain: 'تعریفِ اصلی: A = B وقتی هر عضوِ A در B باشه و هر عضوِ B در A. ترتیب و تعداد به‌تنهایی کافی نیستن.'
+    },
+    {
+        q: 'A = {۱, ۲, ۳, ۴, ۵}، B = {۲, ۵, ۹}. کدوم درسته؟',
+        opts: ['B ⊆ A', 'B ⊄ A', 'A ⊆ B', 'A = B'],
+        correct: 1,
+        explain: 'عددِ ۹ توی B هست، ولی توی A نیست. یعنی B زیرمجموعه‌ی A نیست: B ⊄ A.'
+    },
+    {
+        q: 'اگه A ⊆ B و B ⊆ A، اون‌وقت:',
+        opts: ['A تهیه', 'B تهیه', 'A = B', 'A ≠ B'],
+        correct: 2,
+        explain: 'این یه قاعده‌ی مهمه: اگه هر کدوم زیرمجموعه‌ی اون یکی باشن، حتماً اعضاشون یکیه، پس A = B.'
+    },
+    {
+        q: 'کدوم یکی برابرِ {۰}<strong> نیست</strong>؟',
+        opts: ['مجموعه‌ی شامل صفر', 'مجموعه‌ی تک‌عضوی', '∅', '{۰, ۰, ۰}'],
+        correct: 2,
+        explain: 'تله‌ی بزرگ! ∅ مجموعه‌ی تهی با هیچ عضو. ولی {۰} یه مجموعه با یه عضوه (عددِ صفر). این دو فرق دارن.'
+    }
+];
+
+function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = quizQs.map((q, i) => `
+        <div class="quiz-question" data-idx="${i}">
+            <h4>${toFa(i+1)}. ${q.q}</h4>
+            <div class="quiz-options">
+                ${q.opts.map((o, j) => `<button class="quiz-option" onclick="answerQuiz(${i},${j})">${o}</button>`).join('')}
+            </div>
+            <div class="quiz-feedback"></div>
+        </div>
+    `).join('');
+    // restore previous answers
+    state.quizAnswered.forEach(({idx, choice}) => restoreQuiz(idx, choice));
+    updateQuizScore();
+    if (state.quizAnswered.length === quizQs.length) showQuizFinal();
+}
+
+function answerQuiz(idx, choice) {
+    const q = quizQs[idx];
+    const card = document.querySelector(`.quiz-question[data-idx="${idx}"]`);
+    if (card.dataset.answered) return;
+    card.dataset.answered = 'true';
+    const opts = card.querySelectorAll('.quiz-option');
+    const corrects = Array.isArray(q.correct) ? q.correct : [q.correct];
+    opts.forEach((o, j) => {
+        o.classList.add('answered');
+        o.disabled = true;
+        if (corrects.includes(j)) o.classList.add('correct');
+        if (j === choice && !corrects.includes(j)) o.classList.add('wrong');
+    });
+    const correct = corrects.includes(choice);
+    const fb = card.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+    fb.innerHTML = (correct ? '✅ آفرین! ' : '❌ ') + q.explain;
+    if (correct) { state.quizScore++; fireConfetti(); }
+    state.quizAnswered.push({idx, choice});
+    localStorage.setItem('d2_quizScore', state.quizScore);
+    localStorage.setItem('d2_quizAnswered', JSON.stringify(state.quizAnswered));
+    updateQuizScore();
+    if (state.quizAnswered.length === quizQs.length) showQuizFinal();
+}
+
+function restoreQuiz(idx, choice) {
+    const q = quizQs[idx];
+    const card = document.querySelector(`.quiz-question[data-idx="${idx}"]`);
+    if (!card) return;
+    card.dataset.answered = 'true';
+    const opts = card.querySelectorAll('.quiz-option');
+    const corrects = Array.isArray(q.correct) ? q.correct : [q.correct];
+    opts.forEach((o, j) => {
+        o.classList.add('answered');
+        o.disabled = true;
+        if (corrects.includes(j)) o.classList.add('correct');
+        if (j === choice && !corrects.includes(j)) o.classList.add('wrong');
+    });
+    const correct = corrects.includes(choice);
+    const fb = card.querySelector('.quiz-feedback');
+    fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'wrong');
+    fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.explain;
+}
+
+function updateQuizScore() {
+    document.getElementById('quizScoreDisplay').innerHTML = `امتیاز: <strong>${toFa(state.quizScore)}</strong> از <strong>${toFa(state.quizAnswered.length)}</strong>`;
+}
+
+function showQuizFinal() {
+    const final = document.getElementById('quizFinalResult');
+    const pct = Math.round(state.quizScore / quizQs.length * 100);
+    let msg, emoji, cls;
+    if (pct === 100) { msg = 'پرفکت! کاملاً مسلطی!'; emoji = '🏆'; cls = 'success-box'; }
+    else if (pct >= 75) { msg = 'فوق‌العاده! تسلطِ خوبی داری.'; emoji = '🌟'; cls = 'success-box'; }
+    else if (pct >= 50) { msg = 'بد نیست، ولی مرور کن.'; emoji = '👍'; cls = 'highlight'; }
+    else { msg = 'بهتره به بخش‌های آموزش برگردی.'; emoji = '📚'; cls = 'warning'; }
+    final.style.display = 'block';
+    final.className = cls;
+    final.innerHTML = `
+        <h3>${emoji} نتیجه‌ی نهایی: ${toFa(state.quizScore)} از ${toFa(quizQs.length)} (${toFa(pct)}٪)</h3>
+        <p>${msg}</p>
+        <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:10px">🔄 امتحان مجدد</button>
+    `;
+}
+
+function resetQuiz() {
+    state.quizScore = 0;
+    state.quizAnswered = [];
+    localStorage.setItem('d2_quizScore', 0);
+    localStorage.setItem('d2_quizAnswered', '[]');
+    document.getElementById('quizFinalResult').style.display = 'none';
+    renderQuiz();
+}
+
+// ============== DASHBOARD ==============
+function updateDashboard() {
+    const done = ['intro','equal','game1','subset','game2','dragdrop'].filter(s => state.completed[s]).length;
+    document.getElementById('statCompleted').textContent = toFa(done);
+    document.getElementById('statEq').textContent = toFa(state.eqScore);
+    document.getElementById('statSub').textContent = toFa(state.subScore);
+    document.getElementById('statQuiz').textContent = toFa(state.quizScore);
+
+    const achievements = [
+        { name: '🎬 شروع راه', cond: state.completed.intro },
+        { name: '🟰 آشنا با برابری', cond: state.completed.equal },
+        { name: '🎮 بازیکنِ برابری', cond: state.eqScore >= 6 },
+        { name: '📦 آشنا با زیرمجموعه', cond: state.completed.subset },
+        { name: '🎯 شکارچی زیرمجموعه', cond: state.subScore >= 6 },
+        { name: '🧩 زیرمجموعه‌ساز', cond: state.completed.dragdrop },
+        { name: '🏆 برنده‌ی آزمون', cond: state.quizScore >= 6 },
+        { name: '🔥 استریک ۳+', cond: state.eqBest >= 3 },
+        { name: '💯 پرفکت', cond: state.eqScore === 10 && state.subScore === 10 && state.quizScore === 8 }
+    ];
+    document.getElementById('achList').innerHTML = achievements.map(a =>
+        `<div class="achievement ${a.cond ? '' : 'locked'}">${a.cond ? '✓' : '🔒'} ${a.name}</div>`
+    ).join('');
+}
+
+// ============== RESET ALL ==============
+function resetAll() {
+    if (!confirm('مطمئنی می‌خوای همه‌چی رو از اول شروع کنی؟')) return;
+    ['d2_completed','d2_eqScore','d2_eqRound','d2_eqStreak','d2_eqBest','d2_subScore','d2_subRound','d2_subLives','d2_quizScore','d2_quizAnswered','d2_ddRound','d2_ddStars']
+        .forEach(k => localStorage.removeItem(k));
+    location.reload();
+}
+
+// ============== INIT ==============
+updateProgress();
+renderEqRound();
+renderSubRound();
+ddInit();
+renderQuiz();
+updateDashboard();
+</script>
+</body>
+</html>
