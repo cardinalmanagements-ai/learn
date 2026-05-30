@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📏 پاره‌خط‌ها — یادگیریِ تعاملی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4ff; --ink:#2b2350; --muted:#6f679a;
+  --primary:#667eea; --primary2:#764ba2;
+  --seg:#10b981; --segd:#065f46; --ray:#f59e0b; --line:#ef4444;
+  --pink:#ec4899; --card:#ffffff; --soft:#efeafe; --softer:#f7f4ff;
+  --ok:#10b981; --bad:#ef4444; --gold:#f59e0b;
+  --r:18px; --sh:0 10px 30px rgba(102,86,170,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Vazirmatn',system-ui,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 90% -10%, #e9e3ff 0%, transparent 60%),
+    radial-gradient(900px 500px at -10% 0%, #e3ecff 0%, transparent 55%),
+    var(--bg);
+  color:var(--ink); line-height:1.85; -webkit-font-smoothing:antialiased;
+}
+.container{max-width:880px;margin:0 auto;padding:18px 16px 70px}
+
+/* header */
+.header{
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;border-radius:26px;padding:30px 26px 24px;
+  box-shadow:0 18px 40px rgba(118,75,162,.32);position:relative;overflow:hidden;
+}
+.header:before{content:"";position:absolute;inset:auto -60px -90px auto;width:240px;height:240px;
+  background:rgba(255,255,255,.12);border-radius:50%}
+.header:after{content:"";position:absolute;left:-50px;top:-50px;width:160px;height:160px;
+  background:rgba(255,255,255,.08);border-radius:50%}
+.header h1{margin:0 0 6px;font-size:1.9rem;font-weight:900;position:relative}
+.header p{margin:0;opacity:.94;font-size:1rem;position:relative}
+.progress-wrapper{margin-top:18px;position:relative}
+.progress-text{font-weight:800;font-size:.92rem}
+.progress-bar-container{height:11px;background:rgba(255,255,255,.28);border-radius:99px;margin-top:6px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:#fff;border-radius:99px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+
+/* tabs */
+.nav-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+.tab{
+  border:0;cursor:pointer;font-family:inherit;font-weight:700;font-size:.86rem;
+  padding:9px 13px;border-radius:13px;background:#fff;color:var(--muted);
+  box-shadow:0 3px 10px rgba(102,86,170,.08);transition:.18s;white-space:nowrap;
+}
+.tab:hover{transform:translateY(-2px)}
+.tab.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 8px 18px rgba(118,75,162,.35)}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-inline-start:5px;opacity:0;transition:.2s}
+.tab.done .dot{opacity:1}
+
+/* sections */
+.section{display:none;animation:fade .4s ease}
+.section.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:1.5rem;font-weight:900;margin:14px 0 4px}
+h3{font-size:1.15rem;font-weight:800;margin:22px 0 8px}
+p{margin:10px 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:3px 11px;border-radius:99px;margin-bottom:4px}
+.tag.act{background:#ede9fe;color:#6d28d9}
+.tag.cls{background:#dcfce7;color:#166534}
+.tag.ex{background:#fef3c7;color:#92400e}
+
+.card{background:var(--card);border-radius:var(--r);padding:18px 18px;box-shadow:var(--sh);margin:16px 0;border:1px solid #efeafe}
+.note{background:linear-gradient(180deg,#fbfaff,#f4f1ff);border:1px solid #e9e3ff;border-radius:14px;padding:13px 15px;margin:14px 0}
+.note.tip{border-inline-start:5px solid var(--primary)}
+.note.win{background:linear-gradient(180deg,#f0fdf6,#e9fbf1);border-color:#bbf7d0;border-inline-start:5px solid var(--ok)}
+.note.warn{background:#fff7ed;border-color:#fed7aa;border-inline-start:5px solid var(--ray)}
+.seg{font-weight:800;border-top:2px solid currentColor;padding-top:1px;color:var(--segd);white-space:nowrap}
+.k{font-weight:800;color:var(--primary2)}
+.hl{background:#fff3bf;border-radius:6px;padding:0 5px;font-weight:700}
+
+/* opening scenes */
+.scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.scene{border-radius:16px;padding:14px 12px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.scene .ic{font-size:2rem;display:block;margin-bottom:4px}
+.scene b{display:block;font-size:1.02rem}
+.scene small{display:block;opacity:.92;font-size:.78rem;line-height:1.6;margin-top:4px}
+.scene.s1{background:linear-gradient(135deg,#10b981,#059669)}
+.scene.s2{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.scene.s3{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.scene .pill{position:absolute;top:8px;inset-inline-start:8px;background:rgba(255,255,255,.25);border-radius:99px;font-size:.68rem;padding:2px 8px;font-weight:800}
+@media(max-width:560px){.scenes{grid-template-columns:1fr}}
+
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.cc{background:#fff;border-radius:15px;padding:14px;box-shadow:var(--sh);text-align:center;border-top:4px solid}
+.cc.line{border-color:var(--line)} .cc.ray{border-color:var(--ray)} .cc.segc{border-color:var(--seg)}
+.cc b{font-size:1.05rem}
+.cc small{color:var(--muted);font-size:.8rem;display:block;margin-top:4px;line-height:1.65}
+.cc svg{width:100%;height:34px;margin:4px 0}
+@media(max-width:560px){.cards3{grid-template-columns:1fr}}
+
+.fig{display:flex;justify-content:center;margin:14px 0}
+.fig svg{max-width:100%;height:auto}
+
+/* MCQ */
+.mcq{margin:10px 0}
+.mcq .q{font-weight:700;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:start;font-family:inherit;font-size:.95rem;font-weight:600;
+  background:#fff;border:2px solid #ece8fb;border-radius:13px;padding:11px 14px;margin:7px 0;cursor:pointer;transition:.15s;color:var(--ink)}
+.opt:hover{border-color:var(--primary);transform:translateX(-3px)}
+.opt.correct{background:#ecfdf5;border-color:var(--ok);color:var(--segd)}
+.opt.wrong{background:#fef2f2;border-color:var(--bad);color:#b91c1c}
+.opt[disabled]{cursor:default;opacity:.96}
+.exp{font-size:.86rem;background:#f6f4ff;border-radius:11px;padding:9px 12px;margin-top:6px;display:none;border-inline-start:4px solid var(--primary)}
+.exp.show{display:block;animation:fade .3s}
+
+/* fill rows */
+.fill{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:#faf8ff;border:1px solid #ece8fb;border-radius:13px;padding:11px 13px;margin:10px 0}
+.fill .lbl{font-weight:700}
+.fill input{font-family:inherit;font-weight:800;font-size:1rem;width:72px;text-align:center;border:2px solid #ddd6fb;border-radius:10px;padding:7px;background:#fff;color:var(--ink)}
+.fill input.ok{border-color:var(--ok);background:#ecfdf5}
+.fill input.no{border-color:var(--bad);background:#fef2f2}
+.btn{font-family:inherit;font-weight:800;border:0;cursor:pointer;border-radius:11px;padding:9px 16px;font-size:.9rem;transition:.15s}
+.btn.go{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+.btn.go:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(118,75,162,.3)}
+.btn.ghost{background:#efeafe;color:var(--primary2)}
+.mark{font-weight:900;font-size:1.05rem}
+.hint{width:100%;font-size:.8rem;color:var(--muted)}
+
+/* reveal */
+.reveal{margin:12px 0}
+.reveal>summary{cursor:pointer;list-style:none;font-weight:800;color:var(--primary2);background:#f1edff;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.reveal>summary::-webkit-details-marker{display:none}
+.reveal[open]>summary{border-radius:12px 12px 0 0}
+.reveal .body{background:#faf9ff;border:1px solid #ece8fb;border-top:0;border-radius:0 0 12px 12px;padding:12px 15px;font-size:.92rem}
+
+.done-btn{display:inline-flex;align-items:center;gap:7px;margin:18px 0 4px;font-family:inherit;font-weight:800;border:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--ok),#059669);color:#fff;border-radius:13px;padding:11px 20px;font-size:.95rem;box-shadow:0 8px 18px rgba(16,185,129,.28);transition:.15s}
+.done-btn:hover{transform:translateY(-2px)}
+.done-btn.is-done{background:#d1fae5;color:#065f46;box-shadow:none}
+
+/* ===== triangle lab ===== */
+.lab{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px;border:1px solid #efeafe}
+.lab .stage{background:linear-gradient(180deg,#fbfaff,#f3f0ff);border-radius:14px;padding:6px;margin-bottom:10px}
+.verdict{font-weight:900;text-align:center;border-radius:12px;padding:9px;margin:8px 0;font-size:1.02rem;transition:.2s}
+.verdict.yes{background:#ecfdf5;color:var(--segd)}
+.verdict.no{background:#fef2f2;color:#b91c1c}
+.sliderrow{display:flex;align-items:center;gap:10px;margin:9px 0}
+.sliderrow label{font-weight:800;min-width:74px}
+.sliderrow input[type=range]{flex:1;accent-color:var(--primary)}
+.sliderrow .val{font-weight:900;min-width:42px;text-align:center;background:#efeafe;border-radius:8px;padding:2px 0;color:var(--primary2)}
+.calc{text-align:center;font-weight:800;background:#f6f4ff;border-radius:11px;padding:8px;margin-top:6px;font-size:.95rem}
+
+.mode-tabs{display:flex;gap:8px;margin:14px 0 8px}
+.mode-tab{flex:1;border:0;cursor:pointer;font-family:inherit;font-weight:800;padding:10px;border-radius:12px;background:#efeafe;color:var(--primary2);font-size:.92rem;transition:.15s}
+.mode-tab.active{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff}
+
+/* challenge */
+.chal-top{display:flex;justify-content:space-between;align-items:center;font-weight:800;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.chip{background:#efeafe;color:var(--primary2);border-radius:99px;padding:4px 12px;font-size:.85rem}
+.lives{font-size:1.05rem;letter-spacing:2px}
+.bars{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.bar-wrap{display:flex;align-items:center;gap:9px}
+.bar-wrap b{min-width:60px;font-weight:800}
+.bar{height:18px;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--primary2));transition:width .4s}
+.ans-row{display:flex;gap:10px;margin-top:6px}
+.ans-row .btn{flex:1;font-size:1rem;padding:12px}
+.btn.yes{background:linear-gradient(135deg,var(--ok),#059669);color:#fff}
+.btn.no2{background:linear-gradient(135deg,var(--bad),#dc2626);color:#fff}
+.chal-fb{font-weight:800;text-align:center;border-radius:12px;padding:10px;margin-top:10px;min-height:0;transition:.2s}
+.chal-fb.good{background:#ecfdf5;color:var(--segd)}
+.chal-fb.bad{background:#fef2f2;color:#b91c1c}
+
+/* segment counter */
+.counter-stage{background:#fbfaff;border:1px solid #ece8fb;border-radius:14px;padding:10px;text-align:center}
+.counter-stage svg{width:100%;max-width:520px;height:120px}
+.bigcount{font-size:2.1rem;font-weight:900;color:var(--primary2);text-align:center;margin:6px 0}
+
+/* quiz */
+.quiz-score{font-weight:800;text-align:center;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border-radius:14px;padding:11px;margin:10px 0;font-size:1.05rem}
+.quiz-final{display:none;text-align:center;border-radius:16px;padding:22px;margin-top:14px;font-weight:800}
+.quiz-final.show{display:block;animation:fade .4s}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.stat{background:#fff;border-radius:15px;padding:14px 8px;text-align:center;box-shadow:var(--sh)}
+.stat .num{font-size:1.7rem;font-weight:900;color:var(--primary2)}
+.stat .l{font-size:.74rem;color:var(--muted);font-weight:700}
+@media(max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0}
+.badge{background:#f6f4ff;border:1px solid #ece8fb;border-radius:14px;padding:12px;text-align:center;opacity:.45;filter:grayscale(.7);transition:.3s}
+.badge.on{opacity:1;filter:none;border-color:var(--gold);background:linear-gradient(180deg,#fffbeb,#fff7e0);box-shadow:0 6px 16px rgba(245,158,11,.18)}
+.badge .e{font-size:1.7rem}
+.badge b{display:block;font-size:.85rem;margin-top:3px}
+.badge small{font-size:.72rem;color:var(--muted)}
+.reset{background:none;border:1.5px dashed #cbb8f5;color:var(--muted);border-radius:11px;padding:9px 16px;cursor:pointer;font-family:inherit;font-weight:700;margin-top:14px}
+
+/* confetti */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
+.conf{position:absolute;width:9px;height:14px;top:-20px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+</style>
+</head>
+<body>
+<div id="confetti"></div>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>📏 پاره‌خط‌ها از صفر</h1>
+    <p>نقطه، خط، نیم‌خط، پاره‌خط — و این‌که چطور با هم جمع، تفریق و مقایسه می‌شن.</p>
+    <div class="progress-wrapper">
+      <span class="progress-text"><span id="pctText">۰</span>٪ از راه</span>
+      <div class="progress-bar-container"><div id="bar" class="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="nav-tabs" id="tabs">
+    <button class="tab active" data-t="intro">📏 نمادها<span class="dot"></span></button>
+    <button class="tab" data-t="addsub">➕ جمع و تفریق<span class="dot"></span></button>
+    <button class="tab" data-t="triangle">🔺 نامساویِ مثلث<span class="dot"></span></button>
+    <button class="tab" data-t="find">🔍 طولِ مجهول<span class="dot"></span></button>
+    <button class="tab" data-t="midpoint">📐 وسط و مساوی‌ها<span class="dot"></span></button>
+    <button class="tab" data-t="count">🧮 شمارش<span class="dot"></span></button>
+    <button class="tab" data-t="reason">🧠 استدلال<span class="dot"></span></button>
+    <button class="tab" data-t="quiz">🏆 آزمون و پیشرفت<span class="dot"></span></button>
+  </div>
+
+  <!-- ============ INTRO ============ -->
+  <section class="section active" id="intro">
+    <h2>📏 خط، نیم‌خط، پاره‌خط</h2>
+    <div class="note tip">🎯 کلِ این درس فقط <b>یک سؤال</b> دارد: <b>چندتا سرِ بسته داری؟</b> همین جواب، اسمِ شکل را مشخص می‌کند. بقیه‌ی درس هم فقط جمع‌وتفریق و مقایسه‌ی همین‌هاست.</div>
+
+    <p>قبل از هر تعریفی، سه صحنه‌ی آشنا را ببین. روی هر کدام دستت را بگیر و سرها را بشمار:</p>
+
+    <div class="scenes">
+      <div class="scene s1"><span class="pill">دو سر</span><span class="ic">📐</span><b>خط‌کشِ توی کیفت</b><small>از صفر شروع می‌شود، تا ۲۰ تمام. دو سرِ معلوم → می‌توانی اندازه بگیری. این «پاره‌خط» است.</small></div>
+      <div class="scene s2"><span class="pill">یک سر</span><span class="ic">🔦</span><b>نورِ چراغ‌قوه</b><small>از خودِ چراغ شروع می‌شود (یک سرِ بسته) و تا هر جا که برسد جلو می‌رود. این «نیم‌خط» است.</small></div>
+      <div class="scene s3"><span class="pill">صفر سر</span><span class="ic">🛣️</span><b>جاده‌ی بی‌انتها</b><small>هر دو طرف تا بی‌نهایت باز است؛ هیچ سرِ مشخصی ندارد. این «خط» است.</small></div>
+    </div>
+
+    <div class="note win">پس فرقشان فقط همین است: <b>خط</b> = صفر سرِ بسته · <b>نیم‌خط</b> = یک سر · <b>پاره‌خط</b> = دو سر. هر چه سرها بسته‌تر، شکل «دست‌گیرتر»! فقط پاره‌خط دو سرِ بسته دارد، پس فقط آن را می‌شود اندازه گرفت.</div>
+
+    <div class="cards3">
+      <div class="cc line">
+        <svg viewBox="0 0 160 30"><line x1="8" y1="15" x2="152" y2="15" stroke="#ef4444" stroke-width="3"/><polygon points="8,15 20,9 20,21" fill="#ef4444"/><polygon points="152,15 140,9 140,21" fill="#ef4444"/></svg>
+        <b>خط</b><small>هر دو سر پیکان دارد، تا بی‌نهایت. <b>اندازه‌گیری ندارد.</b> با حرفِ کوچک نام می‌گیرد (مثل <span class="seg" style="border:0">d</span>).</small>
+      </div>
+      <div class="cc ray">
+        <svg viewBox="0 0 160 30"><line x1="12" y1="15" x2="152" y2="15" stroke="#f59e0b" stroke-width="3"/><circle cx="12" cy="15" r="5" fill="#f59e0b"/><polygon points="152,15 140,9 140,21" fill="#f59e0b"/></svg>
+        <b>نیم‌خط</b><small>از یک نقطه شروع می‌شود، فقط یک سرش پیکان دارد. یک سرِ بسته، یک سرِ باز.</small>
+      </div>
+      <div class="cc segc">
+        <svg viewBox="0 0 160 30"><line x1="18" y1="18" x2="142" y2="18" stroke="#10b981" stroke-width="3"/><circle cx="18" cy="18" r="5" fill="#10b981"/><circle cx="142" cy="18" r="5" fill="#10b981"/><text x="12" y="11" font-size="12" fill="#065f46">A</text><text x="136" y="11" font-size="12" fill="#065f46">B</text></svg>
+        <b>پاره‌خط</b><small>دو سرِ مشخص (بدون پیکان). تنها شکلی که <b>طولش را می‌شود اندازه گرفت.</b></small>
+      </div>
+    </div>
+
+    <h3>🔤 قانونِ نام‌گذاری</h3>
+    <div class="card">
+      نقطه‌ها را با <b class="k">حرفِ بزرگِ انگلیسی</b> می‌نویسیم: A، B، C.<br>
+      امتدادِ خط‌ها را با <b class="k">حرفِ کوچک</b>: x، y، d.<br>
+      یک خطِ کوچک روی نامِ پاره‌خط یعنی «<b class="k">طولِ</b> آن».
+      <div class="note warn" style="margin-top:10px">
+        ⚠️ <b>این یک سطر بیشترین غلطِ امتحانی را می‌سازد — خوب جا بیفتد:</b><br>
+        <span class="seg">AB</span> (با خط رویش) یک <b>عدد</b> است، نه شکل. درست مثل فرقِ «<span class="hl">یک خط‌کش</span>» و «<span class="hl">۲۰ سانت</span>».<br>
+        خط‌کش شیء است (می‌توانی برش داری)؛ «۲۰ سانت» عدد است (می‌توانی با آن جمع و تفریق کنی). پس وقتی می‌بینی <span class="seg">AB</span> + <span class="seg">BC</span>، یعنی داریم دو <b>عدد</b> را جمع می‌کنیم.
+      </div>
+    </div>
+
+    <h3>🎯 امتحانِ سریع: کدومه؟</h3>
+    <div id="idMcqs"></div>
+
+    <button class="done-btn" data-done="intro">✅ این بخش رو بلدم</button>
+  </section>
+
+  <!-- ============ ADD/SUB ============ -->
+  <section class="section" id="addsub">
+    <span class="tag act">فعالیت</span>
+    <h2>➕ جمع و تفریق پاره‌خط‌ها</h2>
+    <p>وقتی چند نقطه روی <b class="k">یک خط</b> و پشتِ سرِ هم باشند، پاره‌خط‌ها مثل تکه‌های یک نوار به هم می‌چسبند. <b>تکه‌ی بزرگ = جمعِ تکه‌های کوچک.</b></p>
+
+    <div class="note tip">🚇 <b>مثلِ خطِ مترو:</b> از ایستگاهِ A تا B، بعد از B تا C. کلِ مسیرِ A تا C، دقیقاً جمعِ این دو تکه است:
+      <span class="seg">AC</span> = <span class="seg">AB</span> + <span class="seg">BC</span>. برعکسش هم درست است: اگر کلِ مسیر و یک تکه را داشته باشی، تکه‌ی دیگر = کل منهای آن تکه.</div>
+
+    <div class="fig">
+      <svg viewBox="0 0 360 60" width="360" height="60">
+        <line x1="30" y1="40" x2="330" y2="40" stroke="#10b981" stroke-width="3"/>
+        <circle cx="40" cy="40" r="5" fill="#5b21b6"/><text x="36" y="26" font-size="15" fill="#4c1d95">A</text>
+        <circle cx="170" cy="40" r="5" fill="#5b21b6"/><text x="166" y="26" font-size="15" fill="#4c1d95">B</text>
+        <circle cx="320" cy="40" r="5" fill="#5b21b6"/><text x="316" y="26" font-size="15" fill="#4c1d95">C</text>
+      </svg>
+    </div>
+
+    <div class="note">💡 ترفند: همیشه از روی شکل برو. <span class="seg">AB</span> تکه‌ی اول، <span class="seg">BC</span> تکه‌ی دوم، و <span class="seg">AC</span> کلِ نوار از A تا C.</div>
+
+    <p>جاهای خالی را با <b>نامِ پاره‌خط</b> پر کن (مثلاً <code>AC</code>):</p>
+    <div id="addsubRows"></div>
+
+    <button class="done-btn" data-done="addsub">✅ همه رو درست زدم</button>
+  </section>
+
+  <!-- ============ TRIANGLE ============ -->
+  <section class="section" id="triangle">
+    <span class="tag act">فعالیت + بازی</span>
+    <h2>🔺 نامساویِ مثلث</h2>
+    <p>وقتی سه نقطه روی یک خط <b>نباشند</b>، یک <b class="k">مثلث</b> می‌سازند: △ABC. در هر مثلث یک قانونِ طلایی هست:</p>
+
+    <div class="note win">📐 <b>مجموعِ هر دو ضلع، همیشه از ضلعِ سوم بزرگ‌تر است.</b></div>
+
+    <div class="note tip">🧠 <b>چرا؟ دو تا تصویرِ ملموس:</b><br>
+      ۱) <b>میان‌بر:</b> برای رفتن از A به C، راهِ مستقیم (<span class="seg">AC</span>) همیشه کوتاه‌تر است از این‌که اول بروی B بعد C. هیچ‌وقت دور زدن کوتاه‌تر از مستقیم نمی‌شود!<br>
+      ۲) <b>دو طناب:</b> دو طنابِ کوتاه باید روی هم بکشند تا سرِ سوم را بگیرند. اگر مجموعشان از فاصله‌ی دو سر کوتاه‌تر باشد، وسطِ هوا می‌مانند و به هم نمی‌رسند — مثلثی ساخته نمی‌شود.</div>
+
+    <div class="fig">
+      <svg viewBox="0 0 300 140" width="300" height="140">
+        <polygon points="60,115 250,85 150,20" fill="none" stroke="#10b981" stroke-width="3"/>
+        <circle cx="60" cy="115" r="5" fill="#5b21b6"/><text x="42" y="130" font-size="15" fill="#4c1d95">A</text>
+        <circle cx="250" cy="85" r="5" fill="#5b21b6"/><text x="256" y="88" font-size="15" fill="#4c1d95">C</text>
+        <circle cx="150" cy="20" r="5" fill="#5b21b6"/><text x="146" y="16" font-size="15" fill="#4c1d95">B</text>
+      </svg>
+    </div>
+
+    <p>جای خالی را با ضلعِ سوم پر کن (مثلاً <code>AC</code>):</p>
+    <div id="triRows"></div>
+    <div id="triMcq"></div>
+
+    <h3>🎮 بازی: آزمایشگاهِ مثلث</h3>
+    <p>اینجا قانون را فقط نمی‌خوانی — می‌بینی. اول با چوب‌ها بازی کن و ببین کِی مثلث بسته می‌شود؛ بعد برو سراغِ چالش.</p>
+
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-m="lab">🔧 آزمایشگاه (بکش و ببین)</button>
+      <button class="mode-tab" data-m="chal">🎯 چالشِ امتیازی</button>
+    </div>
+
+    <!-- LAB -->
+    <div class="lab" id="labBox">
+      <div class="stage"><svg id="labSvg" viewBox="0 0 340 200" width="100%" height="200"></svg></div>
+      <div class="verdict" id="labVerdict"></div>
+      <div class="sliderrow"><label>ضلعِ ۱</label><input type="range" id="sa" min="2" max="9" value="4"><span class="val" id="va">۴</span></div>
+      <div class="sliderrow"><label>ضلعِ ۲</label><input type="range" id="sb" min="2" max="9" value="5"><span class="val" id="vb">۵</span></div>
+      <div class="sliderrow"><label>ضلعِ ۳</label><input type="range" id="sc" min="2" max="9" value="6"><span class="val" id="vc">۶</span></div>
+      <div class="calc" id="labCalc"></div>
+    </div>
+
+    <!-- CHALLENGE -->
+    <div class="lab" id="chalBox" style="display:none">
+      <div class="chal-top">
+        <span class="chip" id="chRound">دور ۱ از ۸</span>
+        <span class="chip">امتیاز: <b id="chScore">۰</b></span>
+        <span class="lives" id="chLives">❤️❤️❤️</span>
+      </div>
+      <p style="text-align:center;font-weight:800;margin:4px 0">با این سه چوب می‌شود مثلث ساخت؟</p>
+      <div class="bars" id="chBars"></div>
+      <div class="ans-row">
+        <button class="btn yes" id="chYes">✅ بله، می‌شه</button>
+        <button class="btn no2" id="chNo">❌ نه، نمی‌شه</button>
+      </div>
+      <div class="chal-fb" id="chFb"></div>
+    </div>
+
+    <button class="done-btn" data-done="triangle">✅ نامساویِ مثلث رو فهمیدم</button>
+  </section>
+
+  <!-- ============ FIND ============ -->
+  <section class="section" id="find">
+    <span class="tag cls">کار در کلاس</span>
+    <h2>🔍 پیداکردنِ طولِ مجهول</h2>
+    <p>وقتی نقطه‌ها پشتِ سرِ هم روی یک خط‌اند، <b class="k">کل = جمعِ تکه‌ها</b>. همین را وارونه می‌کنیم تا تکه‌ی گمشده را پیدا کنیم.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0">مسئله‌ی ۱</h3>
+      <p>می‌دانیم <span class="seg">AB</span> = ۷ سانت، <span class="seg">AC</span> = ۲ سانت و <span class="seg">DB</span> = ۴ سانت. طولِ <span class="seg">CD</span> چند است؟ (ترتیبِ نقاط روی خط: A, C, D, B)</p>
+      <div class="fig">
+        <svg viewBox="0 0 360 60" width="360" height="60">
+          <line x1="30" y1="38" x2="330" y2="38" stroke="#10b981" stroke-width="3"/>
+          <circle cx="30" cy="38" r="5" fill="#5b21b6"/><text x="24" y="24" font-size="14" fill="#4c1d95">A</text>
+          <circle cx="150" cy="38" r="5" fill="#5b21b6"/><text x="144" y="24" font-size="14" fill="#4c1d95">C</text>
+          <circle cx="210" cy="38" r="5" fill="#5b21b6"/><text x="204" y="24" font-size="14" fill="#4c1d95">D</text>
+          <circle cx="330" cy="38" r="5" fill="#5b21b6"/><text x="324" y="24" font-size="14" fill="#4c1d95">B</text>
+        </svg>
+      </div>
+      <div class="fill">
+        <span class="lbl"><span class="seg">CD</span> =</span><input id="fCD"><span class="lbl">سانت</span>
+        <button class="btn go" onclick="checkNum('fCD',1,'fCDm')">بررسی</button><span class="mark" id="fCDm"></span>
+      </div>
+      <details class="reveal"><summary>💡 دیدنِ راه‌حل</summary><div class="body">
+        کل از تکه‌ها ساخته شده: <span class="seg">AB</span> = <span class="seg">AC</span> + <span class="seg">CD</span> + <span class="seg">DB</span><br>
+        پس ۷ = ۲ + <span class="seg">CD</span> + ۴ ⟸ ۷ = ۶ + <span class="seg">CD</span> ⟸ <b><span class="seg">CD</span> = ۱ سانت</b>
+      </div></details>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">مسئله‌ی ۲ — دو خط‌کشِ روی‌هم</h3>
+      <p>دو خط‌کشِ ۲۰ سانتی را طوری گذاشتیم که به‌اندازه‌ی ۵ سانت روی هم بیفتند. طولِ کلِ این صفحه چند است؟</p>
+      <div class="fig">
+        <svg viewBox="0 0 360 70" width="360" height="70">
+          <rect x="20" y="22" width="220" height="20" fill="#c7d2fe" stroke="#5b21b6" stroke-width="2"/>
+          <rect x="185" y="42" width="155" height="20" fill="#a7f3d0" stroke="#065f46" stroke-width="2"/>
+          <rect x="185" y="32" width="55" height="22" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="172" y="16" font-size="11" fill="#ef4444">روی‌هم‌افتادگیِ ۵</text>
+        </svg>
+      </div>
+      <div class="fill">
+        <span class="lbl">طولِ صفحه =</span><input id="fRul"><span class="lbl">سانت</span>
+        <button class="btn go" onclick="checkNum('fRul',35,'fRulm')">بررسی</button><span class="mark" id="fRulm"></span>
+        <span class="hint">طولِ کل = ۲۰ + ۲۰ − (مقدارِ روی‌هم‌افتادگی)</span>
+      </div>
+    </div>
+
+    <button class="done-btn" data-done="find">✅ این بخش رو فهمیدم</button>
+  </section>
+
+  <!-- ============ MIDPOINT ============ -->
+  <section class="section" id="midpoint">
+    <span class="tag act">فعالیت</span>
+    <h2>📐 وسط، مساوی‌ها و مضرب‌ها</h2>
+
+    <h3>۱) وسطِ پاره‌خط</h3>
+    <p>نقطه‌ی M درست وسطِ پاره‌خطِ AB است؛ پس دو نیمه‌ی <b class="k">کاملاً مساوی</b> می‌سازد: <span class="seg">AM</span> = <span class="seg">MB</span>. (تیک‌های صورتی روی شکل یعنی این دو تکه برابرند.)</p>
+    <div class="fig">
+      <svg viewBox="0 0 320 56" width="320" height="56">
+        <line x1="20" y1="32" x2="300" y2="32" stroke="#10b981" stroke-width="3"/>
+        <circle cx="20" cy="32" r="5" fill="#5b21b6"/><text x="14" y="20" font-size="14" fill="#4c1d95">A</text>
+        <circle cx="160" cy="32" r="5" fill="#ec4899"/><text x="154" y="20" font-size="14" fill="#4c1d95">M</text>
+        <circle cx="300" cy="32" r="5" fill="#5b21b6"/><text x="294" y="20" font-size="14" fill="#4c1d95">B</text>
+        <path d="M84,26 l8,12 M88,26 l8,12" stroke="#ec4899" stroke-width="2"/>
+        <path d="M224,26 l8,12 M228,26 l8,12" stroke="#ec4899" stroke-width="2"/>
+      </svg>
+    </div>
+    <p>جای خالی را با عدد یا کسر پر کن (برای نصف <code>1/2</code> بنویس). فرض کن <span class="seg">AB</span> = ۱۰:</p>
+    <div class="fill">
+      <span class="lbl"><span class="seg">AM</span> =</span><input id="mAM"><span class="lbl">سانت</span>
+      <button class="btn go" onclick="checkNum('mAM',5,'mAMm')">بررسی</button><span class="mark" id="mAMm"></span>
+    </div>
+    <div class="fill">
+      <span class="lbl"><span class="seg">AM</span> = ___ × <span class="seg">AB</span> →</span><input id="mHalf"><button class="btn go" onclick="checkFrac('mHalf',0.5,'mHalfm')">بررسی</button><span class="mark" id="mHalfm"></span>
+    </div>
+
+    <h3>۲) نقاطِ هم‌فاصله</h3>
+    <p>روی این خط، پاره‌خط‌های AB، BC، CD و DE همه با هم مساوی‌اند. پس هر «پرش» = یک <span class="seg">AB</span>.</p>
+    <div class="fig">
+      <svg viewBox="0 0 360 56" width="360" height="56">
+        <line x1="20" y1="34" x2="340" y2="34" stroke="#10b981" stroke-width="3"/>
+        <g fill="#5b21b6"><circle cx="30" cy="34" r="5"/><circle cx="105" cy="34" r="5"/><circle cx="180" cy="34" r="5"/><circle cx="255" cy="34" r="5"/><circle cx="330" cy="34" r="5"/></g>
+        <g font-size="14" fill="#4c1d95"><text x="26" y="22">A</text><text x="101" y="22">B</text><text x="176" y="22">C</text><text x="251" y="22">D</text><text x="326" y="22">E</text></g>
+      </svg>
+    </div>
+    <div class="fill">
+      <span class="lbl"><span class="seg">AE</span> = ___ × <span class="seg">AB</span> →</span><input id="mAE"><button class="btn go" onclick="checkNum('mAE',4,'mAEm')">بررسی</button><span class="mark" id="mAEm"></span>
+      <span class="hint">از A تا E چند «پرش» است؟</span>
+    </div>
+    <div class="fill">
+      <span class="lbl"><span class="seg">AC</span> = ___ × <span class="seg">AB</span> →</span><input id="mAC"><button class="btn go" onclick="checkNum('mAC',2,'mACm')">بررسی</button><span class="mark" id="mACm"></span>
+    </div>
+
+    <h3>۳) نصف‌های مساوی، مساوی‌اند</h3>
+    <p>مثلثِ ABC متساوی‌الساقین است؛ یعنی <span class="seg">AB</span> = <span class="seg">AC</span>. حالا M وسطِ AB و N وسطِ AC. چرا <span class="seg">AM</span> = <span class="seg">AN</span>؟</p>
+    <div class="fig">
+      <svg viewBox="0 0 240 160" width="220" height="150">
+        <polygon points="120,18 40,145 200,145" fill="none" stroke="#10b981" stroke-width="3"/>
+        <circle cx="80" cy="82" r="4" fill="#ec4899"/><text x="60" y="80" font-size="14" fill="#4c1d95">M</text>
+        <circle cx="160" cy="82" r="4" fill="#ec4899"/><text x="166" y="80" font-size="14" fill="#4c1d95">N</text>
+        <text x="116" y="14" font-size="14" fill="#4c1d95">A</text><text x="24" y="155" font-size="14" fill="#4c1d95">B</text><text x="206" y="155" font-size="14" fill="#4c1d95">C</text>
+      </svg>
+    </div>
+    <details class="reveal"><summary>💡 دیدنِ استدلال</summary><div class="body">
+      <span class="seg">AB</span> = <span class="seg">AC</span> ⟸ نصفِ دو چیزِ مساوی هم مساوی است: ½<span class="seg">AB</span> = ½<span class="seg">AC</span><br>
+      چون M و N وسط‌اند: <span class="seg">AM</span> = ½<span class="seg">AB</span> و <span class="seg">AN</span> = ½<span class="seg">AC</span><br>
+      پس <b><span class="seg">AM</span> = <span class="seg">AN</span></b> ✔
+    </div></details>
+
+    <h3>۴) نصف‌کردنِ پی‌درپی</h3>
+    <div class="note tip">🍫 <b>مثلِ شکستنِ شکلات:</b> یک شکلات را نصف کن، نصفش را دوباره نصف، و باز نصف. هر بار تکه نصف می‌شود. سه بار نصف = یک‌هشتم! یا مثلِ <b>تا کردنِ کاغذ:</b> سه تا، می‌شود ۸ لایه.</div>
+    <p>C وسطِ AB، D وسطِ AC و E وسطِ AD است. <span class="seg">AB</span> چند برابرِ <span class="seg">AE</span> است؟</p>
+    <div class="fig">
+      <svg viewBox="0 0 360 46" width="360" height="46">
+        <line x1="20" y1="28" x2="340" y2="28" stroke="#10b981" stroke-width="3"/>
+        <g fill="#5b21b6"><circle cx="30" cy="28" r="4.5"/><circle cx="68" cy="28" r="4.5"/><circle cx="105" cy="28" r="4.5"/><circle cx="180" cy="28" r="4.5"/><circle cx="330" cy="28" r="4.5"/></g>
+        <g font-size="13" fill="#4c1d95"><text x="26" y="16">A</text><text x="64" y="16">E</text><text x="101" y="16">D</text><text x="176" y="16">C</text><text x="326" y="16">B</text></g>
+      </svg>
+    </div>
+    <div class="fill">
+      <span class="lbl"><span class="seg">AB</span> = ___ × <span class="seg">AE</span> →</span><input id="mHalfAB"><button class="btn go" onclick="checkNum('mHalfAB',8,'mHalfABm')">بررسی</button><span class="mark" id="mHalfABm"></span>
+    </div>
+    <details class="reveal"><summary>💡 چطور؟</summary><div class="body">
+      AC نصفِ AB ⟸ AD نصفِ AC ⟸ AE نصفِ AD.<br>
+      پس AE = ½ × ½ × ½ × AB = ⅛ AB ⟸ <b>AB = ۸ × AE</b> (دقیقاً مثلِ سه بار نصف‌کردنِ شکلات).
+    </div></details>
+
+    <button class="done-btn" data-done="midpoint">✅ این بخش رو بلدم</button>
+  </section>
+
+  <!-- ============ COUNT ============ -->
+  <section class="section" id="count">
+    <span class="tag ex">تمرین</span>
+    <h2>🧮 شمارشِ خط، نیم‌خط و پاره‌خط</h2>
+    <div class="card">
+      سه قانونِ ساده که همه‌چی ازشان درمی‌آید:<br>
+      • از <b class="k">یک</b> نقطه: بی‌شمار خط می‌گذرد.<br>
+      • از <b class="k">دو</b> نقطه: فقط <b class="k">یک</b> خط می‌گذرد.<br>
+      • هر <b class="k">دو</b> نقطه با هم، <b class="k">یک</b> پاره‌خط می‌سازند.
+    </div>
+    <div id="countMcqs"></div>
+
+    <div class="card">
+      <h3 style="margin-top:0">🤝 رازِ شمارش: مثلِ دست‌دادن در مهمونی</h3>
+      <p>هر <b>دو نفر</b> یک بار دست می‌دهند. هر دست‌دادن = یک پاره‌خط. حالا ببین:</p>
+      <div class="counter-stage">
+        <svg id="cntSvg" viewBox="0 0 520 110"></svg>
+        <div class="bigcount" id="cntBig">۰ پاره‌خط</div>
+        <div id="cntExpl" style="font-weight:700;color:var(--muted);min-height:24px"></div>
+      </div>
+      <div class="sliderrow" style="margin-top:12px"><label>تعدادِ نقطه</label><input type="range" id="cntN" min="2" max="7" value="5"><span class="val" id="cntNv">۵</span></div>
+      <button class="btn go" id="cntDraw" style="width:100%">✏️ همه‌ی پاره‌خط‌ها رو بکش و بشمار</button>
+    </div>
+
+    <div class="note tip">پس برای ۵ نقطه: نفرِ اول با ۴ نفرِ دیگر، دومی با ۳ تای باقی‌مانده، سومی با ۲، چهارمی با ۱.<br>یعنی <b>۴ + ۳ + ۲ + ۱ = ۱۰</b> پاره‌خط. (هر چه نقطه‌ها بیشتر، فقط ادامه‌ی همین جمع.)</div>
+
+    <div class="card">
+      <h3 style="margin-top:0">نیم‌خط‌ها روی یک خط</h3>
+      <p>اگر روی یک خطِ راست ۱۰ نقطه بگذاریم، چند نیم‌خط با سرشان روی این نقطه‌ها به‌وجود می‌آید؟</p>
+      <div class="fill">
+        <span class="lbl">تعدادِ نیم‌خط‌ها =</span><input id="cRays"><button class="btn go" onclick="checkNum('cRays',20,'cRaysm')">بررسی</button><span class="mark" id="cRaysm"></span>
+        <span class="hint">هر نقطه دو نیم‌خط می‌سازد (یکی به چپ، یکی به راست). ۱۰ × ۲.</span>
+      </div>
+    </div>
+
+    <button class="done-btn" data-done="count">✅ شمارش رو یاد گرفتم</button>
+  </section>
+
+  <!-- ============ REASON ============ -->
+  <section class="section" id="reason">
+    <span class="tag ex">تمرین</span>
+    <h2>🧠 استدلال و خاصیتِ تعدی</h2>
+    <div class="card">
+      علامتِ <b class="k">⟹</b> یعنی «نتیجه می‌گیریم».<br>
+      <b class="k">خاصیتِ تعدی</b> یعنی: اگر چیزِ اول با دومی برابر باشد و دومی با سومی، پس اولی با سومی هم برابر است. <b>مثلِ یک زنجیر.</b>
+      <div class="note tip" style="margin-top:10px">👫 <b>ملموسش کن:</b> اگر قدِ تو = قدِ علی، و قدِ علی = قدِ سارا، آن‌وقت بدونِ این‌که قدِ سارا را اندازه بگیری مطمئنی قدِ تو = قدِ سارا. حلقه‌های زنجیر به هم وصل‌اند.</div>
+    </div>
+    <div id="reasonMcqs"></div>
+
+    <div class="card">
+      <h3 style="margin-top:0">چرا BE = AC؟ (شکلِ خانه)</h3>
+      <p>در این شکل یک <b>مربع</b> و یک <b>مثلثِ متساوی‌الاضلاع</b> (پشت‌بام) دیده می‌شود.</p>
+      <div class="fig">
+        <svg viewBox="0 0 160 200" width="150" height="190">
+          <rect x="40" y="80" width="80" height="80" fill="none" stroke="#f59e0b" stroke-width="3"/>
+          <polygon points="40,80 120,80 80,20" fill="none" stroke="#f59e0b" stroke-width="3"/>
+          <text x="72" y="16" font-size="14" fill="#4c1d95">A</text>
+          <text x="26" y="84" font-size="14" fill="#4c1d95">B</text><text x="124" y="84" font-size="14" fill="#4c1d95">C</text>
+          <text x="26" y="174" font-size="14" fill="#4c1d95">E</text><text x="124" y="174" font-size="14" fill="#4c1d95">D</text>
+        </svg>
+      </div>
+      <details class="reveal"><summary>💡 دیدنِ استدلال (زنجیرِ تعدی)</summary><div class="body">
+        مثلث متساوی‌الاضلاع است ⟸ <span class="seg">AC</span> = <span class="seg">BC</span>.<br>
+        <span class="seg">BC</span> ضلعِ مربع است و <span class="seg">BE</span> هم ضلعِ همان مربع ⟸ <span class="seg">BC</span> = <span class="seg">BE</span>.<br>
+        حالا زنجیرِ تعدی: AC = BC و BC = BE ⟸ <b><span class="seg">BE</span> = <span class="seg">AC</span></b> ✔
+      </div></details>
+    </div>
+
+    <button class="done-btn" data-done="reason">✅ استدلال رو فهمیدم</button>
+  </section>
+
+  <!-- ============ QUIZ + PROGRESS ============ -->
+  <section class="section" id="quiz">
+    <h2>🏆 آزمونِ نهایی</h2>
+    <p>هر چه این درس داشت، اینجا جمع است. ببینیم چقدر مسلطی!</p>
+    <div class="quiz-score">امتیاز: <b id="qScore">۰</b> از <b id="qTotal">۰</b></div>
+    <div id="quizBox"></div>
+    <div class="quiz-final" id="quizFinal"></div>
+
+    <h2 style="margin-top:30px">📊 پیشرفتِ تو</h2>
+    <div class="stats">
+      <div class="stat"><div class="num" id="stSec">۰</div><div class="l">بخش‌های کامل‌شده</div></div>
+      <div class="stat"><div class="num" id="stTri">۰</div><div class="l">رکوردِ چالشِ مثلث</div></div>
+      <div class="stat"><div class="num" id="stQuiz">۰</div><div class="l">رکوردِ آزمون</div></div>
+      <div class="stat"><div class="num" id="stPct">۰٪</div><div class="l">پیشرفتِ کلی</div></div>
+    </div>
+
+    <h3>🏅 نشان‌ها</h3>
+    <div class="ach" id="achList"></div>
+
+    <button class="reset" id="resetBtn">🔄 پاک‌کردنِ همه‌ی پیشرفت</button>
+  </section>
+
+</div>
+
+<script>
+/* ===== helpers ===== */
+const FA="۰۱۲۳۴۵۶۷۸۹";
+const fa = n => String(n).replace(/[0-9]/g,d=>FA[+d]);
+function normNum(s){
+  s=(s||'').toString().trim();
+  s=s.replace(/[۰-۹]/g,d=>FA.indexOf(d)).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+  s=s.replace(/٫|،/g,m=>m==='٫'?'.':'').replace(/\s/g,'');
+  return s;
+}
+const $=id=>document.getElementById(id);
+
+/* ===== state ===== */
+const KEY='parekhat_v2';
+const SECTIONS=['intro','addsub','triangle','find','midpoint','count','reason','quiz'];
+let S={done:{},triBest:0,quizBest:0,quizTotal:0};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ===== tabs ===== */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); $(t.dataset.t).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ===== progress ===== */
+function refresh(){
+  let n=Object.keys(S.done).filter(k=>S.done[k]).length;
+  let pct=Math.round(n/SECTIONS.length*100);
+  $('bar').style.width=pct+'%'; $('pctText').textContent=fa(pct);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('done',!!S.done[t.dataset.t]));
+  $('stSec').textContent=fa(n);
+  $('stTri').textContent=fa(S.triBest)+'/۸';
+  $('stQuiz').textContent=S.quizTotal?fa(S.quizBest)+'/'+fa(S.quizTotal):'۰';
+  $('stPct').textContent=fa(pct)+'٪';
+  renderAch(pct);
+}
+document.querySelectorAll('.done-btn').forEach(b=>{
+  const k=b.dataset.done;
+  if(S.done[k]){b.classList.add('is-done');b.textContent='✓ انجام شد';}
+  b.onclick=()=>{ if(S.done[k])return; S.done[k]=true; save();
+    b.classList.add('is-done'); b.textContent='✓ انجام شد'; burst(); refresh(); };
+});
+
+/* ===== achievements ===== */
+const ACH=[
+  {id:'start',e:'🧭',t:'شروعِ سفر',d:'بخشِ نمادها',on:()=>S.done.intro},
+  {id:'tri',e:'🔺',t:'مثلث‌ساز',d:'نامساویِ مثلث',on:()=>S.done.triangle},
+  {id:'sniper',e:'🎯',t:'تک‌تیرانداز',d:'۶+ در چالشِ مثلث',on:()=>S.triBest>=6},
+  {id:'count',e:'🧮',t:'شمارشگر',d:'بخشِ شمارش',on:()=>S.done.count},
+  {id:'logic',e:'🧠',t:'استدلالی',d:'بخشِ استدلال',on:()=>S.done.reason},
+  {id:'champ',e:'🏆',t:'قهرمانِ آزمون',d:'۸۰٪+ در آزمون',on:()=>S.quizTotal&&S.quizBest/S.quizTotal>=0.8},
+  {id:'full',e:'💯',t:'تکمیلِ کامل',d:'۱۰۰٪ پیشرفت',on:()=>Object.keys(S.done).filter(k=>S.done[k]).length===SECTIONS.length},
+];
+function renderAch(pct){
+  $('achList').innerHTML=ACH.map(a=>{
+    const ok=a.on();
+    return `<div class="badge ${ok?'on':''}"><div class="e">${ok?a.e:'🔒'}</div><b>${a.t}</b><small>${a.d}</small></div>`;
+  }).join('');
+}
+
+/* ===== MCQ engine ===== */
+function mcq(host,items){
+  $(host).innerHTML='';
+  items.forEach((it,i)=>{
+    const w=document.createElement('div'); w.className='mcq';
+    w.innerHTML=`<div class="q">${fa(i+1)}) ${it.q}</div>`;
+    it.opts.forEach((o,j)=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+      b.onclick=()=>{
+        w.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+        if(j===it.a){b.classList.add('correct'); burst();}
+        else{b.classList.add('wrong'); w.querySelectorAll('.opt')[it.a].classList.add('correct');}
+        w.querySelector('.exp').classList.add('show');
+      };
+      w.appendChild(b);
+    });
+    const e=document.createElement('div'); e.className='exp'; e.innerHTML='💡 '+it.e; w.appendChild(e);
+    $(host).appendChild(w);
+  });
+}
+
+mcq('idMcqs',[
+  {q:'یک «نیم‌خط» چند سرِ بسته (معلوم) دارد؟',opts:['صفر','یک','دو'],a:1,e:'نیم‌خط از یک نقطه شروع می‌شود (یک سرِ بسته) و سرِ دیگرش تا بی‌نهایت باز است.'},
+  {q:'کدام‌یک را اصلاً نمی‌توان اندازه گرفت؟',opts:['پاره‌خط','نیم‌خط','هم نیم‌خط هم خط'],a:2,e:'فقط پاره‌خط دو سرِ بسته دارد. نیم‌خط و خط هر کدام دستِ‌کم یک سرِ بی‌انتها دارند، پس اندازه‌گیری ندارند.'},
+  {q:'<span class="seg">AB</span> (با خط رویش) یعنی چه؟',opts:['خودِ شکلِ پاره‌خط','عددِ طولِ پاره‌خط','نامِ یک خط'],a:1,e:'خط روی نام = «طول». پس <span class="seg">AB</span> یک عدد است، نه شکل — مثلِ فرقِ «خط‌کش» و «۲۰ سانت».'},
+]);
+
+const segNorm=s=>normNum(s).toUpperCase().split('').sort().join('');
+function addsubRows(){
+  const rows=[
+    {l:'<span class="seg">AB</span> + <span class="seg">BC</span> =',a:'AC',h:'تکه‌ی اول + تکه‌ی دوم = کلِ نوار.'},
+    {l:'<span class="seg">AC</span> − <span class="seg">AB</span> =',a:'BC',h:'کل منهای تکه‌ی اول = تکه‌ی دوم.'},
+    {l:'<span class="seg">AC</span> − <span class="seg">BC</span> =',a:'AB',h:'کل منهای تکه‌ی دوم = تکه‌ی اول.'},
+  ];
+  $('addsubRows').innerHTML=rows.map((r,i)=>
+    `<div class="fill"><span class="lbl">${r.l}</span><input id="as${i}" style="width:90px"><button class="btn go" onclick="chkSeg('as${i}','${r.a}','asm${i}')">بررسی</button><span class="mark" id="asm${i}"></span><span class="hint">${r.h}</span></div>`
+  ).join('');
+}
+addsubRows();
+function chkSeg(id,ans,mk){
+  const inp=$(id), ok=segNorm(inp.value)===segNorm(ans);
+  inp.classList.toggle('ok',ok); inp.classList.toggle('no',!ok);
+  $(mk).textContent=ok?'✅':'❌'; if(ok)burst();
+}
+function checkNum(id,ans,mk){
+  const inp=$(id), ok=Math.abs(parseFloat(normNum(inp.value))-ans)<1e-9;
+  inp.classList.toggle('ok',ok); inp.classList.toggle('no',!ok);
+  $(mk).textContent=ok?'✅':'❌'; if(ok)burst();
+}
+function checkFrac(id,ans,mk){
+  let v=normNum(id?$(id).value:''); let num;
+  if(v.includes('/')){const p=v.split('/');num=parseFloat(p[0])/parseFloat(p[1]);}else num=parseFloat(v);
+  const ok=Math.abs(num-ans)<1e-6;
+  $(id).classList.toggle('ok',ok); $(id).classList.toggle('no',!ok);
+  $(mk).textContent=ok?'✅':'❌'; if(ok)burst();
+}
+
+/* triangle fill rows + mcq */
+$('triRows').innerHTML=[
+  {l:'در △ABC: <span class="seg">AB</span> + <span class="seg">BC</span> ⧁ ',a:'AC',h:'مجموعِ دو ضلع از ضلعِ سوم بزرگ‌تر است.'},
+].map((r,i)=>`<div class="fill"><span class="lbl">${r.l}</span><input id="tr${i}" style="width:90px"><button class="btn go" onclick="chkSeg('tr${i}','${r.a}','trm${i}')">بررسی</button><span class="mark" id="trm${i}"></span><span class="hint">${r.h}</span></div>`).join('');
+mcq('triMcq',[
+  {q:'با ضلع‌های ۲، ۳ و ۶ می‌توان مثلث ساخت؟',opts:['بله','نه'],a:1,e:'۲ + ۳ = ۵ که از ۶ کوچک‌تر است. دو ضلعِ کوتاه به هم نمی‌رسند، پس نه.'},
+]);
+
+/* ===== triangle LAB ===== */
+document.querySelectorAll('.mode-tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const lab=b.dataset.m==='lab';
+  $('labBox').style.display=lab?'block':'none';
+  $('chalBox').style.display=lab?'none':'block';
+  if(!lab && !chal.started) startChal();
+});
+function drawLab(){
+  const a=+$('sa').value,b=+$('sb').value,c=+$('sc').value;
+  $('va').textContent=fa(a);$('vb').textContent=fa(b);$('vc').textContent=fa(c);
+  // base = longest, legs = the other two
+  const arr=[a,b,c].sort((x,y)=>y-x); const base=arr[0],p=arr[1],q=arr[2];
+  const valid=(p+q)>base;
+  const s=24, W=340, by=160, baseW=base*s, lx=(W-baseW)/2, rx=lx+baseW;
+  let svg=`<line x1="${lx}" y1="${by}" x2="${rx}" y2="${by}" stroke="#5b21b6" stroke-width="4"/>`;
+  svg+=`<circle cx="${lx}" cy="${by}" r="5" fill="#5b21b6"/><circle cx="${rx}" cy="${by}" r="5" fill="#5b21b6"/>`;
+  if(valid){
+    const x=(baseW*baseW + (p*s)*(p*s) - (q*s)*(q*s))/(2*baseW);
+    const y2=(p*s)*(p*s)-x*x; const ay=Math.sqrt(Math.max(y2,0));
+    const ax=lx+x, apy=by-ay;
+    svg+=`<line x1="${lx}" y1="${by}" x2="${ax}" y2="${apy}" stroke="#10b981" stroke-width="4"/>`;
+    svg+=`<line x1="${rx}" y1="${by}" x2="${ax}" y2="${apy}" stroke="#f59e0b" stroke-width="4"/>`;
+    svg+=`<circle cx="${ax}" cy="${apy}" r="6" fill="#ec4899"><animate attributeName="r" values="6;9;6" dur="1s" repeatCount="indefinite"/></circle>`;
+    svg+=`<text x="${ax-6}" y="${apy-12}" font-size="20">🎉</text>`;
+  }else{
+    const lex=lx+p*s, rex=rx-q*s;
+    svg+=`<line x1="${lx}" y1="${by-30}" x2="${lex}" y2="${by-30}" stroke="#10b981" stroke-width="4"/>`;
+    svg+=`<line x1="${rx}" y1="${by-30}" x2="${rex}" y2="${by-30}" stroke="#f59e0b" stroke-width="4"/>`;
+    svg+=`<line x1="${lex}" y1="${by-30}" x2="${rex}" y2="${by-30}" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"/>`;
+    svg+=`<text x="${(lex+rex)/2-30}" y="${by-40}" font-size="13" fill="#ef4444" font-weight="800">نمی‌رسن!</text>`;
+  }
+  $('labSvg').innerHTML=svg;
+  const v=$('labVerdict');
+  v.className='verdict '+(valid?'yes':'no');
+  v.textContent=valid?'✅ مثلث ساخته می‌شود!':'❌ مثلث ساخته نمی‌شود';
+  $('labCalc').innerHTML=`دو تای کوتاه‌تر: ${fa(p)} + ${fa(q)} = <b>${fa(p+q)}</b> &nbsp;|&nbsp; بلندترین: <b>${fa(base)}</b><br>`+
+    `${fa(p+q)} ${valid?'>':'≤'} ${fa(base)} → ${valid?'بزرگ‌تر است، پس می‌رسند ✔':'بزرگ‌تر نیست، پس نمی‌رسند ✘'}`;
+}
+['sa','sb','sc'].forEach(id=>$(id).oninput=drawLab);
+drawLab();
+
+/* ===== challenge ===== */
+let chal={started:false,round:0,score:0,lives:3,cur:null};
+function genTriple(){
+  let a,b,c,valid;
+  do{a=2+Math.floor(Math.random()*8);b=2+Math.floor(Math.random()*8);c=2+Math.floor(Math.random()*8);
+    const s=[a,b,c].sort((x,y)=>x-y); valid=(s[0]+s[1])>s[2];
+  }while(false);
+  return {a,b,c,valid:(()=>{const s=[a,b,c].sort((x,y)=>x-y);return (s[0]+s[1])>s[2];})()};
+}
+function startChal(){
+  chal={started:true,round:0,score:0,lives:3,cur:null};
+  $('chScore').textContent='۰'; $('chLives').textContent='❤️❤️❤️'; $('chFb').textContent=''; $('chFb').className='chal-fb';
+  $('chYes').disabled=false;$('chNo').disabled=false;
+  nextChal();
+}
+function nextChal(){
+  if(chal.round>=8 || chal.lives<=0){return endChal();}
+  chal.round++; chal.cur=genTriple();
+  $('chRound').textContent='دور '+fa(chal.round)+' از ۸';
+  const t=chal.cur,max=Math.max(t.a,t.b,t.c);
+  $('chBars').innerHTML=[t.a,t.b,t.c].map((v,i)=>
+    `<div class="bar-wrap"><b>چوبِ ${fa(i+1)}</b><div class="bar" style="width:${20+v/max*70}%"></div><span style="font-weight:800;color:var(--primary2)">${fa(v)}</span></div>`
+  ).join('');
+  $('chFb').textContent=''; $('chFb').className='chal-fb';
+}
+function answerChal(yes){
+  if(!chal.cur)return;
+  const t=chal.cur, correct=(yes===t.valid);
+  const s=[t.a,t.b,t.c].sort((x,y)=>x-y);
+  const fb=$('chFb');
+  if(correct){chal.score++; $('chScore').textContent=fa(chal.score); fb.className='chal-fb good';
+    fb.innerHTML=`✅ درست! ${fa(s[0])}+${fa(s[1])}=${fa(s[0]+s[1])} ${t.valid?'>':'≤'} ${fa(s[2])}`; burst();}
+  else{chal.lives--; $('chLives').textContent='❤️'.repeat(chal.lives)+'🖤'.repeat(3-chal.lives);
+    fb.className='chal-fb bad';
+    fb.innerHTML=`❌ نه! ${fa(s[0])}+${fa(s[1])}=${fa(s[0]+s[1])} ${t.valid?'>':'≤'} ${fa(s[2])} → ${t.valid?'مثلث می‌شه':'مثلث نمی‌شه'}`;}
+  chal.cur=null;
+  setTimeout(()=>{ if(chal.round>=8||chal.lives<=0)endChal(); else nextChal(); },1300);
+}
+$('chYes').onclick=()=>answerChal(true);
+$('chNo').onclick=()=>answerChal(false);
+function endChal(){
+  if(chal.score>S.triBest){S.triBest=chal.score;save();refresh();}
+  $('chBars').innerHTML='';
+  $('chFb').className='chal-fb good';
+  $('chFb').innerHTML=`🏁 تمام! امتیازِ تو: <b>${fa(chal.score)}</b> از ۸ — رکوردت: ${fa(S.triBest)}<br><button class="btn ghost" onclick="startChal()" style="margin-top:8px">🔁 دوباره</button>`;
+  if(chal.score>=6)burst(true);
+}
+
+/* ===== segment counter ===== */
+function cntPts(n){
+  const pts=[], W=520, m=40, y=80, gap=(W-2*m)/(n-1);
+  for(let i=0;i<n;i++)pts.push({x:m+i*gap,y});
+  return pts;
+}
+function cntStatic(){
+  const n=+$('cntN').value; $('cntNv').textContent=fa(n);
+  const pts=cntPts(n);
+  let svg=`<line x1="20" y1="80" x2="500" y2="80" stroke="#10b981" stroke-width="3"/>`;
+  pts.forEach(p=>svg+=`<circle cx="${p.x}" cy="${p.y}" r="6" fill="#5b21b6"/>`);
+  $('cntSvg').innerHTML=svg; $('cntBig').textContent='؟ پاره‌خط'; $('cntExpl').textContent='';
+}
+$('cntN').oninput=cntStatic; cntStatic();
+$('cntDraw').onclick=()=>{
+  const n=+$('cntN').value, pts=cntPts(n);
+  let svg=`<line x1="20" y1="80" x2="500" y2="80" stroke="#10b981" stroke-width="3"/>`;
+  pts.forEach(p=>svg+=`<circle cx="${p.x}" cy="${p.y}" r="6" fill="#5b21b6"/>`);
+  let arcs=[],k=0;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+    const x1=pts[i].x,x2=pts[j].x,mx=(x1+x2)/2,h=24+(j-i)*10;
+    arcs.push(`<path d="M${x1},80 Q${mx},${80-h} ${x2},80" fill="none" stroke="hsl(${(k*47)%360},70%,55%)" stroke-width="2" opacity="0"><animate attributeName="opacity" from="0" to="0.9" begin="${k*0.12}s" dur="0.3s" fill="freeze"/></path>`);
+    k++;
+  }
+  $('cntSvg').innerHTML=svg+arcs.join('');
+  const total=n*(n-1)/2;
+  let parts=[];for(let t=n-1;t>=1;t--)parts.push(fa(t));
+  setTimeout(()=>{
+    $('cntBig').textContent=fa(total)+' پاره‌خط'; burst();
+  },k*120+200);
+  $('cntExpl').innerHTML=parts.join(' + ')+' = <b>'+fa(total)+'</b>';
+};
+
+mcq('countMcqs',[
+  {q:'از دو نقطه‌ی مشخص، چند خطِ راست می‌گذرد؟',opts:['بی‌شمار','فقط یکی','دو تا'],a:1,e:'از هر دو نقطه دقیقاً یک خط می‌گذرد. (از یک نقطه اما بی‌شمار خط.)'},
+  {q:'روی یک خط ۵ نقطه است. روی‌هم چند پاره‌خط دیده می‌شود؟',opts:['۵','۸','۱۰'],a:2,e:'مثلِ دست‌دادن: ۴+۳+۲+۱ = ۱۰. (همان ۵×۴÷۲.)'},
+]);
+mcq('reasonMcqs',[
+  {q:'اگر a = b و b = c، طبقِ خاصیتِ تعدی نتیجه می‌گیریم...',opts:['a > c','a = c','هیچ ربطی ندارند'],a:1,e:'مثلِ زنجیر: برابریِ اول و دوم با برابریِ دوم و سوم به هم وصل می‌شوند ⟹ a = c.'},
+]);
+
+/* ===== final quiz ===== */
+const QUIZ=[
+  {q:'کدام شکل دو سرِ بسته دارد و طولش را می‌توان اندازه گرفت؟',opts:['خط','نیم‌خط','پاره‌خط'],a:2},
+  {q:'<span class="seg">AB</span> با خطِ روی نام، یعنی...',opts:['خودِ شکل','طول (یک عدد)','نامِ یک خط'],a:1},
+  {q:'اگر <span class="seg">AC</span> = ۹ و <span class="seg">AB</span> = ۴ (ترتیب A,B,C)، آن‌گاه <span class="seg">BC</span> =',opts:['۵','۱۳','۴'],a:0},
+  {q:'با ضلع‌های ۳، ۴ و ۸ می‌توان مثلث ساخت؟',opts:['بله','نه'],a:1},
+  {q:'M وسطِ AB است و <span class="seg">AB</span> = ۱۲. پس <span class="seg">AM</span> =',opts:['۶','۱۲','۲۴'],a:0},
+  {q:'C وسطِ AB، D وسطِ AC، E وسطِ AD. آن‌گاه <span class="seg">AB</span> چند برابرِ <span class="seg">AE</span> است؟',opts:['۴','۶','۸'],a:2},
+  {q:'روی یک خط ۶ نقطه است. چند پاره‌خط ساخته می‌شود؟',opts:['۱۲','۱۵','۳۰'],a:1},
+  {q:'روی یک خط ۴ نقطه است. چند نیم‌خط با سر روی این نقاط ساخته می‌شود؟',opts:['۴','۶','۸'],a:2},
+  {q:'اگر <span class="seg">AC</span> = <span class="seg">BC</span> و <span class="seg">BC</span> = <span class="seg">BE</span>، طبقِ تعدی...',opts:['<span class="seg">AC</span> = <span class="seg">BE</span>','<span class="seg">AC</span> > <span class="seg">BE</span>','نمی‌توان گفت'],a:0},
+];
+let qAnswered=0,qCorrect=0;
+function renderQuiz(){
+  $('qTotal').textContent=fa(QUIZ.length); $('qScore').textContent=fa(0);
+  $('quizBox').innerHTML=''; qAnswered=0;qCorrect=0;
+  QUIZ.forEach((it,i)=>{
+    const w=document.createElement('div'); w.className='mcq card'; w.style.margin='12px 0';
+    w.innerHTML=`<div class="q">${fa(i+1)}) ${it.q}</div>`;
+    it.opts.forEach((o,j)=>{
+      const b=document.createElement('button'); b.className='opt'; b.innerHTML=o;
+      b.onclick=()=>{
+        w.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+        qAnswered++;
+        if(j===it.a){b.classList.add('correct');qCorrect++;burst();}
+        else{b.classList.add('wrong');w.querySelectorAll('.opt')[it.a].classList.add('correct');}
+        $('qScore').textContent=fa(qCorrect);
+        if(qAnswered===QUIZ.length)finishQuiz();
+      };
+      w.appendChild(b);
+    });
+    $('quizBox').appendChild(w);
+  });
+}
+function finishQuiz(){
+  S.quizBest=Math.max(S.quizBest,qCorrect); S.quizTotal=QUIZ.length; save(); refresh();
+  const pct=Math.round(qCorrect/QUIZ.length*100);
+  const f=$('quizFinal'); f.classList.add('show');
+  let msg=pct>=80?'🏆 عالی! کاملاً مسلطی.':pct>=50?'👍 خوب بود، چند بخش را مرور کن.':'💪 اشکالی نداره — برگرد و دوباره ببین.';
+  f.style.background=pct>=80?'linear-gradient(135deg,#ecfdf5,#d1fae5)':'#f6f4ff';
+  f.style.color=pct>=80?'#065f46':'#4c1d95';
+  f.innerHTML=`${msg}<br>امتیاز: <b>${fa(qCorrect)}</b> از <b>${fa(QUIZ.length)}</b> (${fa(pct)}٪)<br><button class="btn go" onclick="renderQuiz();$('quizFinal').classList.remove('show')" style="margin-top:10px">🔁 دوباره</button>`;
+  if(pct>=80)burst(true);
+}
+renderQuiz();
+
+/* ===== reset ===== */
+$('resetBtn').onclick=()=>{
+  if(confirm('همه‌ی پیشرفتت پاک شود؟')){localStorage.removeItem(KEY);location.reload();}
+};
+
+/* ===== confetti ===== */
+function burst(big){
+  const n=big?70:26, c=$('confetti'), cols=['#667eea','#764ba2','#10b981','#f59e0b','#ec4899','#ef4444'];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div'); d.className='conf';
+    d.style.left=Math.random()*100+'vw';
+    d.style.background=cols[i%cols.length];
+    d.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+    d.style.animationDelay=(Math.random()*.3)+'s';
+    c.appendChild(d); setTimeout(()=>d.remove(),3200);
+  }
+}
+
+refresh();
+</script>
+</body>
+</html>
